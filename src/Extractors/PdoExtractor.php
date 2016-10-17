@@ -1,0 +1,67 @@
+<?php
+
+/*
+ * This file is part of YaEtl.
+ *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
+ * This source file is licensed under the MIT license which you will
+ * find in the LICENSE file or at https://opensource.org/licenses/MIT
+ */
+
+namespace fab2s\YaEtl\Extractors;
+
+/**
+ * Class PdoExtractor
+ */
+class PdoExtractor extends DbExtractorAbstract
+{
+    use PdoExtractorTrait;
+
+    /**
+     * @param \PDO        $pdo
+     * @param string|null $extractQuery
+     */
+    public function __construct(\PDO $pdo, $extractQuery = null)
+    {
+        $this->configurePdo($pdo);
+
+        parent::__construct($extractQuery);
+    }
+
+    /**
+     * leave no trace
+     * implement here to allow easier overidding
+     */
+    public function __destruct()
+    {
+        if ($this->driverBufferedQuery) {
+            // set driver state back to where we met
+            $this->pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function fetchRecords()
+    {
+        $extractQuery = $this->getPaginatedQuery();
+
+        $query = $this->pdo->prepare($extractQuery);
+        if (!$query->execute(!empty($this->queryBindings) ? $this->queryBindings : null)) {
+            return false;
+        }
+
+        $this->extracted = new \SplDoublyLinkedList;
+        $hasRecord       = false;
+        while ($record = $query->fetch(\PDO::FETCH_ASSOC)) {
+            $this->extracted->push($record);
+            $hasRecord = true;
+        }
+
+        $query->closeCursor();
+        unset($query);
+        $this->extracted->rewind();
+
+        return $hasRecord;
+    }
+}

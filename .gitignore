@@ -1,0 +1,10 @@
+.idea
+/vendor
+/nbproject
+*.swp
+*.bak
+~*
+*.un~
+.DS_Store
+Thumbs.db
+/.php_cs.cache
