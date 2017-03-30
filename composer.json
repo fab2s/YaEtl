@@ -1,12 +1,12 @@
 {
     "name" : "fab2s/yaetl",
-    "description" : "Extended Nodal Extract-Transform-Load (ETL) Workflow AKA (N)EJTL or Nodal Extract-Join-Tranform-Load",
+    "description" : "Widely Extended Nodal Extract-Transform-Load ETL Workflow AKA NEJTL or Nodal-Extract-Join-Tranform-Load",
     "type" : "library",
     "authors" : [{
         "name" : "Fabrice de Stefanis"
     }],
     "keywords" : [
-        "Extract-Transform-Load ETL symfony laravel PHP (N)EJTL Nodal Extract-Join-Tranform-Load"
+        "Extract-Transform-Load ETL symfony laravel PHP NEJTL Nodal-Extract-Join-Tranform-Load WorkFlow"
     ],
     "license" : [
         "MIT"
