@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fab2s/NodalFlow.git",
-                "reference": "dc417674295b5d83be2ad5bc04a5d85be4ecaa8f"
+                "reference": "20408a153a81d7d015b879ebf7344bc793163904"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fab2s/NodalFlow/zipball/dc417674295b5d83be2ad5bc04a5d85be4ecaa8f",
-                "reference": "dc417674295b5d83be2ad5bc04a5d85be4ecaa8f",
+                "url": "https://api.github.com/repos/fab2s/NodalFlow/zipball/20408a153a81d7d015b879ebf7344bc793163904",
+                "reference": "20408a153a81d7d015b879ebf7344bc793163904",
                 "shasum": ""
             },
             "require": {
@@ -41,11 +41,11 @@
                     "name": "Fabrice de Stefanis"
                 }
             ],
-            "description": "A PHP Nodal (work) Flow",
+            "description": "A PHP Nodal WorkFlow",
             "keywords": [
                 "PHP NodalFlow WorkFlow Nodal Node"
             ],
-            "time": "2017-03-30 10:57:21"
+            "time": "2017-03-30 13:06:05"
         }
     ],
     "packages-dev": [
