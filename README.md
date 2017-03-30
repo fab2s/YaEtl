@@ -31,7 +31,7 @@ This is required because YaEtl depends on another "unstable" (even though, test 
 
 ### A fluent grammar
 YaEtl can build complex and repeatable workflows very simply:
-* the `from($extractor, $aggregateWith)` method adds an extractor as a source of records in the flow, which may or may not be aggregated with another one and later referred as Fromer
+* the `from($extractor, $aggregateWith = null)` method adds an extractor as a source of records in the flow, which may or may not be aggregated with another one and later referred as Fromer
 
     A fromer is a Traversable Node that will be iterated upon each of his extracted records in the flow. Each records will then pass through all the remaining nodes, which could just be a transformer and a Toer to achieve a simple ETL workflow.
     The second argument is there to address cases where records are split (sharded) among several sources. Aggregating fromers would then make it possible to extract collections across several sharded repositories within the same E(JT)L operation. For example, if you have sharded records by date, you could instantiate several time the same dedicated exactor with relevant parameters, for each of them to extract from one specific date range and source in the same order and then use each of them as aggregated fromer in the workflow.
@@ -48,8 +48,9 @@ Each extractor would then consume all its records before the next fromer takes p
     Branches currently cannot be traversable. It's something that may be implemented at some point though as it is technically feasible and even could be of some use. As any nodes, branch node accepts one argument and can, or not, pass a value to be used as parameter to the next node.
 * the `to($loader)` method adds a loader in the flow, later referred as Toer
 
-    Toers are at the end of the line, as they do not return values, but they are not necessarily at the end of the flow. You can for example add toers at some point in the flow because the required record state is reached, but still continue with more transformations and data enrichment on the same input record for another set of toers in the same flow, which goes down to sharing the extraction among many related tasks.
-This only could be a decent, organized and repeatable optimization if you where to often extract data from a relatively slow REST API that is needed by many different services in your infrastructure, with themselves specific APIs and so on.
+    Toers are at the end of the line, but they are not necessarily at the end of the flow. They can return a value that would be used as argument to the eventual next node or else the first upstream Extractor. But YaEtl's Loaders are not returning values.
+    You can for example add toers at some point in the flow because the required record state is reached, but still continue with more transformations and data enrichment on the same input record for another set of toers in the same flow, which goes down to sharing the extraction among many related tasks.
+    This only could be a decent, organized and repeatable optimization if you where to often extract data from a relatively slow REST API that is needed by many different services in your infrastructure, with themselves specific APIs and so on.
 
 Again, each piece you build is reusable, the extractor written to get a list of records from a db to dump documents can be reused "as is" to push the same records into a remote REST API.
 
