@@ -145,6 +145,8 @@ foreach ((new Extractor)->getTraversable($param) as $record) {
 
 The later does not yet have a strict flow equivalent as NodalFlows and branches do not yet support traversability.
 
+As every Node gets injected with the carrier flow, you can extend YaEtl to implemment whatever context logic you could need to share among all nodes.
+
 ### Extractor
 
 The extractor should usually fetch many records at once using its `extract()` method and should return them one by one through its `getTraversable()` method, inherited from Nodalflow's `TraversableInterface`.
