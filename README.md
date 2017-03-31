@@ -197,7 +197,7 @@ YaEtl comes with many partial to complete Extractor implementations to address m
 * `ExtractorLimitAbstract` (extending `ExtractorAbstract`) adds logic to handle extraction limits
 * `ExtractorBatchLimitAbstract` (extending `ExtractorLimitAbstract`) adds logic to additionally handle batch extraction, eg paginated queries
 * `DbExtractorAbstract` (extending `ExtractorBatchLimitAbstract`) adds logic to extract from any DBMS
-* `PdoExtractorAbstract` (extending `DbExtractorAbstract`) is a ready to use PDO extractor implementation
+* `PdoExtractor` (extending `DbExtractorAbstract`) is a ready to use PDO extractor implementation
 * `UniqueKeyExtractorAbstract` (extending `DbExtractorAbstract` and implementing `JoinableIUnterface`) adds logic to extract and Join from any DBMS provided that the sql query fetches records against a single unique KEY. The unique key may be composite for extraction, but joining is currently only supported against a single unique key. While you can join records on a single unique keys from an extractor that actually query on some other (composite) keys (as long as the Joined key remains unique in the records), you cannot currently Join on a composite unique key directly.
 * `PdoUniqueKeyExtractor` (extending `PdoExtractorAbstract` and implementing `JoinableIUnterface`) is a ready to use PDO unique key extractor.
 
@@ -408,7 +408,9 @@ A FlowStatus object is available within callbacks in case you need to make decis
 This package comes with ready and easy to use [**Laravel**](https://laravel.com/) implementations.
 
 ### Extractor
-Laravel's Extractor extend the corresponding PDO ones and do all the actual querying using PDO as they are intended to extract up to many records.
+Laravel's Extractor extend their PDO counterpart and do all the actual querying using PDO directly. This is done so because they are intended to extract up to many records, and the overhead of using collections and objects for every batch of record would be pretty high. Actually, it could become a problem over couple 100k records, would create less reusable code and without real benefit (the data stays the same).
+
+This means that these class do not differ much from the PDO implementations, as they essentially implement logic to extract the underlying PDO object, query and bindings from Laravel's `Builder`. But they also demonstrate how you could extends the various Abstracts, Interfaces and implementations to create your own.
 
 #### Generic DB extractor
 ```php
