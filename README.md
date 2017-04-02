@@ -36,6 +36,7 @@ YaEtl can build complex and repeatable workflows fluently:
     A fromer is a Traversable Node that will be iterated upon each of his extracted records in the flow. Each records will then pass through all the remaining nodes, which could just be a transformer and a Toer to achieve a simple ETL workflow.
     The second argument is there to address cases where records are split (sharded) among several sources. Aggregating fromers would then make it possible to extract collections across several sharded repositories within the same E(JT)L operation. For example, if you have sharded records by date, you could instantiate several time the same dedicated exactor with relevant parameters, for each instance to extract from one specific date range and source in the same order and then use each of them as an aggregated fromer in the workflow.
     Each extractor would then consume all its records before the next fromer takes place, allowing you to ETL a large collection of ordered records coming from various physical sources as if you where doing it with a single extractor instance.
+    If you where to add a fromer without aggregating it to another, it would then just generate its records, using, or not, each upstream record as argument. This would result into this extractor to generate several records each time it is triggered in the flow, eg, each time a records arrives at its point of execution in the flow.
 * the `join(JoinableInterface $extractor, JoinableInterface $joinFrom, OnClauseInterface $onClause)` methods adds an extractor that will perform a join operation upon another extractor's records, later referred as Joiners
 
     Join operation is pretty similar to a JOIN with a DBMS. Joiner can be used to enrich records and can either "LEFT" join by providing with a default enrichment, when they would not find matching records, or, just a regular join by triggering a "continue" type interruption which will make the flow skip the record and continue with the eventual next record form the first upstream extractor.
@@ -47,7 +48,7 @@ YaEtl can build complex and repeatable workflows fluently:
 
     $leftJoinOnClause  = new OnClause('fromKeyAliasAsInRecord', 'fromKeyAliasAsInRecord', [$suitableObject, 'suitableMethod], $defaultRecord);
     ```
-    If you where to add a fromer without aggregating it to another, it would then just generate its records, using, or not, each upstream record as argument. This would result into this extractor to generate several records each time it is triggered in the flow, eg, each time a records arrives at its point of execution in the flow.
+
 * the `transform(TransformerInterface $trasformer)` method adds a transformer to the flow that will transform each record one by one, later referred as Transformer
 
     Transformers are simple really, they just take a record as parameter and return a transformed version of the record. Simplest use case could be to change character encoding, but they could also be used to match a loader data structure, as a way to make it reusable, or just because it is required by the business logic.
