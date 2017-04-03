@@ -66,8 +66,7 @@ trait PdoExtractorTrait
     }
 
     /**
-     * @param \PDO   $pdo
-     * @param string $extractQuery
+     * @param \PDO $pdo
      */
     public function configurePdo(\PDO $pdo)
     {

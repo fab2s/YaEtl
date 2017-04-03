@@ -31,6 +31,11 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     protected $uniqueKeyName;
 
     /**
+     * @var string
+     */
+    protected $uniqueKeyAlias;
+
+    /**
      * @var array
      */
     protected $uniqueKeyValues = [];
@@ -268,7 +273,7 @@ wiht onClose join ' . \var_export($onClause->geFrom(), true) . ' and uniqueKeyAl
      */
     public function exec($record)
     {
-        $uniqueKeyValue = $record[$this->uniqueKeyName];
+        $uniqueKeyValue = $record[$this->uniqueKeyAlias];
 
         if (isset($this->extracted[$uniqueKeyValue])) {
             $joinRecord = $this->extracted[$uniqueKeyValue];
@@ -378,9 +383,9 @@ wiht onClose join ' . \var_export($onClause->geFrom(), true) . ' and uniqueKeyAl
                     $default = $this->extracted[$keyValue];
                 }
             }
-        }
 
-        $this->extracted = $defaultExtracted;
+            $this->extracted = $defaultExtracted;
+        }
 
         return $this;
     }

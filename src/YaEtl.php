@@ -86,7 +86,7 @@ class YaEtl extends NodalFlow
     }
 
     /**
-     * @param ExtractorAbstract       $extractor
+     * @param ExtractorInterface      $extractor
      * @param null|ExtractorInterface $aggregateWith Use the extractore instance you want to aggregate with
      *
      * @return $this
@@ -134,7 +134,7 @@ class YaEtl extends NodalFlow
     }
 
     /**
-     * @param Node $node
+     * @param NodeInterface $node
      *
      * @throws Exception
      */
@@ -147,8 +147,6 @@ class YaEtl extends NodalFlow
      * @param JoinableInterface $extractor
      * @param JoinableInterface $joinFrom
      * @param OnClauseInterface $onClause
-     * @param callable          $merger
-     * @param bool              $leftJoin
      *
      * @return $this
      */
@@ -228,8 +226,6 @@ class YaEtl extends NodalFlow
     /**
      * Triggered right after the flow stops
      *
-     * @param mixed $success
-     *
      * @return $this
      */
     public function flowEnd()
@@ -288,7 +284,7 @@ class YaEtl extends NodalFlow
         $stats = \array_replace($this->statsDefault, $stats);
 
         foreach ($this->nodes as $nodeIdx => $node) {
-            $isJoining       = ($node instanceof JoinableInterface) && $node->getOnClause();
+            $isJoining = ($node instanceof JoinableInterface) && $node->getOnClause();
             if ($isJoining) {
                 $this->nodeStats[$nodeIdx]['num_join'] = $node->getNumRecords();
                 $stats['num_join'] += $this->nodeStats[$nodeIdx]['num_join'];
