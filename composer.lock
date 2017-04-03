@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fab2s/NodalFlow.git",
-                "reference": "20408a153a81d7d015b879ebf7344bc793163904"
+                "reference": "11e1eb25854a7449ad8e5850b4a80b9b727f5f68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fab2s/NodalFlow/zipball/20408a153a81d7d015b879ebf7344bc793163904",
-                "reference": "20408a153a81d7d015b879ebf7344bc793163904",
+                "url": "https://api.github.com/repos/fab2s/NodalFlow/zipball/11e1eb25854a7449ad8e5850b4a80b9b727f5f68",
+                "reference": "11e1eb25854a7449ad8e5850b4a80b9b727f5f68",
                 "shasum": ""
             },
             "require": {
@@ -45,7 +45,7 @@
             "keywords": [
                 "PHP NodalFlow WorkFlow Nodal Node"
             ],
-            "time": "2017-03-30 13:06:05"
+            "time": "2017-04-03 08:19:30"
         }
     ],
     "packages-dev": [
@@ -660,16 +660,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "5.7.18",
+            "version": "5.7.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c6884c0d4b8a7277de7ae3c9e597aff138c6365f"
+                "reference": "69c4f49ff376af2692bad9cebd883d17ebaa98a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c6884c0d4b8a7277de7ae3c9e597aff138c6365f",
-                "reference": "c6884c0d4b8a7277de7ae3c9e597aff138c6365f",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/69c4f49ff376af2692bad9cebd883d17ebaa98a1",
+                "reference": "69c4f49ff376af2692bad9cebd883d17ebaa98a1",
                 "shasum": ""
             },
             "require": {
@@ -738,7 +738,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-04-02T15:44:48+00:00"
+            "time": "2017-04-03T02:22:27+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",

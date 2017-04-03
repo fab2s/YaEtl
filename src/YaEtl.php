@@ -363,7 +363,7 @@ class YaEtl extends NodalFlow
             $stats['nodes'] = $this->processStats($stats['nodes']);
         }
 
-        foreach ($stats['invocations'] as $idx => &$value) {
+        foreach ($stats['invocations'] as &$value) {
             $value           = \array_replace($value, $this->duration($value['duration']));
 
             $value['report'] = \sprintf('[YaEtl] Time : %s - Memory: %4.2fMiB',
@@ -408,7 +408,7 @@ class YaEtl extends NodalFlow
             return true;
         }
 
-        foreach ($nodeMap as $nodeHash => $mapData) {
+        foreach ($nodeMap as $mapData) {
             if (!empty($mapData['nodes'])) {
                 if ($this->findNodeHashInMap($hash, $mapData['nodes'])) {
                     return true;
