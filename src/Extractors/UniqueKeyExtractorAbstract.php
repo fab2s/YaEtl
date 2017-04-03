@@ -126,7 +126,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     {
         if ($this->uniqueKeyAlias === null || $this->uniqueKeyAlias !== $onClause->getJoinKeyAlias()) {
             throw new \Exception('[YaEtl] On close not compatible with ' . \get_class($this) . '
-wiht onClose join ' . \var_export($onClause->geFrom(), true) . ' and uniqueKeyAlias ' .
+wiht onClose join ' . \var_export($onClause->getFromKeyAlias(), true) . ' and uniqueKeyAlias ' .
                     \var_export($this->uniqueKeyAlias, true));
         }
 
