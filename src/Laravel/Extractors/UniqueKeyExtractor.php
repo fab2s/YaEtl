@@ -37,7 +37,9 @@ class UniqueKeyExtractor extends PdoUniqueKeyExtractor
     {
         $this->configurePdo($extractQuery->getConnection()->getPdo());
 
-        parent::__construct($extractQuery, $uniqueKey);
+        if ($extractQuery !== null) {
+            $this->setExtractQuery($extractQuery);
+        }
     }
 
     /**
