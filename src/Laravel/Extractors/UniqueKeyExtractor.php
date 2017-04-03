@@ -36,6 +36,7 @@ class UniqueKeyExtractor extends PdoUniqueKeyExtractor
     public function __construct(Builder $extractQuery, $uniqueKey = 'id')
     {
         $this->configurePdo($extractQuery->getConnection()->getPdo());
+        $this->configureUniqueKey($uniqueKey);
 
         if ($extractQuery !== null) {
             $this->setExtractQuery($extractQuery);
