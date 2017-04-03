@@ -36,6 +36,11 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      */
     protected $mocked = [];
 
+    /**
+     * should be even as it is divided by two in some providers
+     *
+     * @var int
+     */
     protected $numRecords = 100;
 
     /**

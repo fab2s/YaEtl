@@ -145,8 +145,6 @@ wiht onClose join ' . \var_export($onClause->geFrom(), true) . ' and uniqueKeyAl
     }
 
     /**
-     * Override parent to enforce self
-     *
      * @param JoinableInterface $joinFrom
      *
      * @throws \Exception
@@ -239,6 +237,9 @@ wiht onClose join ' . \var_export($onClause->geFrom(), true) . ' and uniqueKeyAl
                 \reset($this->uniqueKeyValueBuffer);
                 $set = false;
                 foreach ($this->uniqueKeyValues as $uniqueKeyValue) {
+                    // move forward in the array until we reach the
+                    // last value we already had in the buffer and
+                    // then happend the rest
                     if (!$set && $uniqueKeyValue === $lastKeyValue) {
                         $set = true;
                         continue;
