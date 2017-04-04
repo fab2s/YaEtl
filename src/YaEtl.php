@@ -405,10 +405,11 @@ class YaEtl extends NodalFlow
         }
 
         foreach ($nodeMap as $mapData) {
-            if (!empty($mapData['nodes'])) {
-                if ($this->findNodeHashInMap($hash, $mapData['nodes'])) {
-                    return true;
-                }
+            if (
+                !empty($mapData['nodes']) &&
+                $this->findNodeHashInMap($hash, $mapData['nodes'])
+            ) {
+                return true;
             }
         }
 
