@@ -90,22 +90,6 @@ trait PdoExtractorTrait
     }
 
     /**
-     * @param string $extractQuery which MUST NOT contain the LIMIT/OFFSET bit
-     *
-     * @return $this
-     */
-    public function setExtractQuery($extractQuery)
-    {
-        if (empty($this->pdo)) {
-            throw new \Exception('[YaEtl] Pdo must be set');
-        }
-
-        parent::setExtractQuery($extractQuery);
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     protected function getLimitOffsetBit()
