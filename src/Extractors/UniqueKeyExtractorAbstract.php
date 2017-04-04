@@ -64,9 +64,9 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     protected $recordMap;
 
     /**
-     * The Joignable we may be joining against
+     * The Joinable we may be joining against
      *
-     * @var JoignableInterface
+     * @var JoinableInterface
      */
     protected $joinFrom;
 
