@@ -95,35 +95,7 @@ class YaEtl extends NodalFlow
     {
         $this->enforceNodeInstanceUnicity($extractor);
         if ($aggregateWith !== null) {
-            // aggregate with target Node
-            $nodeHash = $aggregateWith->getNodeHash();
-            if (!$nodeHash || (!isset($this->nodeMap[$nodeHash]) && !isset($this->reverseAggregateTable[$nodeHash]))) {
-                throw new \Exception('[YaEtl] Cannot aggregate with orphaned Node:' . \get_class($aggregateWith));
-            }
-
-            $aggregateWithIdx = isset($this->nodeMap[$nodeHash]) ? $this->nodeMap[$nodeHash]['index'] : $this->reverseAggregateTable[$nodeHash];
-
-            $isAggregateNode = $this->nodes[$aggregateWithIdx] instanceof AggregateNodeInterface;
-            if (!$isAggregateNode && !($this->nodes[$aggregateWithIdx] instanceof ExtractorInterface)) {
-                throw new \Exception('[YaEtl] Target Node must implements ExtractorInterface to be aggregated with, got:' . \get_class($aggregateWith));
-            }
-
-            if (!$isAggregateNode) {
-                $aggregateNode = new AggregateNode(true);
-                $aggregateNode->addTraversable($this->nodes[$aggregateWithIdx])
-                        ->addTraversable($extractor);
-                // keep track of this extractor before we burry it in the aggregate
-                $this->reverseAggregateTable[$this->nodes[$aggregateWithIdx]->getNodeHash()] = $aggregateWithIdx;
-                // now replace its slot in the main tree
-                $this->replace($aggregateWithIdx, $aggregateNode);
-                // aggregate node did take care of setting carrier and hash
-                $this->reverseAggregateTable[$aggregateNode->getNodeHash()]                  = $aggregateWithIdx;
-                $this->reverseAggregateTable[$extractor->getNodeHash()]                      = $aggregateWithIdx;
-            } else {
-                $this->nodes[$aggregateWithIdx]->addTraversable($extractor);
-                // aggregate node did take care of setting carrier and hash
-                $this->reverseAggregateTable[$extractor->getNodeHash()] = $aggregateWithIdx;
-            }
+            $this->aggregateTo($extractor, $aggregateWith);
         } else {
             parent::add($extractor);
         }
@@ -277,15 +249,52 @@ class YaEtl extends NodalFlow
     }
 
     /**
+     * @param ExtractorInterface $extractor
+     * @param ExtractorInterface $aggregateWith
+     *
+     * @throws \Exception
+     *
+     * @return $this
+     */
+    protected function aggregateTo(ExtractorInterface $extractor, ExtractorInterface $aggregateWith)
+    {
+        // aggregate with target Node
+        $nodeHash = $aggregateWith->getNodeHash();
+        if (!isset($this->nodeMap[$nodeHash]) && !isset($this->reverseAggregateTable[$nodeHash])) {
+            throw new \Exception('[YaEtl] Cannot aggregate with orphaned Node:' . \get_class($aggregateWith));
+        }
+
+        $aggregateWithIdx = isset($this->nodeMap[$nodeHash]) ? $this->nodeMap[$nodeHash]['index'] : $this->reverseAggregateTable[$nodeHash];
+        if ($this->nodes[$aggregateWithIdx] instanceof AggregateNodeInterface) {
+            $this->nodes[$aggregateWithIdx]->addTraversable($extractor);
+            // aggregate node did take care of setting carrier and hash
+            $this->reverseAggregateTable[$extractor->getNodeHash()] = $aggregateWithIdx;
+        } else {
+            $aggregateNode = new AggregateNode(true);
+            $aggregateNode->addTraversable($this->nodes[$aggregateWithIdx])
+                    ->addTraversable($extractor);
+            // keep track of this extractor before we burry it in the aggregate
+            $this->reverseAggregateTable[$this->nodes[$aggregateWithIdx]->getNodeHash()] = $aggregateWithIdx;
+            // now replace its slot in the main tree
+            $this->replace($aggregateWithIdx, $aggregateNode);
+            // aggregate node did take care of setting carrier and hash
+            $this->reverseAggregateTable[$aggregateNode->getNodeHash()]                  = $aggregateWithIdx;
+            $this->reverseAggregateTable[$extractor->getNodeHash()]                      = $aggregateWithIdx;
+        }
+
+        return $this;
+    }
+
+    /**
      * @param array $stats
+     *
+     * @return $this
      */
     protected function collectNodeStats(array &$stats)
     {
         $stats = \array_replace($this->statsDefault, $stats);
-
         foreach ($this->nodes as $nodeIdx => $node) {
-            $isJoining = ($node instanceof JoinableInterface) && $node->getOnClause();
-            if ($isJoining) {
+            if (($node instanceof JoinableInterface) && $node->getOnClause()) {
                 $this->nodeStats[$nodeIdx]['num_join'] = $node->getNumRecords();
                 $stats['num_join'] += $this->nodeStats[$nodeIdx]['num_join'];
             } elseif ($node instanceof ExtractorInterface) {
@@ -310,6 +319,8 @@ class YaEtl extends NodalFlow
                 $stats['num_extract'] += $this->nodeStats[$nodeIdx]['num_extract'];
             }
         }
+
+        return $this;
     }
 
     /**
