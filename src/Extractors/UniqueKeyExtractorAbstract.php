@@ -148,6 +148,12 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      */
     public function setJoinFrom(JoinableInterface $joinFrom)
     {
+        // at least make sure this joinable extends this very class
+        // to enforce getRecordMap() type
+        if (!is_a($joinFrom, self::class)) {
+            throw new \Exception('[YaEtl] From extractor is not compatible, expected implementation of: ' . self::class . "\ngot: " . \get_class($joinFrom));
+        }
+
         if (preg_match('`^(.+)(order\s+by.*)$`is', $this->extractQuery)) {
             throw new \Exception("[YaEtl] A Joiner must not order its query got: $this->extractQuery");
         }
