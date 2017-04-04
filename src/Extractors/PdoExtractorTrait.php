@@ -106,15 +106,11 @@ trait PdoExtractorTrait
     }
 
     /**
-     * This method sets offset and limit in the query
-     * WARNING : if you set an offset without limit,
-     * the limit will be set to  $this->maxdefaultLimit
-     *
-     * @return string the paginated query with current offset and limit
+     * @return string
      */
-    protected function getPaginatedQuery()
+    protected function getLimitOffsetBit()
     {
-        return $this->extractQuery . \implode('', [
+        return ' ' . \implode('', [
             $this->limit ? ' LIMIT ' . (int) $this->limit : ($this->offset ? ' LIMIT ' . $this->maxdefaultLimit : ''),
             $this->offset ? ' OFFSET ' . (int) $this->offset : '',
             ';',

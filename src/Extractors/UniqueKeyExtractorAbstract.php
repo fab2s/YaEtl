@@ -124,12 +124,6 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      */
     public function setOnClause(OnClauseInterface $onClause)
     {
-        if ($this->uniqueKeyAlias === null || $this->uniqueKeyAlias !== $onClause->getJoinKeyAlias()) {
-            throw new \Exception('[YaEtl] On close not compatible with ' . \get_class($this) . '
-wiht onClose join ' . \var_export($onClause->getFromKeyAlias(), true) . ' and uniqueKeyAlias ' .
-                    \var_export($this->uniqueKeyAlias, true));
-        }
-
         $this->onClose = $onClause;
 
         return $this;
@@ -158,9 +152,8 @@ wiht onClose join ' . \var_export($onClause->getFromKeyAlias(), true) . ' and un
      */
     public function setJoinFrom(JoinableInterface $joinFrom)
     {
-        // if you want to allow wider joining, just override this method in yours
-        if (!($joinFrom instanceof static)) {
-            throw new \Exception('[YaEtl] From extractor is not compatible, expected: ' . \get_class($this) . "\ngot: " . \get_class($joinFrom));
+        if (preg_match('`^(.+)(order\s+by.*)$`is', $this->extractQuery)) {
+            throw new \Exception("[YaEtl] A Joiner must not order its query got: $this->extractQuery");
         }
 
         // since we are joining, we are not a traversable anymore
@@ -193,7 +186,6 @@ wiht onClose join ' . \var_export($onClause->getFromKeyAlias(), true) . ' and un
         if (isset($this->joinFrom)) {
             // join mode, get record map
             $this->uniqueKeyValues = $this->joinFrom->getRecordMap($this->onClose->getFromKeyAlias());
-
             // limit does not apply in join mode
             $this->enforceBatchSize();
             if (empty($this->uniqueKeyValues)) {
@@ -201,26 +193,27 @@ wiht onClose join ' . \var_export($onClause->getFromKeyAlias(), true) . ' and un
             }
 
             if ($this->fetchRecords()) {
-                // gen actual record map before we
-                // set defaults
+                // gen record map before we set defaults
                 $this->genRecordMap()
                     ->setDefaultExtracted();
 
                 return true;
             }
-        } else {
-            // enforce limit if any is set
-            if ($this->isLimitReached()) {
-                return false;
-            }
 
-            $this->enforceBatchSize();
-            if ($this->fetchRecords()) {
-                $this->incrementOffset()
-                    ->genRecordMap();
+            return false;
+        }
 
-                return true;
-            }
+        // enforce limit if any is set
+        if ($this->isLimitReached()) {
+            return false;
+        }
+
+        $this->enforceBatchSize();
+        if ($this->fetchRecords()) {
+            $this->incrementOffset()
+                ->genRecordMap();
+
+            return true;
         }
 
         return false;
@@ -259,9 +252,11 @@ wiht onClose join ' . \var_export($onClause->getFromKeyAlias(), true) . ' and un
 
             $this->uniqueKeyValues      = \array_slice($this->uniqueKeyValueBuffer, 0, $this->batchSize, true);
             $this->uniqueKeyValueBuffer = \array_slice($this->uniqueKeyValueBuffer, $this->batchSize, null, true);
-        } else {
-            parent::enforceBatchSize();
+
+            return $this;
         }
+
+        parent::enforceBatchSize();
 
         return $this;
     }
@@ -415,10 +410,9 @@ wiht onClose join ' . \var_export($onClause->getFromKeyAlias(), true) . ' and un
             // $this->extracted is an indexed array on the proper key but ...
             foreach ($this->extracted as $record) {
                 if (!isset($record[$fromKeyAlias])) {
-                    // joiner will have nothing. I don't think array_key_exists
-                    // would do better here as joining on null remains a problem
-                    // @TODO throw exception instead ? Log ? in debug mode ?
-                    break;
+                    // Since we do not enforce key alias existance during init
+                    // we have to do it here
+                    throw new \Exception("[YaEtl] From Key Alias not found in record: $fromKeyAlias");
                 }
 
                 $fromKeyValue       = $record[$fromKeyAlias];

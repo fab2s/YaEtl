@@ -64,4 +64,16 @@ class PdoExtractor extends DbExtractorAbstract
 
         return $hasRecord;
     }
+
+    /**
+     * This method sets offset and limit in the query
+     * WARNING : if you set an offset without limit,
+     * the limit will be set to  $this->maxdefaultLimit
+     *
+     * @return string the paginated query with current offset and limit
+     */
+    protected function getPaginatedQuery()
+    {
+        return $this->extractQuery . $this->getLimitOffsetBit();
+    }
 }

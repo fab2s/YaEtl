@@ -96,7 +96,7 @@ class YaEtlTest extends \TestCase
     {
         $fromQuery = 'SELECT * FROM ' . self::FROM_TABLE . ' ORDER BY id ASC';
         $toQuery   = 'SELECT * FROM ' . self::TO_TABLE . ' ORDER BY id ASC';
-        $joinQuery = 'SELECT * FROM ' . self::JOIN_TABLE . ' ORDER BY id ASC';
+        $joinQuery = 'SELECT * FROM ' . self::JOIN_TABLE;
         $fullFrom1 = new PdoUniqueKeyExtractor($this->getPdo(), $fromQuery, 'id');
         $fullFrom2 = new PdoUniqueKeyExtractor($this->getPdo(), $fromQuery, 'id');
         $fullFrom3 = new PdoUniqueKeyExtractor($this->getPdo(), $fromQuery, 'id');

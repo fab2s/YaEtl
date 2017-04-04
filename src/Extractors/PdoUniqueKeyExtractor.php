@@ -73,20 +73,16 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
             return false;
         }
 
-        if (isset($this->joinFrom)) {
-            $this->extracted = [];
-        } else {
-            $this->extracted = new \SplDoublyLinkedList;
-        }
-
-        $hasRecord = false;
+        $this->extracted = isset($this->joinFrom) ? [] : new \SplDoublyLinkedList;
+        $hasRecord       = false;
         while ($record = $query->fetch(\PDO::FETCH_ASSOC)) {
             if (isset($this->joinFrom)) {
                 $this->extracted[$record[$this->uniqueKeyName]] = $record;
-            } else {
-                $this->extracted->push($record);
+                $hasRecord                                      = true;
+                continue;
             }
 
+            $this->extracted->push($record);
             $hasRecord = true;
         }
 
@@ -94,5 +90,25 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
         unset($query);
 
         return $hasRecord;
+    }
+
+    /**
+     * This method sets offset and limit in the query
+     * WARNING : if you set an offset without limit,
+     * the limit will be set to  $this->maxdefaultLimit
+     *
+     * @return string the paginated query with current offset and limit
+     */
+    protected function getPaginatedQuery()
+    {
+        if ($this->joinFrom) {
+            $this->queryBindings = array_values($this->uniqueKeyValues);
+
+            $whereOrAndStr = stripos($this->extractQuery, 'WHERE') !== false ? 'AND' : 'WHERE';
+
+            return $this->extractQuery . " $whereOrAndStr $this->uniqueKeyName IN (" . implode(',', array_fill(0, count($this->uniqueKeyValues), '?')) . ')';
+        }
+
+        return $this->extractQuery . $this->getLimitOffsetBit();
     }
 }
