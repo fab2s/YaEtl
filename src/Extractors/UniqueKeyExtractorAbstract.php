@@ -7,11 +7,7 @@
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
  */
 
-namespace fab2s\Yaetl\Extractors;
-
-use fab2s\YaEtl\Extractors\DbExtractorAbstract;
-use fab2s\YaEtl\Extractors\JoinableInterface;
-use fab2s\YaEtl\Extractors\OnClauseInterface;
+namespace fab2s\YaEtl\Extractors;
 
 /**
  * Abstract Class UniqueKeyExtractorAbstract

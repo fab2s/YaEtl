@@ -9,7 +9,7 @@
 
 namespace fab2s\YaEtl\Laravel\Extractors;
 
-use fab2s\Yaetl\Extractors\PdoUniqueKeyExtractor;
+use fab2s\YaEtl\Extractors\PdoUniqueKeyExtractor;
 use Illuminate\Database\Query\Builder;
 
 /**

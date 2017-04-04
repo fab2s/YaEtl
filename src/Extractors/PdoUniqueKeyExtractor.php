@@ -7,9 +7,7 @@
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
  */
 
-namespace fab2s\Yaetl\Extractors;
-
-use fab2s\YaEtl\Extractors\PdoExtractorTrait;
+namespace fab2s\YaEtl\Extractors;
 
 /**
  * class PdoUniqueKeyExtractor
