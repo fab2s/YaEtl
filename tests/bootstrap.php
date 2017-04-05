@@ -9,4 +9,4 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/TestCase.php';
-require __DIR__ . '/DbUnit_ArrayDataSet.php';
+require __DIR__ . '/DbUnitArrayDataSet.php';

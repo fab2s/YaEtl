@@ -187,7 +187,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             }
         }
 
-        return new DbUnit_ArrayDataSet($result);
+        return new DbUnitArrayDataSet($result);
     }
 
     /**

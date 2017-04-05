@@ -7,7 +7,7 @@
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
  */
 
-class DbUnit_ArrayDataSet extends \PHPUnit_Extensions_Database_DataSet_AbstractDataSet
+class DbUnitArrayDataSet extends \PHPUnit_Extensions_Database_DataSet_AbstractDataSet
 {
     /**
      * @var array
