@@ -267,20 +267,15 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
             ++$this->numRecords;
 
             return $this->onClose->merge($record, $joinRecord);
-        } elseif (isset($this->uniqueKeyValueBuffer[$uniqueKeyValue])) {
-            // uniqueKeyValueBuffer should never run out until
-            // the fromer stop providing records which mean
-            // we do not reach here. Case left is when this
-            // batchSize < fromer batchSize.
-            // trigger extract
-            if ($this->extract()) {
-                return $this->exec($record);
-            }
-        } elseif ($this->extract()) {
+        }
+
+        if ($this->extract()) {
             return $this->exec($record);
         }
 
-        // something is wrong
+        // something is wrong as uniqueKeyValueBuffer should
+        // never run out until the fromer stop providing records
+        // which means we do not want to reach here
         throw new \Exception('[YaEtl] Record map missmatch betwen Joiner ' . \get_class($this) . ' and Fromer ' . \get_class($this->joinFrom));
     }
 
@@ -356,14 +351,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
         if ($this->joinFrom !== null) {
             $defaultExtracted = \array_fill_keys($this->uniqueKeyValues, $this->onClose->isLeftJoin() ? $this->onClose->getDefaultRecord() : false);
 
-            foreach ($defaultExtracted as $keyValue => &$default) {
-                // extracted is an array in join mode
-                if (isset($this->extracted[$keyValue])) {
-                    $default = $this->extracted[$keyValue];
-                }
-            }
-
-            $this->extracted = $defaultExtracted;
+            $this->extracted = \array_replace($defaultExtracted, $this->extracted);
         }
 
         return $this;
@@ -386,8 +374,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
 
             // generate rercord map
             $this->recordMap[$fromKeyAlias] = [];
-
-            $map = &$this->recordMap[$fromKeyAlias];
+            $map                            = &$this->recordMap[$fromKeyAlias];
             // we do not want to map defaults here as we do not want joiners
             // to this to join on null
             // we could optimize a little bit for cases where

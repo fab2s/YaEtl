@@ -269,18 +269,20 @@ class YaEtl extends NodalFlow
             $this->nodes[$aggregateWithIdx]->addTraversable($extractor);
             // aggregate node did take care of setting carrier and hash
             $this->reverseAggregateTable[$extractor->getNodeHash()] = $aggregateWithIdx;
-        } else {
-            $aggregateNode = new AggregateNode(true);
-            $aggregateNode->addTraversable($this->nodes[$aggregateWithIdx])
-                    ->addTraversable($extractor);
-            // keep track of this extractor before we burry it in the aggregate
-            $this->reverseAggregateTable[$this->nodes[$aggregateWithIdx]->getNodeHash()] = $aggregateWithIdx;
-            // now replace its slot in the main tree
-            $this->replace($aggregateWithIdx, $aggregateNode);
-            // aggregate node did take care of setting carrier and hash
-            $this->reverseAggregateTable[$aggregateNode->getNodeHash()]                  = $aggregateWithIdx;
-            $this->reverseAggregateTable[$extractor->getNodeHash()]                      = $aggregateWithIdx;
+
+            return $this;
         }
+
+        $aggregateNode = new AggregateNode(true);
+        $aggregateNode->addTraversable($this->nodes[$aggregateWithIdx])
+                ->addTraversable($extractor);
+        // keep track of this extractor before we burry it in the aggregate
+        $this->reverseAggregateTable[$this->nodes[$aggregateWithIdx]->getNodeHash()] = $aggregateWithIdx;
+        // now replace its slot in the main tree
+        $this->replace($aggregateWithIdx, $aggregateNode);
+        // aggregate node did take care of setting carrier and hash
+        $this->reverseAggregateTable[$aggregateNode->getNodeHash()]                  = $aggregateWithIdx;
+        $this->reverseAggregateTable[$extractor->getNodeHash()]                      = $aggregateWithIdx;
 
         return $this;
     }
