@@ -41,7 +41,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @var int
      */
-    protected $numRecords = 100;
+    protected $numRecords = 20;
 
     /**
      * @var \PDO

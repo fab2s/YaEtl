@@ -15,17 +15,6 @@ namespace fab2s\YaEtl\Extractors;
 trait PdoExtractorTrait
 {
     /**
-     * This is hte default limit applied when no limit
-     * is set and an offset is set.
-     * It's 2^31 – 1 = 2147483647 = max 32bit
-     * Use 2^63 − 1 = 9223372036854775807 = max 64bit
-     * if your os and dbms are 64bit
-     *
-     * @var int
-     */
-    protected $maxdefaultLimit = 2147483647;
-
-    /**
      * @var \PDO
      */
     protected $pdo;
@@ -87,17 +76,5 @@ trait PdoExtractorTrait
                 $this->pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
             }
         }
-    }
-
-    /**
-     * @return string
-     */
-    protected function getLimitOffsetBit()
-    {
-        return ' ' . \implode('', [
-            $this->limit ? ' LIMIT ' . (int) $this->limit : ($this->offset ? ' LIMIT ' . $this->maxdefaultLimit : ''),
-            $this->offset ? ' OFFSET ' . (int) $this->offset : '',
-            ';',
-        ]);
     }
 }

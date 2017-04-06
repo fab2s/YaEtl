@@ -93,15 +93,7 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract
      */
     public function incrementOffset()
     {
-        if ($this->limit) {
-            $this->offset += $this->batchSize;
-        } else {
-            // set limit to numRecords as we got all record at once
-            // without limit. This is a bit hackish I know but is so far
-            // required to handle the, no limit case whith a limited
-            // extractor
-            $this->limit = $this->numRecords + 1;
-        }
+        $this->offset += $this->batchSize;
 
         return $this;
     }

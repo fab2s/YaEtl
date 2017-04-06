@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fab2s/NodalFlow.git",
-                "reference": "0cd731c8120cb829ac26da2c4d13386f7abfa2d3"
+                "reference": "5114976cfc5c4f8dc3e1a20a8a7232008697cdd2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fab2s/NodalFlow/zipball/0cd731c8120cb829ac26da2c4d13386f7abfa2d3",
-                "reference": "0cd731c8120cb829ac26da2c4d13386f7abfa2d3",
+                "url": "https://api.github.com/repos/fab2s/NodalFlow/zipball/5114976cfc5c4f8dc3e1a20a8a7232008697cdd2",
+                "reference": "5114976cfc5c4f8dc3e1a20a8a7232008697cdd2",
                 "shasum": ""
             },
             "require": {
@@ -45,7 +45,7 @@
             "keywords": [
                 "PHP NodalFlow WorkFlow Nodal Node"
             ],
-            "time": "2017-04-05 09:21:12"
+            "time": "2017-04-06 13:50:44"
         }
     ],
     "packages-dev": [
@@ -1314,16 +1314,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.2.6",
+            "version": "v3.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "093e416ad096355149e265ea2e4cc1f9ee40ab1a"
+                "reference": "62b4cdb99d52cb1ff253c465eb1532a80cebb621"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/093e416ad096355149e265ea2e4cc1f9ee40ab1a",
-                "reference": "093e416ad096355149e265ea2e4cc1f9ee40ab1a",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/62b4cdb99d52cb1ff253c465eb1532a80cebb621",
+                "reference": "62b4cdb99d52cb1ff253c465eb1532a80cebb621",
                 "shasum": ""
             },
             "require": {
@@ -1365,7 +1365,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-03-07T16:47:02+00:00"
+            "time": "2017-03-20T09:45:15+00:00"
         },
         {
             "name": "webmozart/assert",

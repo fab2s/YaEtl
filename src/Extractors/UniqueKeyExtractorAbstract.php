@@ -228,31 +228,13 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     {
         if (isset($this->joinFrom)) {
             // obey batch size to allow fromer to fetch a huge amount of records
-            // while keeping the where in query size under control by splitting
+            // while keeping the "where in" query size under control by splitting
             // it into several chunks.
-            if (!empty($this->uniqueKeyValueBuffer)) {
-                // happend eventual new keys from upstream extractor
-                \end($this->uniqueKeyValueBuffer);
-                $lastKeyValue = \current($this->uniqueKeyValueBuffer);
-                \reset($this->uniqueKeyValueBuffer);
-                $set = false;
-                foreach ($this->uniqueKeyValues as $uniqueKeyValue) {
-                    // move forward in the array until we reach the
-                    // last value we already had in the buffer and
-                    // then happend the rest
-                    if (!$set && $uniqueKeyValue === $lastKeyValue) {
-                        $set = true;
-                        continue;
-                    }
-
-                    $this->uniqueKeyValueBuffer[$uniqueKeyValue] = $uniqueKeyValue;
-                }
-            } else {
-                // get everything
-                $this->uniqueKeyValueBuffer = $this->uniqueKeyValues;
-            }
-
+            // append uniqueKeyValues to uniqueKeyValueBuffer
+            $this->uniqueKeyValueBuffer = \array_replace($this->uniqueKeyValueBuffer, $this->uniqueKeyValues);
+            // only keep batchSize
             $this->uniqueKeyValues      = \array_slice($this->uniqueKeyValueBuffer, 0, $this->batchSize, true);
+            // drop consumed keys
             $this->uniqueKeyValueBuffer = \array_slice($this->uniqueKeyValueBuffer, $this->batchSize, null, true);
 
             return $this;

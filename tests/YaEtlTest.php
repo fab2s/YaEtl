@@ -98,14 +98,18 @@ class YaEtlTest extends \TestCase
         $toQuery   = 'SELECT * FROM ' . self::TO_TABLE . ' ORDER BY id ASC';
         $joinQuery = 'SELECT * FROM ' . self::JOIN_TABLE;
         $fullFrom1 = new PdoUniqueKeyExtractor($this->getPdo(), $fromQuery, 'id');
+        $fullFrom1->setBatchSize(42);
         $fullFrom2 = new PdoUniqueKeyExtractor($this->getPdo(), $fromQuery, 'id');
+        $fullFrom2->setBatchSize(1337);
         $fullFrom3 = new PdoUniqueKeyExtractor($this->getPdo(), $fromQuery, 'id');
+        $fullFrom3->setBatchSize(77);
         $fullFrom4 = new PdoUniqueKeyExtractor($this->getPdo(), $fromQuery, 'id');
         $fullFrom4->setBatchSize(10);
 
         $joiner1 = new PdoUniqueKeyExtractor($this->getPdo(), $joinQuery, 'id');
+        $joiner1->setBatchSize(10);
         $joiner2 = new PdoUniqueKeyExtractor($this->getPdo(), $joinQuery, 'id');
-        $joiner2->setBatchSize(20);
+        $joiner2->setBatchSize(1337);
 
         $joinOnClause  = new OnClause('id', 'id', function ($upstreamRecord, $record) {
             return array_replace($upstreamRecord, $record);
@@ -249,6 +253,8 @@ class YaEtlTest extends \TestCase
         $FirstTenFrom->setLimit(10);
         $AfterTenFrom = clone $fullFrom;
         $AfterTenFrom->setOffset(10);
+        $AfterTenFrom->setLimit(10);
+        $AfterTenFrom->setBatchSize(10);
 
         $loaderMockSetup1 = $this->getLoaderMock();
         $loaderMockSetup2 = $this->getLoaderMock();

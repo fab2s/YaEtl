@@ -120,6 +120,17 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
     }
 
     /**
+     * @return string
+     */
+    protected function getLimitOffsetBit()
+    {
+        return ' ' . \implode('', [
+            ' LIMIT ' . (int) $this->batchSize,
+            $this->offset ? ' OFFSET ' . (int) $this->offset : '',
+        ]);
+    }
+
+    /**
      * execute query and store results in $this->extracted
      *
      * @return bool true if there are records fetched
