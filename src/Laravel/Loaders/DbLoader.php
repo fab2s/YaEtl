@@ -71,16 +71,16 @@ class DbLoader extends LoaderAbstract
     }
 
     /**
-     * @param mixed $record
+     * This method does not implement multi inserts and will
+     * perform one query per record, which is also why flush
+     * is left alone
+     * We assume here that transformed data is a name/value pair
+     * array of fields to update/insert
+     *
+     * @param array $record
      */
     public function exec($record)
     {
-        // We assume here that transformed data is a name/value pair
-        // array of fields to update/insert
-        // And yes, this does not implement multi inserts and will
-        // perform one query per record, which is also why flush
-        // is left alone
-
         // clone query object in order to prevent where clause stacking
         $loadQuery   = clone $this->loadQuery;
         $whereClause = \array_intersect_key($record, \array_flip($this->whereFields));

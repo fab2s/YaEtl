@@ -186,23 +186,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     public function extract($param = null)
     {
         if (isset($this->joinFrom)) {
-            // join mode, get record map
-            $this->uniqueKeyValues = $this->joinFrom->getRecordMap($this->onClose->getFromKeyAlias());
-            // limit does not apply in join mode
-            $this->enforceBatchSize();
-            if (empty($this->uniqueKeyValues)) {
-                return false;
-            }
-
-            if ($this->fetchRecords()) {
-                // gen record map before we set defaults
-                $this->genRecordMap()
-                    ->setDefaultExtracted();
-
-                return true;
-            }
-
-            return false;
+            return $this->joinExtract($param);
         }
 
         // enforce limit if any is set
@@ -277,6 +261,32 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
         // never run out until the fromer stop providing records
         // which means we do not want to reach here
         throw new \Exception('[YaEtl] Record map missmatch betwen Joiner ' . \get_class($this) . ' and Fromer ' . \get_class($this->joinFrom));
+    }
+
+    /**
+     * @param mixed $param
+     *
+     * @return bool
+     */
+    protected function joinExtract($param = null)
+    {
+        // join mode, get record map
+        $this->uniqueKeyValues = $this->joinFrom->getRecordMap($this->onClose->getFromKeyAlias());
+        // limit does not apply in join mode
+        $this->enforceBatchSize();
+        if (empty($this->uniqueKeyValues)) {
+            return false;
+        }
+
+        if ($this->fetchRecords()) {
+            // gen record map before we set defaults
+            $this->genRecordMap()
+                ->setDefaultExtracted();
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
