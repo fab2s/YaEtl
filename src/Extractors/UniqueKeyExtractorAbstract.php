@@ -186,7 +186,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     public function extract($param = null)
     {
         if (isset($this->joinFrom)) {
-            return $this->joinExtract($param);
+            return $this->joinExtract();
         }
 
         // enforce limit if any is set
@@ -264,11 +264,9 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     }
 
     /**
-     * @param mixed $param
-     *
      * @return bool
      */
-    protected function joinExtract($param = null)
+    protected function joinExtract()
     {
         // join mode, get record map
         $this->uniqueKeyValues = $this->joinFrom->getRecordMap($this->onClose->getFromKeyAlias());
