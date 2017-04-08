@@ -18,8 +18,6 @@ class CallableTransformer extends PayloadNodeAbstract implements TransformerInte
 {
     /**
      * @param callable $payload
-     *
-     * @throws \Exception
      */
     public function __construct(callable $payload)
     {

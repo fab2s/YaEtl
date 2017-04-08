@@ -9,6 +9,7 @@
 
 namespace fab2s\YaEtl\Laravel\Extractors;
 
+use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Extractors\PdoUniqueKeyExtractor;
 use Illuminate\Database\Query\Builder;
 
@@ -46,14 +47,14 @@ class UniqueKeyExtractor extends PdoUniqueKeyExtractor
     /**
      * @param $extractQuery
      *
-     * @throws \Exception
+     * @throws YaEtlException
      *
      * @return $this
      */
     public function setExtractQuery($extractQuery)
     {
         if (!($extractQuery instanceof Builder)) {
-            throw new \ErrorException('Argument 1 passed to ' . __METHOD__ . ' must be an instance of ' . Builder::class . ', ' . \gettype($extractQuery) . ' given');
+            throw new YaEtlException('Argument 1 passed to ' . __METHOD__ . ' must be an instance of ' . Builder::class . ', ' . \gettype($extractQuery) . ' given');
         }
 
         parent::setExtractQuery($extractQuery);

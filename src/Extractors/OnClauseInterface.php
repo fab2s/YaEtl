@@ -22,8 +22,6 @@ interface OnClauseInterface
      *                                  mixed a default record to be
      *                                  used each time there is no match
      *                                  just like a left join would
-     *
-     * @throws \Exception
      */
     public function __construct($fromKeyAlias, $joinKeyAlias, callable $merger, $defaultRecord = null);
 

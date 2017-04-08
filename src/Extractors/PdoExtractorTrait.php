@@ -9,6 +9,8 @@
 
 namespace fab2s\YaEtl\Extractors;
 
+use fab2s\NodalFlow\YaEtlException;
+
 /**
  * trait PdoExtractorTrait
  */
@@ -56,6 +58,8 @@ trait PdoExtractorTrait
 
     /**
      * @param \PDO $pdo
+     *
+     * @throws YaEtlException
      */
     public function configurePdo(\PDO $pdo)
     {
@@ -63,7 +67,7 @@ trait PdoExtractorTrait
         $this->dbDriverName = $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
 
         if (!isset($this->supportedDrivers[$this->dbDriverName])) {
-            throw new \Exception('[YaEtl] Pdo driver not supported, must be one of: ' . \implode(', ', \array_keys($this->supportedDrivers)));
+            throw new YaEtlException('Pdo driver not supported, must be one of: ' . \implode(', ', \array_keys($this->supportedDrivers)));
         }
 
         if ($this->dbDriverName === 'mysql') {

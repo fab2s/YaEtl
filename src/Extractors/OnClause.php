@@ -9,6 +9,8 @@
 
 namespace fab2s\YaEtl\Extractors;
 
+use fab2s\NodalFlow\YaEtlException;
+
 /**
  * class OnClause
  */
@@ -52,7 +54,7 @@ class OnClause implements OnClauseInterface
      *                                  used each time there is no match
      *                                  just like a left join would
      *
-     * @throws \Exception
+     * @throws YaEtlException
      */
     public function __construct($fromKeyAlias, $joinKeyAlias, callable $merger, $defaultRecord = null)
     {
@@ -60,7 +62,7 @@ class OnClause implements OnClauseInterface
         $this->joinKeyAlias = \trim($joinKeyAlias);
 
         if ($this->fromKeyAlias === '' || $this->joinKeyAlias === '') {
-            throw new \Exception('[YaEtl] From and Join are required');
+            throw new YaEtlException('From and Join are required');
         }
 
         $this->merger = $merger;

@@ -9,6 +9,8 @@
 
 namespace fab2s\YaEtl\Extractors;
 
+use fab2s\NodalFlow\YaEtlException;
+
 /**
  * Abstract Class UniqueKeyExtractorAbstract
  */
@@ -142,7 +144,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     /**
      * @param JoinableInterface $joinFrom
      *
-     * @throws \Exception
+     * @throws YaEtlException
      *
      * @return $this
      */
@@ -151,11 +153,11 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
         // at least make sure this joinable extends this very class
         // to enforce getRecordMap() type
         if (!is_a($joinFrom, self::class)) {
-            throw new \Exception('[YaEtl] From extractor is not compatible, expected implementation of: ' . self::class . "\ngot: " . \get_class($joinFrom));
+            throw new YaEtlException('From extractor is not compatible, expected implementation of: ' . self::class . "\ngot: " . \get_class($joinFrom));
         }
 
         if (preg_match('`^(.+)(order\s+by.*)$`is', $this->extractQuery)) {
-            throw new \Exception("[YaEtl] A Joiner must not order its query got: $this->extractQuery");
+            throw new YaEtlException("A Joiner must not order its query got: $this->extractQuery");
         }
 
         // since we are joining, we are not a traversable anymore
@@ -260,7 +262,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
         // something is wrong as uniqueKeyValueBuffer should
         // never run out until the fromer stop providing records
         // which means we do not want to reach here
-        throw new \Exception('[YaEtl] Record map missmatch betwen Joiner ' . \get_class($this) . ' and Fromer ' . \get_class($this->joinFrom));
+        throw new YaEtlException('Record map missmatch betwen Joiner ' . \get_class($this) . ' and Fromer ' . \get_class($this->joinFrom));
     }
 
     /**
@@ -391,7 +393,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
                 if (!isset($record[$fromKeyAlias])) {
                     // Since we do not enforce key alias existance during init
                     // we have to do it here
-                    throw new \Exception("[YaEtl] From Key Alias not found in record: $fromKeyAlias");
+                    throw new YaEtlException("From Key Alias not found in record: $fromKeyAlias");
                 }
 
                 $fromKeyValue       = $record[$fromKeyAlias];

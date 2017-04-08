@@ -14,6 +14,7 @@ use fab2s\NodalFlow\Nodes\AggregateNode;
 use fab2s\NodalFlow\Nodes\AggregateNodeInterface;
 use fab2s\NodalFlow\Nodes\BranchNode;
 use fab2s\NodalFlow\Nodes\NodeInterface;
+use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Extractors\ExtractorInterface;
 use fab2s\YaEtl\Extractors\JoinableInterface;
 use fab2s\YaEtl\Extractors\OnClauseInterface;
@@ -108,11 +109,11 @@ class YaEtl extends NodalFlow
     /**
      * @param NodeInterface $node
      *
-     * @throws Exception
+     * @throws YaEtlException
      */
     public function add(NodeInterface $node)
     {
-        throw new \Exception('[YaEtl] add() is not directly available, use YaEtl grammar from(), transform(), join() and / or to() instead');
+        throw new YaEtlException('add() is not directly available, use YaEtl grammar from(), transform(), join() and / or to() instead');
     }
 
     /**
@@ -169,7 +170,7 @@ class YaEtl extends NodalFlow
      * @param YaEtl $flow
      * @param type  $isAReturningVal
      *
-     * @throws \Exception
+     * @throws YaEtlException
      *
      * @return $this
      */
@@ -184,7 +185,7 @@ class YaEtl extends NodalFlow
 
         $flowHash = $this->objectHash($flow);
         if (isset($flowHashes[$flowHash])) {
-            throw new \Exception('[YaEtl] An instance of ' . \get_class($flow) . ' appears to be already in use in this flow. Please clone / re new before reuse');
+            throw new YaEtlException('An instance of ' . \get_class($flow) . ' appears to be already in use in this flow. Please clone / re new before reuse');
         }
 
         $flowHashes[$flowHash] = 1;
@@ -252,7 +253,7 @@ class YaEtl extends NodalFlow
      * @param ExtractorInterface $extractor
      * @param ExtractorInterface $aggregateWith
      *
-     * @throws \Exception
+     * @throws YaEtlException
      *
      * @return $this
      */
@@ -261,7 +262,7 @@ class YaEtl extends NodalFlow
         // aggregate with target Node
         $nodeHash = $aggregateWith->getNodeHash();
         if (!isset($this->nodeMap[$nodeHash]) && !isset($this->reverseAggregateTable[$nodeHash])) {
-            throw new \Exception('[YaEtl] Cannot aggregate with orphaned Node:' . \get_class($aggregateWith));
+            throw new YaEtlException('Cannot aggregate with orphaned Node:' . \get_class($aggregateWith));
         }
 
         $aggregateWithIdx = isset($this->nodeMap[$nodeHash]) ? $this->nodeMap[$nodeHash]['index'] : $this->reverseAggregateTable[$nodeHash];
@@ -331,14 +332,14 @@ class YaEtl extends NodalFlow
      * @param type          $nodeIdx
      * @param NodeInterface $node
      *
-     * @throws \InvalidArgumentException
+     * @throws YaEtlException
      *
      * @return $this
      */
     protected function replace($nodeIdx, NodeInterface $node)
     {
         if (!isset($this->nodes[$nodeIdx])) {
-            throw new \InvalidArgumentException('Argument 1 should be a valid index in nodes, got:' . \gettype($nodeIdx));
+            throw new YaEtlException('Argument 1 should be a valid index in nodes, got:' . \gettype($nodeIdx));
         }
 
         unset($this->nodeMap[$this->nodeStats[$nodeIdx]['hash']], $this->nodeStats[$nodeIdx]);
@@ -392,14 +393,14 @@ class YaEtl extends NodalFlow
      *
      * @param NodeInterface $node
      *
-     * @throws \Exception
+     * @throws YaEtlException
      *
      * @return $this
      */
     protected function enforceNodeInstanceUnicity(NodeInterface $node)
     {
         if ($this->findNodeHashInMap($this->objectHash($node), $this->getNodeMap())) {
-            throw new \Exception('[YaEtl] This instance of ' . \get_class($node) . ' appears to be already in use in this flow. Please deep clone / re new before reuse');
+            throw new YaEtlException('This instance of ' . \get_class($node) . ' appears to be already in use in this flow. Please deep clone / re new before reuse');
         }
 
         return $this;
