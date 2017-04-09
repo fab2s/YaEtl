@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fab2s/NodalFlow.git",
-                "reference": "b5c281b63f0081969e1c9c7a4b2f70de85453f79"
+                "reference": "5c0d86841837df1ee99fc9a1d539458cd6f2e0df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fab2s/NodalFlow/zipball/b5c281b63f0081969e1c9c7a4b2f70de85453f79",
-                "reference": "b5c281b63f0081969e1c9c7a4b2f70de85453f79",
+                "url": "https://api.github.com/repos/fab2s/NodalFlow/zipball/5c0d86841837df1ee99fc9a1d539458cd6f2e0df",
+                "reference": "5c0d86841837df1ee99fc9a1d539458cd6f2e0df",
                 "shasum": ""
             },
             "require": {
@@ -45,7 +45,7 @@
             "keywords": [
                 "PHP NodalFlow WorkFlow Nodal Node"
             ],
-            "time": "2017-04-08 19:55:35"
+            "time": "2017-04-09 11:29:28"
         }
     ],
     "packages-dev": [
