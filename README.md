@@ -13,12 +13,12 @@ The major interest of such design is, in addition to organize complex task with 
 Being Nodal makes it possible to chain arbitrary number of Extract to Load operations which may go through arbitrary number of transform, joins and, to even branch the workflow in case some Loaders require different transformation and or joins before they can do their work.
 
 ## Resources
- - [Documentation](https://github.com/fab2s/YaEtl/docs/blob/master/index.md)
- - [Usage](https://github.com/fab2s/YaEtl/docs/blob/master/usage.md)
- - [Code reusability](https://github.com/fab2s/YaEtl/docs/blob/master/reusability.md)
- - [Callbacks](https://github.com/fab2s/YaEtl/docs/blob/master/callbacks.md)
- - [Exceptions](https://github.com/fab2s/YaEtl/docs/blob/master/exceptions.md)
- - [Laravel (the awesome)](https://github.com/fab2s/YaEtl/docs/blob/master/laravel.md)
+ - [Documentation](https://github.com/fab2s/YaEtl/blob/master/docs/index.md)
+ - [Usage](https://github.com/fab2s/YaEtl/blob/master/docs/usage.md)
+ - [Code reusability](https://github.com/fab2s/YaEtl/blob/master/docs/reusability.md)
+ - [Callbacks](https://github.com/fab2s/YaEtl/blob/master/docs/callbacks.md)
+ - [Exceptions](https://github.com/fab2s/YaEtl/blob/master/docs/exceptions.md)
+ - [Laravel (the awesome)](https://github.com/fab2s/YaEtl/blob/master/docs/laravel.md)
 
 
 ## Installation
