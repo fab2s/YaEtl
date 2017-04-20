@@ -9,6 +9,7 @@
 
 namespace fab2s\YaEtl\Laravel\Loaders;
 
+use DB;
 use fab2s\YaEtl\LoaderAbstract;
 use Illuminate\Database\Query\Builder;
 
