@@ -34,27 +34,27 @@ Once done, you can start playing :
 
 ```php
 $yaEtl = new YaEtl;
-$yaEtl->from(new Extractor)
+$yaEtl->from($extractor = new Extractor)
     -> transform(new Transformer)
     ->to(new Loader)
     ->exec();
 
 // forgot something ?
 // continuing with the same object
-$yaEtl->transform($anotherTransformer = new AnotherTransformer)
+$yaEtl->transform(new AnotherTransformer)
     ->to(new CsvLoader)
     ->transform(new SuperCoolTransformer)
     ->to(new S3Loader)
     // never too cautious
     ->to(new FlatLogLoader)
-    // better
+    // Flows are repeatable
     ->exec();
 
 // oh but what if ...
 $yaEtl->branch(
     (new YaEtl)->transform(new SwaggyTransformer)
-        // we need to enrich $anotherTransformer's records
-        ->join($anotherTransformer, new HypeJoiner($pdo, $query, new OnClose('upstreamFieldName', 'joinerFieldName', function($upstreamRecord, $joinerRecord) {
+        // Enrich $extractor's records
+        ->join($extractor, new HypeJoiner($pdo, $query, new OnClose('upstreamFieldName', 'joinerFieldName', function($upstreamRecord, $joinerRecord) {
             return array_replace($joinerRecord, $upstreamRecord);
         })))
         ->transform(new PutItAllTogetherTransformer)
