@@ -94,13 +94,27 @@ class Extractor extends ExtractorAbstract
 Of course, it's not realistic in many cases to get all records at once, but it's is simple to paginate the result and then exhaust each page record by record, especially since the extract operation is separated and used somehow in the "meta" loop.
 
 YaEtl comes with many partial to complete Extractor implementations to address many use case with some emphasis on databases in general and [PDO](http://php.net/PDO) in particular:
-* `ExtractorAbstract` (implementing `ExtractorInterface` which extends NodalFlow's `TraversableInterface`) is the minimal NodalFlow setup you can extend to create an extractor
-* `ExtractorLimitAbstract` (extending `ExtractorAbstract`) adds logic to handle extraction limits
-* `ExtractorBatchLimitAbstract` (extending `ExtractorLimitAbstract`) adds logic to additionally handle batch extraction, eg paginated queries
-* `DbExtractorAbstract` (extending `ExtractorBatchLimitAbstract`) adds logic to extract from any DBMS
-* `PdoExtractor` (extending `DbExtractorAbstract`) is a ready to use PDO extractor implementation
-* `UniqueKeyExtractorAbstract` (extending `DbExtractorAbstract` and implementing `JoinableIUnterface`) adds logic to extract and Join from any DBMS provided that the sql query fetches records against a single unique KEY. The unique key may be composite for extraction, but joining is currently only supported against a single unique key. While you can join records on a single unique keys from an extractor that actually query on some other (composite) keys (as long as the Joined key remains unique in the records), you cannot currently Join on a composite unique key directly.
-* `PdoUniqueKeyExtractor` (extending `PdoExtractorAbstract` and implementing `JoinableIUnterface`) is a ready to use PDO unique key extractor.
+
+### ExtractorAbstract
+`ExtractorAbstract` implements `ExtractorInterface` which extends NodalFlow's `TraversableInterface`. This is the minimal NodalFlow setup you can extend to create an extractor
+
+### ExtractorLimitAbstract
+`ExtractorLimitAbstract` extends `ExtractorAbstract` and adds logic to handle extraction limits.
+
+### ExtractorBatchLimitAbstract
+`ExtractorBatchLimitAbstract` extends `ExtractorLimitAbstract` and adds logic to additionally handle batch extraction, eg paginated queries.
+
+### DbExtractorAbstract
+`DbExtractorAbstract` extends `ExtractorBatchLimitAbstract` and adds logic to extract from any DBMS.
+
+### PdoExtractor
+`PdoExtractor` extends `DbExtractorAbstract` and is a ready to use PDO extractor implementation.
+
+### UniqueKeyExtractorAbstract
+`UniqueKeyExtractorAbstract` extends `DbExtractorAbstract` and implements `JoinableIUnterface`. It adds logic to extract and Join from any DBMS provided that the sql query fetches records against a single unique KEY. The unique key may be composite for extraction, but joining is currently only supported against a single unique key. While you can join records on a single unique keys from an extractor that actually query on some other (composite) keys (as long as the Joined key remains unique in the records), you cannot currently Join on a composite unique key directly.
+
+### PdoUniqueKeyExtractor
+`PdoUniqueKeyExtractor` extends `PdoExtractorAbstract` and also implements `JoinableIUnterface`). It is a ready to use PDO `Joinable` (unique key) extractor.
 
 Implementing a `Joinable` extractor requires a bit more work as there is a need to build records maps and transmit them among joiners. But it can be pretty quick using `UniqueKeyExtractorAbstract` and / or `PdoUniqueKeyExtractor` as they provides with much of the work. The Laravel `UniqueKeyExtractor` class is a working example of a class extending `PdoUniqueKeyExtractor`, being itself a working example of a class implementing `UniqueKeyExtractorAbstract`.
 
