@@ -2,35 +2,49 @@
 
 ## A fluent grammar
 YaEtl can build complex and repeatable workflows fluently:
-* the `from(ExtractorInterface $extractor, ExtractorInterface $aggregateWith = null)` method adds an extractor as a source of records to the flow, which may or may not be aggregated with another one and later referred as Fromer
+### from()
+The `from(ExtractorInterface $extractor, ExtractorInterface $aggregateWith = null)` method adds an extractor as a source of records to the flow, which may or may not be aggregated with another one and later referred as Fromer
 
-    A fromer is a Traversable Node that will be iterated upon each of his extracted records in the flow. Each records will then pass through all the remaining nodes, which could just be a transformer and a Toer to achieve a simple ETL workflow.
-    The second argument is there to address cases where records are split (sharded) among several sources. Aggregating fromers would then make it possible to extract collections across several sharded repositories within the same E(JT)L operation. For example, if you have sharded records by date, you could instantiate several time the same dedicated exactor with relevant parameters, for each instance to extract from one specific date range and source in the same order and then use each of them as an aggregated fromer in the workflow.
-    Each extractor would then consume all its records before the next fromer takes place, allowing you to ETL a large collection of ordered records coming from various physical sources as if you where doing it with a single extractor instance.
-    If you where to add a fromer without aggregating it to another, it would then just generate its records, using, or not, each upstream record as argument. This would result into this extractor to generate several records each time it is triggered in the flow, eg, each time a records arrives at its point of execution in the flow.
-* the `join(JoinableInterface $extractor, JoinableInterface $joinFrom, OnClauseInterface $onClause)` methods adds an extractor that will perform a join operation upon another extractor's records, later referred as Joiners
+A fromer is a Traversable Node that will be iterated upon each of his extracted records in the flow. Each records will then pass through all the remaining nodes, which could just be a transformer and a Toer to achieve a simple ETL workflow.
 
-    Join operation is pretty similar to a JOIN with a DBMS. Joiner can be used to enrich records and can either "LEFT" join by providing with a default enrichment, when they would not find matching records, or, just a regular join by triggering a "continue" type interruption which will make the flow skip the record and continue with the eventual next record form the first upstream extractor.
-    The nature of the join is defined by the `$onClause` argument which implements `OnClauseInterface`:
-    ```php
-    $joinOnClause  = new OnClause('fromKeyAliasAsInRecord', 'fromKeyAliasAsInRecord', function ($upstreamRecord, $record) {
-        return array_replace($record, $upstreamRecord);
-    });
+The second argument is there to address cases where records are split (sharded) among several sources. Aggregating fromers would then make it possible to extract collections across several sharded repositories within the same E(JT)L operation. For example, if you have sharded records by date, you could instantiate several time the same dedicated exactor with relevant parameters, for each instance to extract from one specific date range and source in the same order and then use each of them as an aggregated fromer in the workflow.
 
-    $leftJoinOnClause  = new OnClause('fromKeyAliasAsInRecord', 'fromKeyAliasAsInRecord', [$suitableObject, 'suitableMethod], $defaultRecord);
-    ```
+Each extractor would then consume all its records before the next fromer takes place, allowing you to ETL a large collection of ordered records coming from various physical sources as if you where doing it with a single extractor instance.
 
-* the `transform(TransformerInterface $trasformer)` method adds a transformer to the flow that will transform each record one by one, later referred as Transformer
+If you where to add a fromer without aggregating it to another, it would then just generate its records, using, or not, each upstream record as argument. This would result into this extractor to generate several records each time it is triggered in the flow, eg, each time a records arrives at its point of execution in the flow.
 
-    Transformers are simple really, they just take a record as parameter and return a transformed version of the record. Simplest use case could be to change character encoding, but they could also be used to match a loader data structure, as a way to make it reusable, or just because it is required by the business logic.
-* the `branch(YaTl $yaEtlWorkflow)` method adds an entire flow in the flow, that will be treated as a single node and later referred as Brancher
+### join()
+The `join(JoinableInterface $extractor, JoinableInterface $joinFrom, OnClauseInterface $onClause)` methods adds an extractor that will perform a join operation upon another extractor's records, later referred as Joiners
 
-    Branches currently cannot be traversable. It's something that may be implemented at some point though as it is technically feasible and even could be of some use. As any nodes, branch node accepts one argument and can, or not, pass a value to be used as parameter to the next node.
-* the `to(LoaderInterface $loader)` method adds a loader in the flow, later referred as Toer
+Join operation is pretty similar to a JOIN with a DBMS. Joiner can be used to enrich records and can either "LEFT" join by providing with a default enrichment, when they would not find matching records, or, just a regular join by triggering a "continue" type interruption which will make the flow skip the record and continue with the eventual next record form the first upstream extractor.
 
-    Toers are at the end of the line, but they are not necessarily at the end of the flow. They can return a value that would be used as argument to the eventual next node or else the first upstream Extractor. But YaEtl's Loaders are currently not returning values.
-    You can for example add toers at some point in the flow because the required record state is reached, but still continue with more transformations and data enrichment on the same input record for another set of toers in the same flow, which goes down to sharing the extraction among many related tasks.
-    This only could be a decent, organized and repeatable optimization if you where to often extract data from a relatively slow REST API that is needed by many different services in your infrastructure, with themselves specific APIs and so on.
+The nature of the join is defined by the `$onClause` argument which implements `OnClauseInterface`:
+```php
+$joinOnClause  = new OnClause('fromKeyAliasAsInRecord', 'fromKeyAliasAsInRecord', function ($upstreamRecord, $record) {
+    return array_replace($record, $upstreamRecord);
+});
+
+$leftJoinOnClause  = new OnClause('fromKeyAliasAsInRecord', 'fromKeyAliasAsInRecord', [$suitableObject, 'suitableMethod], $defaultRecord);
+```
+
+### transform()
+The `transform(TransformerInterface $trasformer)` method adds a transformer to the flow that will transform each record one by one, later referred as Transformer
+
+Transformers are simple really, they just take a record as parameter and return a transformed version of the record. Simplest use case could be to change character encoding, but they could also be used to match a loader data structure, as a way to make it reusable, or just because it is required by the business logic.
+
+### branch()
+The `branch(YaTl $yaEtlWorkflow)` method adds an entire flow in the flow, that will be treated as a single node and later referred as Brancher
+
+Branches currently cannot be traversable. It's something that may be implemented at some point though as it is technically feasible and even could be of some use. As any nodes, branch node accepts one argument and can, or not, pass a value to be used as parameter to the next node.
+
+### to()
+The `to(LoaderInterface $loader)` method adds a loader in the flow, later referred as Toer
+
+Toers are at the end of the line, but they are not necessarily at the end of the flow. They can return a value that would be used as argument to the eventual next node or else the first upstream Extractor. But YaEtl's Loaders are currently not returning values.
+
+You can for example add toers at some point in the flow because the required record state is reached, but still continue with more transformations and data enrichment on the same input record for another set of toers in the same flow, which goes down to sharing the extraction among many related tasks.
+
+This only could be a decent, organized and repeatable optimization if you where to often extract data from a relatively slow REST API that is needed by many different services in your infrastructure, with themselves specific APIs and so on.
 
 Again, each piece you build is reusable, the extractor written to get a list of records from a db to dump documents can be reused "as is" to push the same records into a remote REST API.
 
