@@ -64,6 +64,150 @@ $yaEtl->branch(
 // etc ...
 ```
 
+## Usage Pattern
+
+YaEtl can address several generic use cases with ease, among which some would otherwise require more specialized / complex coding.
+
+### Pure ETL
+
+YaEtl can, but is not limited to, incarnate a pure ETL flow as seen many times. It's worth nothing to say that YaEtl supports batch extract and load by design.
+```bash
++---------+                   +---------+
+|         |                   |         |
+|         |                   |         |
+|  data   |                   |  data   |
+| source  |                   | storage |
+|         |                   |         |
+|         |                   |         |
+|         |                   |         |
+++-+-+-+-++                   +-^-^-^-^-+
+ | + + + |                      + + + +
+ |Records|                      Records
+ | + + + |                      + + + +
++v-v-v-v-v--+                 +-+-+-+-++
+| Extractor |                 |  Load  |
++-+---------+                 +---^----+
+  |                               |
+  | Record  +-----------+ Record  |
+  +---------> Transform +---------+
+            +-----------+
+
+```
+
+### Mutualized extracts
+
+Being Nodal makes it possible for YaEtl to transparently mutualize extraction across as many use case as necessary, which in the end may even not be a load.
+```bash
++-------------+
+|             |
+|             |
+|  slow http  |
+| data source |
+|             |
+|             |
++-----+-------+
+      |
+      |                            +----------+
++-----v-------+                 +--> Loader 1 |
+|  Extractor  |                 |  +----------+
++-+-----------+                 |
+  |                             |  +----------+
+  |            +-------------+  +--> Loader 2 |
+  +------------> Transformer +--+  +----------+
+               +-------------+  |
+                                |
+                                |  +----------+
+                                +--> Loader N |
+                                |  +----------+
+                                |
+                                |  +-------------+
+                                +--> Transformer |
+                                   +-+-----------+
+                                     |            +----------+
+                                     +------------> Loader X |
+                                                  +----------+
+
+```
+
+### Categorized Extract
+
+As Extractors will have the up stream return value as argument, it is possible to chain Extractors themselves to obtain items in categories. This can help separate concerns as it makes it possible to extract all items in all categories while still using specialized extractors, eg a category and an item extractor, provided that the item extractor is able to also extract items by category when provided with the proper category object as argument (which is not the case when you would start with extracting items, unless you specify an argument to the whole flow).
+
+```bash
++------------+
+|            |
+|            |
+| categories |
+|            |
+|            |
++-----+------+
+      |
+      |
++-----v------+
+| Extractor  |
+++-----------+
+ |
+ | category   +-----------+
+ +------------> Extractor |
+ |            ++----------+
+ +-----------> |
+      ...      |  item
+               +----------> ...
+               |
+               +---------->
+                    ...
+
+```
+
+### Sharded extraction
+
+Some time, it could be required to extract data from several physical sources and / or shards at a low level, that is without any predefined and ready to use abstraction.
+
+This kind of operation is easy with YaEtl as Extractors can be aggregated to each other when building the flow. You could for example wich to extract data spanning over several sources where each would only keep a specific time frame. The same extractor could then be instantiated for each shard with proper sorting to end up extracting all the data as if it was stored in a single repository.
+
+```bash
+     +-------------+  +-------------+     +-------------+
+     |             |  |             |     |             |
+     |   shard 1   |  |   shard 2   | ... |   shard N   |
+     |             |  |             |     |             |
+     +------+------+  +------+------+     +------+------+
+            |                |                   |
+            |                |                   |
++------------------------------------------------------------+
+|           |                |                   |           |
+|    +------v------+  +------v------+     +------v------+    |
+|    |             |  |             |     |             |    |
+|    | Extractor 1 |  | Extractor 2 | ... | Extractor N |    |
+|    |             |  |             |     |             |    |
+|    +------+------+  +------+------+     +-------+-----+    |
+|           |                |                    +          |
+|           |                |             Aggregate Node    |
++-------------------------------------------------+----------+
+            |                |                    |       Records
+            +----------------+--------------------+--------------->
+
+```
+
+### Joins
+
+YaEtl provides with all the necessary interfaces to implement Join operation in pretty much the same way a DBMS would (regular and left join). Under the hoods, this require to communicate some kind of record map for joiners to know what record to match in the process. YaEtl comes complete `PDO` implementation of Joinable Extractor (against single unique key). Use cases of such feature are endless, especially when you start considering that all the above patterns are fully combinable and even branchable.
+
+```bash
++-----------+      +------------+
+|           |      |            |
+|           |      |            |
+|   users   |      | addresses  |
+|           |      |            |
+|           |      |            |
++-----+-----+      +-----+------+
+      |                  |
+      |                  |
++-----v-----+ user +-----v------+ user & address
+| Extractor +------>   Joiner   +---------------->
++-----------+      +------------+
+
+```
+
 ## Serialization
 
 As the whole flow is an object, it can be serialized, but this is unless it carries Closures, which may occur with `OnClose` objects. Closure serialization is not natively supported by PHP, but there are ways around it like [Opis Closure](https://github.com/opis/closure)
