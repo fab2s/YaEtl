@@ -17,7 +17,7 @@ use fab2s\NodalFlow\Nodes\NodeInterface;
 use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Extractors\ExtractorInterface;
 use fab2s\YaEtl\Extractors\JoinableInterface;
-use fab2s\YaEtl\Extractorsfv\OnClauseInterface;
+use fab2s\YaEtl\Extractors\OnClauseInterface;
 use fab2s\YaEtl\Loaders\LoaderInterface;
 use fab2s\YaEtl\Transformers\TransformerInterface;
 
