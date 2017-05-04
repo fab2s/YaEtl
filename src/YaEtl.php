@@ -17,7 +17,7 @@ use fab2s\NodalFlow\Nodes\NodeInterface;
 use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Extractors\ExtractorInterface;
 use fab2s\YaEtl\Extractors\JoinableInterface;
-use fab2s\YaEtl\Extractors\OnClauseInterface;
+use fab2s\YaEtl\Extractorsfv\OnClauseInterface;
 use fab2s\YaEtl\Loaders\LoaderInterface;
 use fab2s\YaEtl\Transformers\TransformerInterface;
 
@@ -168,7 +168,7 @@ class YaEtl extends NodalFlow
      * @staticvar type $flowHashes
      *
      * @param YaEtl $flow
-     * @param type  $isAReturningVal
+     * @param bool  $isAReturningVal
      *
      * @throws YaEtlException
      *
@@ -213,7 +213,7 @@ class YaEtl extends NodalFlow
     /**
      * kiss method to expose basic stats
      *
-     * @return $this
+     * @return array
      */
     public function getStats()
     {

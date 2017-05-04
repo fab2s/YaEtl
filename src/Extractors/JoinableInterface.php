@@ -19,8 +19,8 @@ use fab2s\NodalFlow\Nodes\ExecNodeInterface;
 interface JoinableInterface extends ExtractorInterface, ExecNodeInterface
 {
     /**
-     * @param string $fromKeyAlias The from unique key to get the map against
-     *                             as exposed in the record
+     * @param string|null $fromKeyAlias The from unique key to get the map against
+     *                                  as exposed in the record
      *
      * @return mixed whatever you need to represent the record collection
      *               Could be something as simple as an array of all

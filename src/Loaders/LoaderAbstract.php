@@ -47,12 +47,12 @@ abstract class LoaderAbstract extends NodeAbstract implements LoaderInterface
      * is called, and YaEtl does call flush() after the
      * extract loop ended.
      *
-     * @param FlowStatusInterface $flowStatus the flush status, should only be set by
-     *                                        YaEtl to indicate last flush() call status
-     *                                        either :
-     *                                        - clean (isClean()): everything went well
-     *                                        - dirty (isDirty()): one extractor broke the flow
-     *                                        - exception (isException()): an exception was raised during the flow
+     * @param FlowStatusInterface|null $flowStatus the flush status, should only be set by
+     *                                             YaEtl to indicate last flush() call status
+     *                                             either :
+     *                                             - clean (isClean()): everything went well
+     *                                             - dirty (isDirty()): one extractor broke the flow
+     *                                             - exception (isException()): an exception was raised during the flow
      **/
     public function flush(FlowStatusInterface $flowStatus = null)
     {

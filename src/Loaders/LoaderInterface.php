@@ -22,12 +22,12 @@ interface LoaderInterface extends ExecNodeInterface
      * needs to flush some remaining data from its eventual buffer.
      * Could be used to buffer records in order to perform multi inserts etc ...
      *
-     * @param FlowStatusInterface $flowStatus the flush status, should only be set by
-     *                                        YaEtl to indicate last flush() call status
-     *                                        either :
-     *                                        - clean (isClean()): everything went well
-     *                                        - dirty (isDirty()): one extractor broke the flow
-     *                                        - exception (isException()): an exception was raised during the flow
+     * @param FlowStatusInterface|null $flowStatus the flush status, should only be set by
+     *                                             YaEtl to indicate last flush() call status
+     *                                             either :
+     *                                             - clean (isClean()): everything went well
+     *                                             - dirty (isDirty()): one extractor broke the flow
+     *                                             - exception (isException()): an exception was raised during the flow
      **/
     public function flush(FlowStatusInterface $flowStatus = null);
 }

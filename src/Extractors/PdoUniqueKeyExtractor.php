@@ -20,7 +20,7 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
      * generic extraction from tables with unique (composite) key
      *
      * @param \PDO         $pdo
-     * @param string       $extractQuery
+     * @param string|null  $extractQuery
      * @param array|string $uniqueKey    can be either a unique key name as
      *                                   string
      *                                   '(table.)compositeKeyName' // ('id' by default)
