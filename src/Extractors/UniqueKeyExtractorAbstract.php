@@ -75,7 +75,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     /**
      * generic extraction from tables with unique (composite) key
      *
-     * @param string       $extractQuery
+     * @param string|null  $extractQuery
      * @param array|string $uniqueKey    can be either a unique key name as
      *                                   string
      *                                   '(table.)compositeKeyName' // ('id' by default)
@@ -170,8 +170,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     }
 
     /**
-     * @param string $fromKeyAlias The from unique key to get the map against
-     *                             as exposed in the record
+     * @param string|null $fromKeyAlias The from unique key to get the map against
+     *                                  as exposed in the record
      *
      * @return array [keyValue1, keyValue2, ...]
      */
