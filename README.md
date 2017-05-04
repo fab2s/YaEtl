@@ -131,7 +131,7 @@ Being Nodal makes it possible for YaEtl to transparently mutualize extraction ac
 
 ### Categorized Extract
 
-As Extractors will have the up stream return value as argument, it is possible to chain Extractors themselves to obtain items in categories. This can help separate concerns as it makes it possible to extract all items in all categories while still using specialized extractors, eg a category and an item extractor, provided that the item extractor is able to also extract items by category when provided with the proper category object as argument (which is not the case when you would start with extracting items, unless you specify an argument to the whole flow).
+As Extractors will have the up stream return value as argument, it is possible to chain Extractors themselves to obtain items in categories. This can help separate concerns as it makes it possible to extract all items in all categories while still using specialized extractors, eg a category and an item one; provided that the item extractor is also able to extract items by category when passed with the proper category object as argument (which is not the case when you would start with extracting items, unless you specify an argument to the whole flow).
 
 ```bash
 +------------+
