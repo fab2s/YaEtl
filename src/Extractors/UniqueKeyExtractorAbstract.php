@@ -156,7 +156,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
             throw new YaEtlException('The extractor joined against is not compatible, expected implementation of: ' . self::class . "\ngot: " . \get_class($joinFrom));
         }
 
-        if (preg_match('`^(.+)(order\s+by.*)$`is', $this->extractQuery)) {
+        if (preg_match('`^.+?order\s+by.*?$`is', $this->extractQuery)) {
             throw new YaEtlException("A Joiner must not order its query got: $this->extractQuery");
         }
 
@@ -359,7 +359,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     protected function setDefaultExtracted()
     {
         if ($this->joinFrom !== null) {
-            $defaultExtracted = \array_fill_keys($this->uniqueKeyValues, $this->onClose->isLeftJoin() ? $this->onClose->getDefaultRecord() : false);
+            $defaultrecord    = $this->onClose->isLeftJoin() ? $this->onClose->getDefaultRecord() : false;
+            $defaultExtracted = \array_fill_keys($this->uniqueKeyValues, $defaultrecord);
 
             $this->extracted = \array_replace($defaultExtracted, $this->extracted);
         }
