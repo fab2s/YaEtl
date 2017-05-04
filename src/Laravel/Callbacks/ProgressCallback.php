@@ -13,7 +13,7 @@ use fab2s\NodalFlow\Callbacks\CallbackAbstract;
 use fab2s\NodalFlow\Flows\FlowInterface;
 use fab2s\NodalFlow\Nodes\NodeInterface;
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Output\OutputInterface;
+use Illuminate\Console\OutputStyle;
 
 /**
  * Class ProgressCallback
@@ -26,7 +26,7 @@ class ProgressCallback extends CallbackAbstract
     protected $command;
 
     /**
-     * @var OutputInterface
+     * @var OutputStyle
      */
     protected $output;
 
