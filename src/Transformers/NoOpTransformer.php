@@ -15,6 +15,8 @@ namespace fab2s\YaEtl\Transformers;
 class NoOpTransformer extends TransformerAbstract
 {
     /**
+     * Execute the dumbest transformer ever
+     *
      * @param mixed $record
      *
      * @return mixed

@@ -19,18 +19,22 @@ use Illuminate\Database\Query\Builder;
 class DbExtractor extends PdoExtractor
 {
     /**
+     * The record collection structure
+     *
      * @var \SplDoublyLinkedList
      */
     protected $extracted;
 
     /**
-     * query object
+     * The query object
      *
      * @var Builder
      */
     protected $extractQuery;
 
     /**
+     * Instantiate the DbExtractor
+     *
      * @param Builder|null $extractQuery
      */
     public function __construct(Builder $extractQuery = null)
@@ -43,6 +47,8 @@ class DbExtractor extends PdoExtractor
     }
 
     /**
+     * Set the extract query
+     *
      * @param $extractQuery
      *
      * @throws YaEtlException

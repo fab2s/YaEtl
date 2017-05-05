@@ -22,11 +22,15 @@ abstract class ExtractorLimitAbstract extends ExtractorAbstract implements Extra
     protected $limit;
 
     /**
+     * Number of records
+     *
      * @var int
      */
     protected $numRecords = 0;
 
     /**
+     * Set extract limit
+     *
      * @param int $limit
      *
      * @return $this
@@ -39,6 +43,8 @@ abstract class ExtractorLimitAbstract extends ExtractorAbstract implements Extra
     }
 
     /**
+     * Get current limit
+     *
      * @return int
      */
     public function getLimit()
@@ -47,6 +53,8 @@ abstract class ExtractorLimitAbstract extends ExtractorAbstract implements Extra
     }
 
     /**
+     * Get number of records (at the end of the Flow's execution)
+     *
      * @return int
      */
     public function getNumRecords()
@@ -55,6 +63,8 @@ abstract class ExtractorLimitAbstract extends ExtractorAbstract implements Extra
     }
 
     /**
+     * Tells if limit is reached already
+     *
      * @return bool true if limit is reached
      */
     public function isLimitReached()

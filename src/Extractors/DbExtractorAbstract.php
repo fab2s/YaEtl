@@ -15,18 +15,22 @@ namespace fab2s\YaEtl\Extractors;
 abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
 {
     /**
+     * The record collection structure
+     *
      * @var \SplDoublyLinkedList|array
      */
     protected $extracted;
 
     /**
-     * query
+     * The SQL query
      *
      * @var mixed
      */
     protected $extractQuery;
 
     /**
+     * Instantiate a DB extractor
+     *
      * @param mixed $extractQuery
      */
     public function __construct($extractQuery = null)
@@ -37,6 +41,8 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
     }
 
     /**
+     * Trigger a batch extract
+     *
      * @param mixed $param
      *
      * @return bool
@@ -58,6 +64,8 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
     }
 
     /**
+     * Set the Extract SQL query
+     *
      * @param mixed $extractQuery
      *
      * @return $this
@@ -70,6 +78,8 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
     }
 
     /**
+     * Get the records as a Generator to iterate upon
+     *
      * @param mixed $param
      *
      * @return \Generator
@@ -120,6 +130,8 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
     }
 
     /**
+     * Build the LIMIT...OFFSET bit of thhe query
+     *
      * @return string
      */
     protected function getLimitOffsetBit()
@@ -131,7 +143,7 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
     }
 
     /**
-     * execute query and store results in $this->extracted
+     * Execute query and store results in $this->extracted
      *
      * @return bool true if there are records fetched
      */

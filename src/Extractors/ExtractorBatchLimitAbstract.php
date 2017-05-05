@@ -15,7 +15,7 @@ namespace fab2s\YaEtl\Extractors;
 abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract
 {
     /**
-     * query offset
+     * The query offset
      *
      * @var int
      */
@@ -58,6 +58,8 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract
     }
 
     /**
+     * Get query offset
+     *
      * @return int
      */
     public function getOffset()
@@ -66,6 +68,8 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract
     }
 
     /**
+     * Set batch size
+     *
      * @param int $batchSize
      *
      * @return $this
@@ -78,6 +82,8 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract
     }
 
     /**
+     * Get batch size
+     *
      * @return int
      */
     public function getBatchSize()
@@ -86,7 +92,7 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract
     }
 
     /**
-     * adds limit to offset, to be invoqued
+     * Adds limit to offset, to be invoqued
      * each time extract() is executed
      *
      * @return $this

@@ -21,36 +21,37 @@ use Illuminate\Console\OutputStyle;
 class ProgressCallback extends CallbackAbstract
 {
     /**
+     * The Laravel Command object, as it does not make sense
+     * to display CLI progress otherwise
+     *
      * @var Command
      */
     protected $command;
 
     /**
+     * The Laravle output object, extracted from the command object
+     *
      * @var OutputStyle
      */
     protected $output;
 
     /**
-     * @var int
+     * The number of records
+     *
+     * @var int|null
      */
     protected $numRecords;
 
     /**
-     * @var int
-     */
-    protected $extractBatchSize;
-
-    /**
+     * Progress modulo, should align with YaEtl's one
+     *
      * @var int
      */
     protected $progressMod = 1;
 
     /**
-     * @var int
-     */
-    protected $progressStep = 1;
-
-    /**
+     * Set progress modulo
+     *
      * @param int $progressMod
      *
      * @return $this
@@ -63,6 +64,8 @@ class ProgressCallback extends CallbackAbstract
     }
 
     /**
+     * Set the total number of records prior to FLow execution
+     *
      * @param int $numRecords
      *
      * @return $this
@@ -75,6 +78,8 @@ class ProgressCallback extends CallbackAbstract
     }
 
     /**
+     * Set Laravel's Command
+     *
      * @param Command $command
      *
      * @return $this

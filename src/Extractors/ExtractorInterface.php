@@ -27,7 +27,7 @@ interface ExtractorInterface extends TraversableNodeInterface
      * triggers file open and return true in case of success and false
      * when called again.
      *
-     * @param mixed $param
+     * @param mixed|null $param
      *
      * @return bool false in case no more records can be fetched
      */

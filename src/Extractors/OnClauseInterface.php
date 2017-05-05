@@ -15,6 +15,8 @@ namespace fab2s\YaEtl\Extractors;
 interface OnClauseInterface
 {
     /**
+     * Instatiate an OnClose
+     *
      * @param string     $fromKeyAlias  The from unique key name in record
      * @param string     $joinKeyAlias  The join unique key name in record
      * @param callable   $merger
@@ -26,16 +28,22 @@ interface OnClauseInterface
     public function __construct($fromKeyAlias, $joinKeyAlias, callable $merger, $defaultRecord = null);
 
     /**
+     * Get the from key alias
+     *
      * @return string The From extractor unique key name as exposed in each record
      */
     public function getFromKeyAlias();
 
     /**
+     * Get the join key alias
+     *
      * @return string The Join extractor unique key name as exposed in each record
      */
     public function getJoinKeyAlias();
 
     /**
+     * Merge Joined data into the original record
+     *
      * @param mixed $upstreamRecord
      * @param mixed $record
      *
@@ -44,6 +52,8 @@ interface OnClauseInterface
     public function merge($upstreamRecord, $record);
 
     /**
+     * Indicate if we are left joining
+     *
      * @return bool
      */
     public function isLeftJoin();

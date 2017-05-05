@@ -17,16 +17,22 @@ use fab2s\NodalFlow\Nodes\NodeAbstract;
 abstract class TransformerAbstract extends NodeAbstract implements TransformerInterface
 {
     /**
+     * This is not a traversable
+     *
      * @var bool
      */
     protected $isATraversable = false;
 
     /**
+     * This is a returning value
+     *
      * @var bool
      */
     protected $isAReturningVal = true;
 
     /**
+     * This is not a FLow
+     *
      * @var bool
      */
     protected $isAFlow = false;

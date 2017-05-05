@@ -15,25 +15,32 @@ namespace fab2s\YaEtl\Extractors;
 interface ExtractorBatchLimitInterface extends ExtractorLimitInterface
 {
     /**
-     * can be used to set a specific offset prior to start the extraction
+     * Set Query offset
+     * Can be used to set a specific offset prior to start the extraction
      *
-     * @param int $offset
+     * @param int $offset The query offset
      *
      * @return $this
      */
     public function setOffset($offset);
 
     /**
+     * Get current query offset
+     *
      * @return int
      */
     public function getOffset();
 
     /**
+     * Get current batch size
+     *
      * @return int
      */
     public function getBatchSize();
 
     /**
+     * Set batch size
+     *
      * @param int $batchSize
      *
      * @return $this

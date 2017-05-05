@@ -17,49 +17,56 @@ use fab2s\NodalFlow\YaEtlException;
 abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements JoinableInterface
 {
     /**
-     * the unique key name
+     * The composite key representation
      *
      * @var array|string
      */
     protected $compositeKey;
 
     /**
-     * @var string
+     * The unique key name
+     *
+     * @var string|null
      */
     protected $uniqueKeyName;
 
     /**
-     * @var string
+     * The unique key alias
+     *
+     * @var string|null
      */
     protected $uniqueKeyAlias;
 
     /**
+     * List of unique key values, used to be joinable
+     *
      * @var array
      */
     protected $uniqueKeyValues = [];
 
     /**
+     * unique key value buffer, used to align batch sizes
+     *
      * @var array
      */
     protected $uniqueKeyValueBuffer = [];
 
     /**
-     * @var callable
-     */
-    protected $merger;
-
-    /**
-     * @var OnClauseInterface
+     * This Node's OnClose objject if any
+     *
+     * @var OnClauseInterface|null
      */
     protected $onClose;
 
     /**
+     * List of all joiners by their OnClose constraints
+     *
      * @var array of OnClauseInterface
      */
     protected $joinerOnCloses = [];
 
     /**
-     * the record map
+     * The record map
      *
      * @var array
      */
@@ -73,7 +80,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     protected $joinFrom;
 
     /**
-     * generic extraction from tables with unique (composite) key
+     * Generic extraction from tables with unique (composite) key
      *
      * @param string|null  $extractQuery
      * @param array|string $uniqueKey    can be either a unique key name as
@@ -104,7 +111,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     }
 
     /**
-     * get Joiner's ON clause. Only used in Join mode
+     * Get this Joiner's ON clause. Only used in Join mode
      *
      * @return OnClauseInterface
      */
@@ -128,7 +135,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     }
 
     /**
-     * register ON clause field mapping. Used by an eventual joiner to this
+     * Register ON clause field mapping. Used by an eventual joiner to this
      *
      * @param OnClauseInterface $onClause
      *
@@ -142,6 +149,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     }
 
     /**
+     * Register the extractor we would be joining against
+     *
      * @param JoinableInterface $joinFrom
      *
      * @throws YaEtlException
@@ -170,6 +179,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     }
 
     /**
+     * Get record map, used to allow joiners to join
+     *
      * @param string|null $fromKeyAlias The from unique key to get the map against
      *                                  as exposed in the record
      *
@@ -181,6 +192,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     }
 
     /**
+     * Trigger extract
+     *
      * @param mixed $param
      *
      * @return bool
@@ -208,6 +221,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     }
 
     /**
+     * Enforce batch size consistency
+     *
      * @return $this
      */
     public function enforceBatchSize()
@@ -232,6 +247,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     }
 
     /**
+     * Execute the Join
+     *
      * @param mixed $record
      *
      * @return mixed The result of the join
@@ -266,6 +283,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     }
 
     /**
+     * Trigger an extract in join mode
+     *
      * @return bool
      */
     protected function joinExtract()
@@ -290,6 +309,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     }
 
     /**
+     * Configure the unique key
+     *
      * @param array|string $uniqueKey can be either a unique key name as
      *                                string
      *                                '(table.)compositeKeyName' // ('id' by default)
@@ -340,6 +361,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     }
 
     /**
+     * Clean up key names
+     *
      * @param string $keyName
      *
      * @return string
@@ -350,7 +373,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     }
 
     /**
-     * prepare record set to obey join mode eg return record = true
+     * Prepare record set to obey join mode eg return record = true
      * to break branch execution when no match are found in join more
      * or default to be later merged in left join mode
      *
@@ -369,6 +392,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     }
 
     /**
+     * Generate record map
+     *
      * @return $this
      */
     protected function genRecordMap()

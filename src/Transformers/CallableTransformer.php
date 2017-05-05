@@ -17,6 +17,8 @@ use fab2s\NodalFlow\Nodes\PayloadNodeAbstract;
 class CallableTransformer extends PayloadNodeAbstract implements TransformerInterface
 {
     /**
+     * Instantiate the transformmer
+     *
      * @param callable $payload
      */
     public function __construct(callable $payload)
@@ -25,6 +27,8 @@ class CallableTransformer extends PayloadNodeAbstract implements TransformerInte
     }
 
     /**
+     * Execute the callable payload
+     *
      * @param mixed $param the record
      *
      * @return mixed

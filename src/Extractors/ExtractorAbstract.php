@@ -17,21 +17,29 @@ use fab2s\NodalFlow\Nodes\NodeAbstract;
 abstract class ExtractorAbstract extends NodeAbstract implements ExtractorInterface
 {
     /**
+     * This is a Traversable
+     *
      * @var bool
      */
     protected $isATraversable = true;
 
     /**
+     * This is a returning value
+     *
      * @var bool
      */
     protected $isAReturningVal = true;
 
     /**
+     * This is not a Flow
+     *
      * @var bool
      */
     protected $isAFlow = false;
 
     /**
+     * Number of extracts in Flow's execution
+     *
      * @var int
      */
     protected $numExtract = 0;

@@ -17,6 +17,8 @@ class PdoExtractor extends DbExtractorAbstract
     use PdoExtractorTrait;
 
     /**
+     * Instanbtiate PdoExtractor
+     *
      * @param \PDO        $pdo
      * @param string|null $extractQuery
      */
@@ -28,7 +30,7 @@ class PdoExtractor extends DbExtractorAbstract
     }
 
     /**
-     * leave no trace
+     * Leave no trace
      * implement here to allow easier overidding
      */
     public function __destruct()
@@ -40,6 +42,8 @@ class PdoExtractor extends DbExtractorAbstract
     }
 
     /**
+     * Fetch records
+     *
      * @return bool
      */
     public function fetchRecords()

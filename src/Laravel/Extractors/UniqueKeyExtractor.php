@@ -19,7 +19,7 @@ use Illuminate\Database\Query\Builder;
 class UniqueKeyExtractor extends PdoUniqueKeyExtractor
 {
     /**
-     * generic extraction from tables with unique (composite) key
+     * Generic extraction from tables with unique (composite) key
      *
      * @param Builder      $extractQuery
      * @param array|string $uniqueKey    can be either a unique key name as
@@ -45,7 +45,9 @@ class UniqueKeyExtractor extends PdoUniqueKeyExtractor
     }
 
     /**
-     * @param $extractQuery
+     * Set the extract query
+     *
+     * @param Builder $extractQuery
      *
      * @throws YaEtlException
      *

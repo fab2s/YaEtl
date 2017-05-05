@@ -17,7 +17,7 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
     use PdoExtractorTrait;
 
     /**
-     * generic extraction from tables with unique (composite) key
+     * Generic extraction from tables with unique (composite) key
      *
      * @param \PDO         $pdo
      * @param string|null  $extractQuery
@@ -48,7 +48,7 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
     }
 
     /**
-     * leave no trace
+     * Leave no trace
      * implement here to allow easier overidding
      */
     public function __destruct()
@@ -60,6 +60,8 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
     }
 
     /**
+     * Fetch records
+     *
      * @return bool
      */
     public function fetchRecords()

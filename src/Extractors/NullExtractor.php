@@ -22,6 +22,8 @@ class NullExtractor extends ExtractorBatchLimitAbstract
     protected $limit = 5000;
 
     /**
+     * Triggers an extract
+     *
      * @param mixed $param
      *
      * @return bool
@@ -36,7 +38,11 @@ class NullExtractor extends ExtractorBatchLimitAbstract
     }
 
     /**
+     * Return the dumbest Generator ever
+     *
      * @param mixed $param
+     *
+     * @return \Generator
      */
     public function getTraversable($param)
     {

@@ -19,25 +19,22 @@ use Illuminate\Database\Query\Builder;
 class DbLoader extends LoaderAbstract
 {
     /**
-     * array of fields used in the where clause (select and update)
+     * Array of fields used in the where clause (select and update)
      *
      * @var array
      */
     protected $whereFields;
 
     /**
-     * query object
+     * The query object
      *
      * @var Builder
      */
     protected $loadQuery;
 
     /**
-     * @var mixed
-     */
-    protected $record;
-
-    /**
+     * Instatiate the DbLoader
+     *
      * @param Builder|null $loadQuery
      */
     public function __construct(Builder $loadQuery = null)
@@ -48,6 +45,8 @@ class DbLoader extends LoaderAbstract
     }
 
     /**
+     * Set the Load query
+     *
      * @param Builder $loadQuery
      *
      * @return $this
@@ -60,6 +59,8 @@ class DbLoader extends LoaderAbstract
     }
 
     /**
+     * Set proper WHERE fields
+     *
      * @param array $whereFields
      *
      * @return $this
@@ -78,24 +79,24 @@ class DbLoader extends LoaderAbstract
      * We assume here that transformed data is a name/value pair
      * array of fields to update/insert
      *
-     * @param array $record
+     * @param array $param
      */
-    public function exec($record)
+    public function exec($param = null)
     {
         // clone query object in order to prevent where clause stacking
         $loadQuery   = clone $this->loadQuery;
-        $whereClause = \array_intersect_key($record, \array_flip($this->whereFields));
+        $whereClause = \array_intersect_key($param, \array_flip($this->whereFields));
 
         // let's be atomic while we're at it (and where applicable ...)
         // btw, multi insert are not necessarily that faster in real world
         // situation where there is a lot of updates and you need ot keep
         // atomicity using transactions
-        DB::transaction(function () use ($loadQuery, $whereClause, $record) {
+        DB::transaction(function () use ($loadQuery, $whereClause, $param) {
             if ($loadQuery->where($whereClause)->sharedLock()->exists()) {
-                $update = \array_diff_key($record, $whereClause);
+                $update = \array_diff_key($param, $whereClause);
                 $loadQuery->update($update);
             } else {
-                $loadQuery->insert($record);
+                $loadQuery->insert($param);
             }
         });
     }

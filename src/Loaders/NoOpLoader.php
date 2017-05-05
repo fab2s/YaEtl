@@ -15,6 +15,8 @@ namespace fab2s\YaEtl\Loaders;
 class NoOpLoader extends LoaderAbstract
 {
     /**
+     * Execute the dumbest loader
+     *
      * @param mixed $record
      *
      * @return bool

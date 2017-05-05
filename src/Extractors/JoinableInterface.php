@@ -19,6 +19,8 @@ use fab2s\NodalFlow\Nodes\ExecNodeInterface;
 interface JoinableInterface extends ExtractorInterface, ExecNodeInterface
 {
     /**
+     * Generate record map, used to allow joiner to join
+     *
      * @param string|null $fromKeyAlias The from unique key to get the map against
      *                                  as exposed in the record
      *
@@ -48,7 +50,7 @@ interface JoinableInterface extends ExtractorInterface, ExecNodeInterface
     public function setOnClause(OnClauseInterface $onClause);
 
     /**
-     * get Joiner's ON clause. Only used in Join mode
+     * Get Joiner's ON clause. Only used in Join mode
      *
      * @return OnClauseInterface
      */
@@ -68,7 +70,7 @@ interface JoinableInterface extends ExtractorInterface, ExecNodeInterface
     public function exec($record);
 
     /**
-     * register ON clause field mapping. Used by an eventual joiner to this
+     * Register ON clause field mapping. Used by an eventual joiner to this
      * to build relevant recordMap
      *
      * @param OnClauseInterface $onClause

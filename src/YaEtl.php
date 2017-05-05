@@ -27,24 +27,8 @@ use fab2s\YaEtl\Transformers\TransformerInterface;
 class YaEtl extends NodalFlow
 {
     /**
-     * The total amount of record to fetch, in case
-     * there is a limit set
+     * The stats items added to NodalFlow's ones
      *
-     * @var int
-     */
-    protected $extractLimit;
-
-    /**
-     * @var array
-     */
-    protected $aggregateNodes = [];
-
-    /**
-     * @var int
-     */
-    protected $aggregateNodeIdx = 0;
-
-    /**
      * @var array
      */
     protected $stats = [
@@ -70,23 +54,15 @@ class YaEtl extends NodalFlow
     ];
 
     /**
+     * The revers aggregate lookup table
+     *
      * @var array
      */
     protected $reverseAggregateTable = [];
 
     /**
-     * @param int $recordLimit
+     * Adds an extractor to the Flow which may be aggregated with another one
      *
-     * @return $this
-     */
-    public function setExtractLimit($recordLimit)
-    {
-        $this->extractLimit = max(1, (int) $recordLimit);
-
-        return $this;
-    }
-
-    /**
      * @param ExtractorInterface      $extractor
      * @param null|ExtractorInterface $aggregateWith Use the extractore instance you want to aggregate with
      *
@@ -107,6 +83,8 @@ class YaEtl extends NodalFlow
     }
 
     /**
+     * Override NodalFlow's add method to prohibit its direct usage
+     *
      * @param NodeInterface $node
      *
      * @throws YaEtlException
@@ -117,6 +95,8 @@ class YaEtl extends NodalFlow
     }
 
     /**
+     * Adds a Joiner to a specific Extractor in the FLow
+     *
      * @param JoinableInterface $extractor
      * @param JoinableInterface $joinFrom
      * @param OnClauseInterface $onClause
@@ -137,6 +117,8 @@ class YaEtl extends NodalFlow
     }
 
     /**
+     * Adds a Transformer to the Flow
+     *
      * @param TransformerInterface $transformer
      *
      * @return $this
@@ -151,6 +133,8 @@ class YaEtl extends NodalFlow
     }
 
     /**
+     * Adds a Loader to the Flow
+     *
      * @param LoaderInterface $loader
      *
      * @return $this
@@ -165,10 +149,13 @@ class YaEtl extends NodalFlow
     }
 
     /**
+     * Adds a Branch (Flow) to the Flow
+     *
      * @staticvar type $flowHashes
      *
-     * @param YaEtl $flow
-     * @param bool  $isAReturningVal
+     * @param YaEtl $flow            The Branch to add in this Flow
+     * @param bool  $isAReturningVal To indicate if this Branch Flow is a true Branch or just
+     *                               a bag of Nodes to execute at this location of the Flow
      *
      * @throws YaEtlException
      *
@@ -211,7 +198,7 @@ class YaEtl extends NodalFlow
     }
 
     /**
-     * kiss method to expose basic stats
+     * KISS method to expose basic stats
      *
      * @return array
      */
@@ -250,6 +237,8 @@ class YaEtl extends NodalFlow
     }
 
     /**
+     * Used internally to aggregate Extracors
+     *
      * @param ExtractorInterface $extractor
      * @param ExtractorInterface $aggregateWith
      *
@@ -289,6 +278,8 @@ class YaEtl extends NodalFlow
     }
 
     /**
+     * Collect Nodes stats
+     *
      * @param array $stats
      *
      * @return $this
@@ -363,6 +354,8 @@ class YaEtl extends NodalFlow
     }
 
     /**
+     * Compute final stats
+     *
      * @param array $stats
      *
      * @return array
@@ -407,6 +400,8 @@ class YaEtl extends NodalFlow
     }
 
     /**
+     * Find a Node by its hash in a nodemap, used to enfore Node instance unicity
+     *
      * @param string $hash
      * @param array  $nodeMap
      *
@@ -431,7 +426,7 @@ class YaEtl extends NodalFlow
     }
 
     /**
-     * calls each WorkFlow's loaders flush method
+     * Calls each WorkFlow's loaders flush method
      *
      * @return $this
      */

@@ -15,6 +15,8 @@ namespace fab2s\YaEtl\Extractors;
 interface ExtractorLimitInterface extends ExtractorInterface
 {
     /**
+     * Set extract limit
+
      * @param int $limit
      *
      * @return $this
@@ -22,16 +24,22 @@ interface ExtractorLimitInterface extends ExtractorInterface
     public function setLimit($limit);
 
     /**
+     * Get current limit
+     *
      * @return int
      */
     public function getLimit();
 
     /**
+     * Get number of records (at the end of the Flow's execution)
+     *
      * @return int
      */
     public function getNumRecords();
 
     /**
+     * Tells if limit is reached already
+     *
      * @return bool true if limit is reached
      */
     public function isLimitReached();

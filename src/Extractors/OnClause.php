@@ -17,27 +17,35 @@ use fab2s\NodalFlow\YaEtlException;
 class OnClause implements OnClauseInterface
 {
     /**
+     * The single unique key alias as exposed in the original extractor's records
+     *
      * @var string
      */
     protected $fromKeyAlias;
 
     /**
+     * The single unique key alias we are joining on
+     *
      * @var string
      */
     protected $joinKeyAlias;
 
     /**
+     * The merger to use to merge joined data to the record
+     *
      * @var callable
      */
     protected $merger;
 
     /**
+     * Indicate if we are left or just joining
+     *
      * @var bool
      */
     protected $leftJoin = false;
 
     /**
-     * the default record to return in left join mode
+     * The default record to return in left join mode
      * will be set to true in order to break the branch exec
      * in join mode or this value in left join mode
      *
@@ -46,6 +54,8 @@ class OnClause implements OnClauseInterface
     protected $defaultRecord;
 
     /**
+     * Instatiate an OnClose
+     *
      * @param string     $fromKeyAlias  The from unique key name in record
      * @param string     $joinKeyAlias  The join unique key name in record
      * @param callable   $merger
@@ -74,6 +84,8 @@ class OnClause implements OnClauseInterface
     }
 
     /**
+     * Get the from key alias
+     *
      * @return string The From extractor unique key name as exposed in each record
      */
     public function getFromKeyAlias()
@@ -82,6 +94,8 @@ class OnClause implements OnClauseInterface
     }
 
     /**
+     * Get the join key alias
+     *
      * @return string The Join extractor unique key name as exposed in each record
      */
     public function getJoinKeyAlias()
@@ -90,6 +104,8 @@ class OnClause implements OnClauseInterface
     }
 
     /**
+     * Merge Joined data into the original record
+     *
      * @param mixed $upstreamRecord
      * @param mixed $record
      *
@@ -102,6 +118,8 @@ class OnClause implements OnClauseInterface
     }
 
     /**
+     * Indicate if we are left joining
+     *
      * @return bool
      */
     public function isLeftJoin()

@@ -18,6 +18,8 @@ use fab2s\NodalFlow\Nodes\NodeAbstract;
 abstract class LoaderAbstract extends NodeAbstract implements LoaderInterface
 {
     /**
+     * This is not a traversable
+     *
      * @var bool
      */
     protected $isATraversable = false;
@@ -33,6 +35,8 @@ abstract class LoaderAbstract extends NodeAbstract implements LoaderInterface
     protected $isAReturningVal = false;
 
     /**
+     * This is not a Flow
+     *
      * @var bool
      */
     protected $isAFlow = false;

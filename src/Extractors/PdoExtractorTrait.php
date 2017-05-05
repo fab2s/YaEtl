@@ -17,16 +17,22 @@ use fab2s\NodalFlow\YaEtlException;
 trait PdoExtractorTrait
 {
     /**
+     * The PDO connection
+     *
      * @var \PDO
      */
     protected $pdo;
 
     /**
+     * Keep track of Buffered queries status in case we need / can to tweak it
+     *
      * @var bool
      */
     protected $driverBufferedQuery;
 
     /**
+     * List of supported drivers
+     *
      * @var array
      */
     protected $supportedDrivers = [
@@ -36,17 +42,21 @@ trait PdoExtractorTrait
     ];
 
     /**
+     * Current driver name
+     *
      * @var string
      */
     protected $dbDriverName;
 
     /**
+     * Query bindings
+     *
      * @var array
      */
     protected $queryBindings;
 
     /**
-     * leave no trace
+     * Leave no trace
      */
     public function __destruct()
     {
@@ -57,6 +67,8 @@ trait PdoExtractorTrait
     }
 
     /**
+     * Properly set up PDO connection
+     *
      * @param \PDO $pdo
      *
      * @throws YaEtlException
