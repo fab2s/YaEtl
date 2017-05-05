@@ -113,7 +113,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     /**
      * Get this Joiner's ON clause. Only used in Join mode
      *
-     * @return OnClauseInterface
+     * @return OnClauseInterface|null
      */
     public function getOnClause()
     {
