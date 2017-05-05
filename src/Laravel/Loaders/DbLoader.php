@@ -79,7 +79,7 @@ class DbLoader extends LoaderAbstract
      * We assume here that transformed data is a name/value pair
      * array of fields to update/insert
      *
-     * @param array $param|null The record to load
+     * @param array|null $param The record to load
      */
     public function exec($param = null)
     {
