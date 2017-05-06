@@ -85,23 +85,23 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      * @param string|null  $extractQuery
      * @param array|string $uniqueKey    can be either a unique key name as
      *                                   string
-     *                                   '(table.)compositeKeyName' // ('id' by default)
+     *                                   `'(table.)compositeKeyName' // ('id' by default)`
      *
      *                      or an array :
-     *                      ['(table.)compositeKey1'] // single unique key
-     *                      ['(table.)compositeKey1', '(table.)compositeKey2', ] // composite unique key
+     *                      `['(table.)compositeKey1'] // single unique key`
+     *                      `['(table.)compositeKey1', '(table.)compositeKey2', ] // composite unique key`
      *
      *                      or an associative array in case you are using aliases :
-     *                      [
+     *                      `[
      *                          '(table.)compositeKey1' => 'aliasNameAsInRecord',
-     *                      ]
+     *                      ]`
      *
      *                      and :
-     *                      [
+     *                      `[
      *                          '(table.)compositeKey1' => 'aliasNameAsInRecord1',
      *                          '(table.)compositeKey2' => 'aliasNameAsInRecord2',
      *                          // ...
-     *                      ]
+     *                      ]`
      */
     public function __construct($extractQuery = null, $uniqueKey = 'id')
     {
@@ -313,23 +313,23 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *
      * @param array|string $uniqueKey can be either a unique key name as
      *                                string
-     *                                '(table.)compositeKeyName' // ('id' by default)
+     *                                `'(table.)compositeKeyName' // ('id' by default)`
      *
      *                      or an array :
-     *                      ['(table.)compositeKey1'] // single unique key
-     *                      ['(table.)compositeKey1', '(table.)compositeKey2', ] // composite unique key
+     *                      `['(table.)compositeKey1'] // single unique key`
+     *                      `['(table.)compositeKey1', '(table.)compositeKey2', ] // composite unique key`
      *
      *                      or an associative array in case you are using aliases :
-     *                      [
+     *                      `[
      *                          '(table.)compositeKey1' => 'aliasNameAsInRecord',
-     *                      ]
+     *                      ]`
      *
      *                      and :
-     *                      [
+     *                      `[
      *                          '(table.)compositeKey1' => 'aliasNameAsInRecord1',
      *                          '(table.)compositeKey2' => 'aliasNameAsInRecord2',
      *                          // ...
-     *                      ]
+     *                      ]`
      *
      * @return $this
      */

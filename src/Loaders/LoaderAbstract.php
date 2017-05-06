@@ -54,14 +54,14 @@ abstract class LoaderAbstract extends NodeAbstract implements LoaderInterface
      * @param FlowStatusInterface|null $flowStatus the flush status, should only be set by
      *                                             YaEtl to indicate last flush() call status
      *                                             either :
-     *                                             - clean (isClean()): everything went well
-     *                                             - dirty (isDirty()): one extractor broke the flow
-     *                                             - exception (isException()): an exception was raised during the flow
+     *                                             - clean (`isClean()`): everything went well
+     *                                             - dirty (`isDirty()`): one extractor broke the flow
+     *                                             - exception (`isException()`): an exception was raised during the flow
      **/
     public function flush(FlowStatusInterface $flowStatus = null)
     {
         /*
-         * if ($flowStatus !== null) {
+         * `if ($flowStatus !== null) {
          *      // YaEtl's call to flush()
          *      if ($flowStatus->isClean()) {
          *           // everything went well
@@ -73,7 +73,7 @@ abstract class LoaderAbstract extends NodeAbstract implements LoaderInterface
          * } else {
          *      // it should be you calling this method
          *      // during the flow execution (multi insert)
-         * }
+         * }`
          */
     }
 }

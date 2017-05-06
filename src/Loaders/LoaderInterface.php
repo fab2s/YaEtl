@@ -25,9 +25,9 @@ interface LoaderInterface extends ExecNodeInterface
      * @param FlowStatusInterface|null $flowStatus the flush status, should only be set by
      *                                             YaEtl to indicate last flush() call status
      *                                             either :
-     *                                             - clean (isClean()): everything went well
-     *                                             - dirty (isDirty()): one extractor broke the flow
-     *                                             - exception (isException()): an exception was raised during the flow
+     *                                             - clean (`isClean()`): everything went well
+     *                                             - dirty (`isDirty()`): one extractor broke the flow
+     *                                             - exception (`isException()`): an exception was raised during the flow
      **/
     public function flush(FlowStatusInterface $flowStatus = null);
 }
