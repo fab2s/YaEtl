@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "be77613a6c3928b41dffb5cde4c53c91",
+    "content-hash": "c714b70eac38034a84082b4d68bc5b2b",
     "packages": [
         {
             "name": "fab2s/nodalflow",
-            "version": "v1.0.0-rc.1",
+            "version": "v1.0.0-rc.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fab2s/NodalFlow.git",
-                "reference": "c66afeeab3f4b7f9e41760051aef5228b8b365f1"
+                "reference": "3b9ef9b437f029f0a2583fa68817e44bbb03d3ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fab2s/NodalFlow/zipball/c66afeeab3f4b7f9e41760051aef5228b8b365f1",
-                "reference": "c66afeeab3f4b7f9e41760051aef5228b8b365f1",
+                "url": "https://api.github.com/repos/fab2s/NodalFlow/zipball/3b9ef9b437f029f0a2583fa68817e44bbb03d3ef",
+                "reference": "3b9ef9b437f029f0a2583fa68817e44bbb03d3ef",
                 "shasum": ""
             },
             "require": {
@@ -45,7 +45,7 @@
             "keywords": [
                 "PHP NodalFlow WorkFlow Nodal Node"
             ],
-            "time": "2017-04-21T13:30:02+00:00"
+            "time": "2017-05-09T11:24:07+00:00"
         }
     ],
     "packages-dev": [
