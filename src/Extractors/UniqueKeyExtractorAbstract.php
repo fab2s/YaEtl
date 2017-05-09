@@ -83,9 +83,9 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      * Generic extraction from tables with unique (composite) key
      *
      * @param string|null  $extractQuery
-     * @param array|string $uniqueKey    can be either a unique key name as
-     *                                   string
-     *                                   `'(table.)compositeKeyName' // ('id' by default)`
+     * @param array|string $uniqueKeySetup can be either a unique key name as
+     *                                     string
+     *                                     `'(table.)compositeKeyName' // ('id' by default)`
      *
      *                      or an array :
      *                      `['(table.)compositeKey1'] // single unique key`
@@ -103,9 +103,9 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *                          // ...
      *                      ]`
      */
-    public function __construct($extractQuery = null, $uniqueKey = 'id')
+    public function __construct($extractQuery = null, $uniqueKeySetup = 'id')
     {
-        $this->configureUniqueKey($uniqueKey);
+        $this->configureUniqueKey($uniqueKeySetup);
 
         parent::__construct($extractQuery);
     }
@@ -311,9 +311,9 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     /**
      * Configure the unique key
      *
-     * @param array|string $uniqueKey can be either a unique key name as
-     *                                string
-     *                                `'(table.)compositeKeyName' // ('id' by default)`
+     * @param array|string $uniqueKeySetup can be either a unique key name as
+     *                                     string
+     *                                     `'(table.)compositeKeyName' // ('id' by default)`
      *
      *                      or an array :
      *                      `['(table.)compositeKey1'] // single unique key`
@@ -333,13 +333,13 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *
      * @return $this
      */
-    protected function configureUniqueKey($uniqueKey)
+    protected function configureUniqueKey($uniqueKeySetup)
     {
-        $uniqueKey            = \is_array($uniqueKey) ? $uniqueKey : [$uniqueKey];
-        $this->compositeKey   = [];
-        $this->uniqueKeyName  = null;
-        $this->uniqueKeyAlias = null;
-        foreach ($uniqueKey as $key => $value) {
+        $uniqueKeySetup            = \is_array($uniqueKeySetup) ? $uniqueKeySetup : [$uniqueKeySetup];
+        $this->compositeKey        = [];
+        $this->uniqueKeyName       = null;
+        $this->uniqueKeyAlias      = null;
+        foreach ($uniqueKeySetup as $key => $value) {
             if (\is_numeric($key)) {
                 $compositeKeyName  = $this->cleanUpKeyName($value);
                 $compositeKeyParts = \explode('.', $compositeKeyName);
