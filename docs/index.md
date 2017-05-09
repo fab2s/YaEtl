@@ -12,9 +12,6 @@ The major interest of such design is, in addition to organize complex task with 
 
 Being Nodal makes it possible to chain arbitrary number of Extract to Load operations which may go through arbitrary number of transform, joins and, to even branch the workflow in case some Loaders require different transformation and or joins before they can do their work.
 
-## YaEtl Documentation
-[![Documentation Status](https://readthedocs.org/projects/yaetl/badge/?version=latest)](http://yaetl.readthedocs.io/en/latest/?badge=latest) Documentation can be found at [ReadTheDocs](http://yaetl.readthedocs.io/en/latest/?badge=latest)
-
 ## Installation
 
 YaEtl can be installed using composer :
