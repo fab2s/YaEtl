@@ -82,7 +82,7 @@ YaEtl can, but is not limited to, incarnate a pure ETL flow as seen many times. 
  |Records|                      Records
  | + + + |                      + + + +
 +v-v-v-v-v--+                 +-+-+-+-++
-| Extractor |                 |  Load  |
+|  Extract  |                 |  Load  |
 +-+---------+                 +---^----+
   |                               |
   | Record  +-----------+ Record  |
@@ -109,15 +109,15 @@ Being Nodal makes it possible for YaEtl to transparently mutualize extraction ac
 |  Extractor  |                 |  +----------+
 +-+-----------+                 |
   |                             |  +----------+
-  |            +-------------+  +--> Loader 2 |
+  |  Record 1  +-------------+  +--> Loader 2 |
   +------------> Transformer +--+  +----------+
-               +-------------+  |
-                                |
-                                |  +----------+
-                                +--> Loader N |
-                                |  +----------+
-                                |
-                                |  +-------------+
+  |            +-------------+  |      ...
+  |  Record 2                   |
+  +------------>                |  +----------+
+  |    ...                      +--> Loader N |
+  |                             |  +----------+
+  |  Record N                   |
+  +------------>                |  +-------------+
                                 +--> Transformer |
                                    +-+-----------+
                                      |            +----------+
@@ -178,10 +178,10 @@ This kind of operation is easy with YaEtl as Extractors can be aggregated to eac
 |    |             |  |             |     |             |    |
 |    +------+------+  +------+------+     +-------+-----+    |
 |           |                |                    +          |
-|           |                |             Aggregate Node    |
-+-------------------------------------------------+----------+
-            |                |                    |       Records
-            +----------------+--------------------+--------------->
+|           |                |             Aggregate Node    | Records
++-----------v----------------v--------------------v----------+---------->
+
+                                                                       ...
 
 ```
 
