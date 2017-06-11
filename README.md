@@ -23,13 +23,6 @@ YaEtl can be installed using composer :
 composer require "fab2s/yaetl"
 ```
 
-But until NodalFlow and YaEtl hits stable release, you will also need to specifically require NodalFlow:
-```shell
-composer require "fab2s/nodalflow"
-```
-
-This is required because YaEtl depends on another "unstable" (even though, test are showing that something is working) package would otherwise not be explicitly required as "unstable" by the project using YaEtl.
-
 Once done, you can start playing :
 
 ```php
