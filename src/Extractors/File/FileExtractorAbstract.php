@@ -46,6 +46,14 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
     }
 
     /**
+     * make sure we do not hold un-necessary handles
+     */
+    public function __destruct()
+    {
+        $this->releaseHandle();
+    }
+
+    /**
      * @param mixed $param
      *
      * @return bool

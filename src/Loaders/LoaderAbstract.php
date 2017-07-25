@@ -63,10 +63,12 @@ abstract class LoaderAbstract extends NodeAbstract implements LoaderInterface
         /*
          * `if ($flowStatus !== null) {
          *      // YaEtl's call to flush()
-         *      if ($flowStatus->isClean()) {
+         *      if ($flowStatus->isRunning()) {
+         *           // flow is running
+         *      } elseif ($flowStatus->isClean()) {
          *           // everything went well
          *      } elseif ($flowStatus->isDirty()) {
-         *      // a node broke the flow
+         *           // a node broke the flow
          *      } elseif ($flowStatus->isException()) {
          *           // an exception was raised during the flow execution
          *      }

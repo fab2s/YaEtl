@@ -9,6 +9,7 @@
 
 namespace fab2s\YaEtl;
 
+use fab2s\NodalFlow\Flows\FlowStatusInterface;
 use fab2s\NodalFlow\NodalFlow;
 use fab2s\NodalFlow\Nodes\AggregateNode;
 use fab2s\NodalFlow\Nodes\AggregateNodeInterface;
@@ -61,6 +62,11 @@ class YaEtl extends NodalFlow
     protected $reverseAggregateTable = [];
 
     /**
+     * @var bool
+     */
+    protected $forceFlush = false;
+
+    /**
      * Adds an extractor to the Flow which may be aggregated with another one
      *
      * @param ExtractorInterface      $extractor
@@ -92,6 +98,33 @@ class YaEtl extends NodalFlow
     public function add(NodeInterface $node)
     {
         throw new YaEtlException('add() is not directly available, use YaEtl grammar from(), transform(), join() and / or to() instead');
+    }
+
+    /**
+     * By default, branched flows will only see their
+     * `flush()` method called when the top most parent
+     * triggers its own `flush()`.
+     * It make sense most of the time to to do so as
+     * the most common use case for branches so far is
+     * to deal with one record at a time without generating
+     * records (even when left joining). In such case,
+     * the `flush()` method really need to be called by the flow
+     * exactly when the top most flow one is.
+     *
+     * Set to true if you are generating many records in a branch
+     * and it makes sense to flush the branch more often
+     * Also note that the branch will also be flushed at the end
+     * of its top most parent.
+     *
+     * @param bool $forceFlush
+     *
+     * @return $this
+     */
+    public function forceFlush($forceFlush)
+    {
+        $this->forceFlush = (bool) $forceFlush;
+
+        return $this;
     }
 
     /**
@@ -213,7 +246,7 @@ class YaEtl extends NodalFlow
         $stats             = \array_replace($stats, $this->duration($stats['duration']));
         $stats['report']   = \sprintf(
             '[YaEtl](%s) %s Extractor - %s Extract - %s Record (%s Iterations)
-[YaEtl] %s Joiner - %s Join - %s Branch
+[YaEtl] %s Joiner - %s Join - %s Continue - %s Break - %s Branch
 [YaEtl] %s Transformer - %s Transform - %s Loader - %s Load - %s Flush
 [YaEtl] Time : %s - Memory: %4.2fMiB',
             $this->flowStatus,
@@ -223,6 +256,8 @@ class YaEtl extends NodalFlow
             \number_format($this->numIterate, 0, '.', ' '),
             \number_format($stats['num_joiner'], 0, '.', ' '),
             \number_format($stats['num_join'], 0, '.', ' '),
+            \number_format($this->numContinue, 0, '.', ' '),
+            \number_format($this->numBreak, 0, '.', ' '),
             \number_format($stats['num_branch'], 0, '.', ' '),
             \number_format($stats['num_transformer'], 0, '.', ' '),
             \number_format($stats['num_transform'], 0, '.', ' '),
@@ -234,6 +269,17 @@ class YaEtl extends NodalFlow
         );
 
         return $stats;
+    }
+
+    /**
+     * Tells if the flow is set to force flush
+     * Only used when branched (to tell the parent)
+     *
+     * @return bool
+     */
+    public function isForceFlush()
+    {
+        return !empty($this->forceFlush);
     }
 
     /**
@@ -426,15 +472,45 @@ class YaEtl extends NodalFlow
     }
 
     /**
-     * Calls each WorkFlow's loaders flush method
+     * Calls each WorkFlow's loaders and branch flush method
      *
      * @return $this
      */
-    protected function flush()
+    protected function flush(FlowStatusInterface $flowStatus = null)
+    {
+        if ($flowStatus === null) {
+            if ($this->hasParent() && !$this->isForceFlush()) {
+                // we'll get another chance at this
+                return $this;
+            }
+
+            // use current status
+            return $this->flushNodes($this->flowStatus);
+        }
+
+        // use parent's status
+        return $this->flushNodes($flowStatus);
+    }
+
+    /**
+     * Actually flush nodes
+     *
+     * @param FlowStatusInterface $flowStatus
+     *
+     * @return $this
+     */
+    protected function flushNodes(FlowStatusInterface $flowStatus)
     {
         foreach ($this->nodes as $node) {
-            if ($node instanceof LoaderInterface || \is_a($node, static::class)) {
-                $node->flush($this->flowStatus);
+            if ($node instanceof LoaderInterface) {
+                $node->flush($flowStatus);
+                ++$this->stats['num_flush'];
+                continue;
+            }
+
+            // start with only flushing YaEtl and extends
+            if ($node instanceof BranchNode && \is_a($node->getPayload(), static::class)) {
+                $node->getPayload()->flush($flowStatus);
                 ++$this->stats['num_flush'];
             }
         }
