@@ -384,8 +384,8 @@ class YaEtl extends NodalFlow
 
         $node->setCarrier($this)->setNodeHash($nodeHash);
 
-        $this->nodes[$nodeIdx]       = $node;
-        $this->nodeMap[$nodeHash]    = \array_replace($this->nodeMapDefault, [
+        $this->nodes[$nodeIdx]    = $node;
+        $this->nodeMap[$nodeHash] = \array_replace($this->nodeMapDefault, [
             'class'    => \get_class($node),
             'branchId' => $this->flowId,
             'hash'     => $nodeHash,
@@ -412,9 +412,12 @@ class YaEtl extends NodalFlow
             $stats['nodes'] = $this->processStats($stats['nodes']);
         }
 
+        if (empty($stats['invocations'])) {
+            return $stats;
+        }
+
         foreach ($stats['invocations'] as &$value) {
             $value           = \array_replace($value, $this->duration($value['duration']));
-
             $value['report'] = \sprintf('[YaEtl] Time : %s - Memory: %4.2fMiB',
                 $value['durationStr'],
                 $value['mib']
