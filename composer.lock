@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "2a32c8cf4356574f573c4c7710c165cc",
+    "content-hash": "0fac4e4be96fb653f6204013ebd6ba82",
     "packages": [
         {
             "name": "fab2s/nodalflow",
-            "version": "dev-master",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fab2s/NodalFlow.git",
@@ -45,7 +45,7 @@
             "keywords": [
                 "PHP NodalFlow WorkFlow Nodal Node"
             ],
-            "time": "2017-07-27 17:06:49"
+            "time": "2017-07-27T17:06:49+00:00"
         }
     ],
     "packages-dev": [
@@ -1420,9 +1420,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "fab2s/nodalflow": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

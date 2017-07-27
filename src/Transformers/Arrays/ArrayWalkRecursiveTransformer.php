@@ -9,6 +9,7 @@
 
 namespace fab2s\YaEtl\Transformers\Arrays;
 
+use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Transformers\TransformerAbstract;
 
 /**
