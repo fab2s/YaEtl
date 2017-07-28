@@ -62,6 +62,34 @@ class YaEtl extends NodalFlow
     protected $reverseAggregateTable = [];
 
     /**
+     * The branch hash map, used to enforce unicity
+     * Unfortunately, the first static approach is not
+     * a working option as spl_object_hash() does reuse
+     * hash when instances are destroyed, and this can
+     * create collisions in static context when you would
+     * execute several flows with branches in the same
+     * process :
+     * new flow1
+     *      branch1(hash892),branch2(hash111) ...
+     * execute
+     * unset flow1 and branches
+     *
+     * new flow2
+     *      breanch3(hash228),branch4(hash892) <====== BOOOMMM
+     *
+     * Using dynamic variable solves this very issue, but does
+     * not provides with the same level of instance unicity enforcement
+     * This opens the gates for node instance reuse in different branches
+     * and parent instances
+     * Since this very feature is there to help enforcing good practice,
+     * it's not vital, it's up to the developper to know if and why he would
+     * be reusing nodes instances after all.
+     *
+     * @var array
+     */
+    protected $branchHashMap;
+
+    /**
      * @var bool
      */
     protected $forceFlush = false;
@@ -196,19 +224,18 @@ class YaEtl extends NodalFlow
      */
     public function branch(YaEtl $flow, $isAReturningVal = false)
     {
-        static $flowHashes;
-        if (!isset($flowHashes)) {
-            $flowHashes = [
+        if (!isset($this->branchHashMap)) {
+            $this->branchHashMap = [
                 $this->objectHash($this) => 1,
             ];
         }
 
         $flowHash = $this->objectHash($flow);
-        if (isset($flowHashes[$flowHash])) {
+        if (isset($this->branchHashMap[$flowHash])) {
             throw new YaEtlException('An instance of ' . \get_class($flow) . ' appears to be already in use in this flow. Please clone / re new before reuse');
         }
 
-        $flowHashes[$flowHash] = 1;
+        $this->branchHashMap[$flowHash] = 1;
 
         parent::add(new BranchNode($flow, $isAReturningVal));
         ++$this->stats['num_branch'];
