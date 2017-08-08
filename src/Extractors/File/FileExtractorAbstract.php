@@ -64,7 +64,7 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
             $this->handle = fopen($this->srcFile, 'rb');
         }
 
-        if (!$this->handle | [!is_resource($this->handle)]) {
+        if (!$this->handle || !is_resource($this->handle)) {
             return false;
         }
 
