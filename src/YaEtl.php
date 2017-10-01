@@ -75,14 +75,14 @@ class YaEtl extends NodalFlow
      * unset flow1 and branches
      *
      * new flow2
-     *      breanch3(hash228),branch4(hash892) <====== BOOOMMM
+     *      branch3(hash228),branch4(hash892) <====== BOOOMMM
      *
      * Using dynamic variable solves this very issue, but does
      * not provides with the same level of instance unicity enforcement
      * This opens the gates for node instance reuse in different branches
      * and parent instances
      * Since this very feature is there to help enforcing good practice,
-     * it's not vital, it's up to the developper to know if and why he would
+     * it's not vital, it's up to the developer to know if and why he would
      * be reusing nodes instances after all.
      *
      * @var array
@@ -98,7 +98,7 @@ class YaEtl extends NodalFlow
      * Adds an extractor to the Flow which may be aggregated with another one
      *
      * @param ExtractorInterface      $extractor
-     * @param null|ExtractorInterface $aggregateWith Use the extractore instance you want to aggregate with
+     * @param null|ExtractorInterface $aggregateWith Use the extractor instance you want to aggregate with
      *
      * @return $this
      */
@@ -310,7 +310,7 @@ class YaEtl extends NodalFlow
     }
 
     /**
-     * Used internally to aggregate Extracors
+     * Used internally to aggregate Extractors
      *
      * @param ExtractorInterface $extractor
      * @param ExtractorInterface $aggregateWith
@@ -393,7 +393,7 @@ class YaEtl extends NodalFlow
     /**
      * Replaces a node with another one
      *
-     * @param type          $nodeIdx
+     * @param int           $nodeIdx
      * @param NodeInterface $node
      *
      * @throws YaEtlException
@@ -476,7 +476,7 @@ class YaEtl extends NodalFlow
     }
 
     /**
-     * Find a Node by its hash in a nodemap, used to enfore Node instance unicity
+     * Find a Node by its hash in a node map, used to enforce Node instance unicity
      *
      * @param string $hash
      * @param array  $nodeMap
@@ -503,6 +503,8 @@ class YaEtl extends NodalFlow
 
     /**
      * Calls each WorkFlow's loaders and branch flush method
+     *
+     * @param FlowStatusInterface|null $flowStatus
      *
      * @return $this
      */

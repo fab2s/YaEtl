@@ -52,7 +52,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     protected $uniqueKeyValueBuffer = [];
 
     /**
-     * This Node's OnClose objject if any
+     * This Node's OnClose object if any
      *
      * @var OnClauseInterface|null
      */
@@ -250,6 +250,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      * Execute the Join
      *
      * @param mixed $record
+     *
+     * @throws YaEtlException
      *
      * @return mixed The result of the join
      */

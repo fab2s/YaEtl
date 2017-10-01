@@ -17,11 +17,11 @@ use fab2s\NodalFlow\Nodes\TraversableNodeInterface;
 interface ExtractorInterface extends TraversableNodeInterface
 {
     /**
-     * This method is vagely similar to a valid() meta iterator
+     * This method is vaguely similar to a valid() meta iterator
      * It will triggers the record collection extraction when called
      * and return true when records where fetched.
      *
-     * This is usefull when batch extracting. If your extractor
+     * This is useful when batch extracting. If your extractor
      * does not perform batch extract (for example if you are
      * just reading a file line by line), just make so this method
      * triggers file open and return true in case of success and false

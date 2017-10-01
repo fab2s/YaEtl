@@ -7,20 +7,62 @@
     "content-hash": "0fac4e4be96fb653f6204013ebd6ba82",
     "packages": [
         {
-            "name": "fab2s/nodalflow",
-            "version": "1.0.2",
+            "name": "fab2s/context-exception",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/fab2s/NodalFlow.git",
-                "reference": "780f21688e897fa67f5fc4320516c5b53eb5d17b"
+                "url": "https://github.com/fab2s/ContextException.git",
+                "reference": "a2073f15d7b5203b0ea820cc34c97e4f8821b54e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fab2s/NodalFlow/zipball/780f21688e897fa67f5fc4320516c5b53eb5d17b",
-                "reference": "780f21688e897fa67f5fc4320516c5b53eb5d17b",
+                "url": "https://api.github.com/repos/fab2s/ContextException/zipball/a2073f15d7b5203b0ea820cc34c97e4f8821b54e",
+                "reference": "a2073f15d7b5203b0ea820cc34c97e4f8821b54e",
                 "shasum": ""
             },
             "require": {
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabrice de Stefanis"
+                }
+            ],
+            "description": "A context exception interface and implementation",
+            "keywords": [
+                "PHP Context Exception"
+            ],
+            "time": "2017-10-01T16:34:48+00:00"
+        },
+        {
+            "name": "fab2s/nodalflow",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fab2s/NodalFlow.git",
+                "reference": "9dfd6244b01ba0352f08940da81c19b182591e96"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fab2s/NodalFlow/zipball/9dfd6244b01ba0352f08940da81c19b182591e96",
+                "reference": "9dfd6244b01ba0352f08940da81c19b182591e96",
+                "shasum": ""
+            },
+            "require": {
+                "fab2s/context-exception": "~1.0.0",
                 "php": ">=5.6.0"
             },
             "require-dev": {
@@ -45,7 +87,7 @@
             "keywords": [
                 "PHP NodalFlow WorkFlow Nodal Node"
             ],
-            "time": "2017-07-27T17:06:49+00:00"
+            "time": "2017-10-01T16:41:09+00:00"
         }
     ],
     "packages-dev": [

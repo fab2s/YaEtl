@@ -33,7 +33,7 @@ class DbLoader extends LoaderAbstract
     protected $loadQuery;
 
     /**
-     * Instatiate the DbLoader
+     * Instantiate the DbLoader
      *
      * @param Builder|null $loadQuery
      */
@@ -80,6 +80,8 @@ class DbLoader extends LoaderAbstract
      * array of fields to update/insert
      *
      * @param array|null $param The record to load
+     *
+     * @return mixed|void
      */
     public function exec($param = null)
     {

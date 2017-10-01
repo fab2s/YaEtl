@@ -59,7 +59,7 @@ interface JoinableInterface extends ExtractorInterface, ExecNodeInterface
     /**
      * exec will join incoming $record with the joined record from its
      * matching extracted record collection
-     * exec is suposed to call $this->carrier->continueFlow() when the desired
+     * exec is supposed to call $this->carrier->continueFlow() when the desired
      * action is to skip record in join mode and return the record with default
      * join values in left join mode
      *

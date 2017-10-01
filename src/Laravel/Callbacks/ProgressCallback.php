@@ -29,7 +29,7 @@ class ProgressCallback extends CallbackAbstract
     protected $command;
 
     /**
-     * The Laravle output object, extracted from the command object
+     * The Laravel output object, extracted from the command object
      *
      * @var OutputStyle
      */

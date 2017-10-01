@@ -49,7 +49,7 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
 
     /**
      * Leave no trace
-     * implement here to allow easier overidding
+     * implement here to allow easier overriding
      */
     public function __destruct()
     {

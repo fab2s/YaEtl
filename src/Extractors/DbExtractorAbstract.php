@@ -130,7 +130,7 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
     }
 
     /**
-     * Build the LIMIT...OFFSET bit of thhe query
+     * Build the LIMIT...OFFSET bit of the query
      *
      * @return string
      */
