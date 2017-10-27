@@ -27,17 +27,17 @@ class ArrayWalkRecursiveTransformer extends TransformerAbstract
     /**
      * @var mixed
      */
-    protected $userdata;
+    protected $userData;
 
     /**
      * @param callable   $callable Worth nothing to say that the first callback argument should
      *                             be a reference if you want anything to append to the record
-     * @param null|mixed $userdata
+     * @param null|mixed $userData
      */
-    public function __construct(callable $callable, $userdata = null)
+    public function __construct(callable $callable, $userData = null)
     {
         $this->callable = $callable;
-        $this->userdata = $userdata;
+        $this->userData = $userData;
     }
 
     /**
@@ -45,11 +45,13 @@ class ArrayWalkRecursiveTransformer extends TransformerAbstract
      *
      * @param mixed $record
      *
+     * @throws YaEtlException
+     *
      * @return mixed
      */
     public function exec($record)
     {
-        if (!\array_walk_recursive($this->callable, $record, $this->userdata)) {
+        if (!\array_walk_recursive($record, $this->callable, $this->userData)) {
             throw new YaEtlException('array_walk_recursive call failed', 1, null, [
                 'record' => $record,
             ]);

@@ -96,7 +96,7 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
          *
          * Now since using shift() will result in an empty
          * SplDoublyLinkedList at the end of the extraction cycle,
-         * the ETL will end up using less RAM when using multiple froms.
+         * the ETL will end up using less RAM when using multiple forms.
          * Otherwise, each extractor would keep its entire last
          * extracted collection in RAM until the end of the whole ETL.
          *

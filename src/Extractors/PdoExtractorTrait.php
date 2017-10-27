@@ -83,7 +83,7 @@ trait PdoExtractorTrait
         }
 
         if ($this->dbDriverName === 'mysql') {
-            // buffered wueries can have great performance impact
+            // buffered queries can have great performance impact
             // with large data sets
             $this->driverBufferedQuery = $this->pdo->getAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY);
 

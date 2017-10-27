@@ -17,7 +17,7 @@ use fab2s\NodalFlow\Nodes\PayloadNodeAbstract;
 class CallableTransformer extends PayloadNodeAbstract implements TransformerInterface
 {
     /**
-     * Instantiate the transformmer
+     * Instantiate the transformer
      *
      * @param callable $payload
      */

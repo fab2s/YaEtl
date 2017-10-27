@@ -130,7 +130,7 @@ class YaEtlTest extends \TestCase
             [
                 // test a join : success means that the to table ends up
                 // exactly like join table, that is, every join_id are set
-                // and missmatch are skipped
+                // and mismatch are skipped
                 'flow'          => (new YaEtl)
                     ->from($fullFrom1)
                     ->join(new PdoUniqueKeyExtractor($this->getPdo(), $joinQuery, 'id'), $fullFrom1, $joinOnClause)
@@ -205,7 +205,7 @@ class YaEtlTest extends \TestCase
                 ],
             ],
             [
-                // same as left join test with unbalanced batchsizes
+                // same as left join test with unbalanced batchSizes
                 'flow'          => (new YaEtl)
                     ->from($fullFrom4)
                     ->join($joiner2, $fullFrom4, $leftJoinOnClause)

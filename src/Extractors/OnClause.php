@@ -54,7 +54,7 @@ class OnClause implements OnClauseInterface
     protected $defaultRecord;
 
     /**
-     * Instatiate an OnClose
+     * Instantiate an OnClose
      *
      * @param string     $fromKeyAlias  The from unique key name in record
      * @param string     $joinKeyAlias  The join unique key name in record

@@ -13,7 +13,7 @@ use fab2s\YaEtl\Loaders\LoaderInterface;
 use fab2s\YaEtl\Loaders\NoOpLoader;
 
 // we need these two for phpunit to properly mock NoOpLoader
-// doing this allows us to use phpunit awsome spies
+// doing this allows us to use phpunit awesome spies
 interface TestLoaderInterface extends NodeInterface, ExecNodeInterface, LoaderInterface
 {
 }
@@ -104,7 +104,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * We mock loader to just gather all records than made
      * their way up there and return it to have the whole
-     * Flow to return it and allow input / output commparison
+     * Flow to return it and allow input / output comparison
      * The $spy will allow us to inspect invocations and arguments
      *
      * @return array
