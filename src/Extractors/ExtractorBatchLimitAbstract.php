@@ -29,7 +29,7 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract
     protected $batchSize = 1337;
 
     /**
-     * makes sure that offset + batchsize does not exceed limit
+     * makes sure that offset + batchSize does not exceed limit
      * by setting $this->batchSize to 0 when going beyond $this->limit
      *
      * @return $this

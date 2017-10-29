@@ -41,7 +41,7 @@ $yaEtl->from($dbExtractor)
 ```
 
 ### Unique Key extractor
-In many simple case you can use the handy `UniqueKeyExtractor` whhich also implement `JoinableInterface`
+In many simple case you can use the handy `UniqueKeyExtractor` which also implement `JoinableInterface`
 
 ```php
 use fab2s\YaEtl;

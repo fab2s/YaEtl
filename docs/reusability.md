@@ -1,4 +1,4 @@
-# Code reusability
+# Code re-usability
 
 YaEtl allows vast possibilities to reuse the code once written for an ETL. You can for example use a loader to load one single $record, as you would use a Model to store a record in a database, either directly:
 ```php

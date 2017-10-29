@@ -153,7 +153,7 @@ As Extractors will have the up stream return value as argument, it is possible t
 
 Some time, it could be required to extract data from several physical sources and / or shards at a low level, that is without any predefined and ready to use abstraction.
 
-This kind of operation is easy with YaEtl as Extractors can be aggregated to each other when building the flow. You could for example wish to extract data spanning over several sources where each would only keep a specific time frame. The same extractor could then be instantiated for each shard with proper sorting to end up extracting all the data as if it was stored in a single repository. YaEtl would then internally consume each eaxtractor's records in the order they where added to the flow and provide them one by one to the remaining nodes strictly as if a single extractor was used.
+This kind of operation is easy with YaEtl as Extractors can be aggregated to each other when building the flow. You could for example wish to extract data spanning over several sources where each would only keep a specific time frame. The same extractor could then be instantiated for each shard with proper sorting to end up extracting all the data as if it was stored in a single repository. YaEtl would then internally consume each extractor's records in the order they where added to the flow and provide them one by one to the remaining nodes strictly as if a single extractor was used.
 
 ```bash
      +-------------+  +-------------+     +-------------+

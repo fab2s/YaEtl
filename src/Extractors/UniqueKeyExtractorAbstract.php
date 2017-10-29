@@ -281,7 +281,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
         // something is wrong as uniqueKeyValueBuffer should
         // never run out until the fromer stop providing records
         // which means we do not want to reach here
-        throw new YaEtlException('Record map missmatch betwen Joiner ' . \get_class($this) . ' and Fromer ' . \get_class($this->joinFrom));
+        throw new YaEtlException('Record map mismatch between Joiner ' . \get_class($this) . ' and Fromer ' . \get_class($this->joinFrom));
     }
 
     /**
@@ -396,6 +396,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     /**
      * Generate record map
      *
+     * @throws YaEtlException
+     *
      * @return $this
      */
     protected function genRecordMap()
@@ -410,7 +412,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
                 continue;
             }
 
-            // generate rercord map
+            // generate record map
             $this->recordMap[$fromKeyAlias] = [];
             $map                            = &$this->recordMap[$fromKeyAlias];
             // we do not want to map defaults here as we do not want joiners
@@ -419,7 +421,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
             // $this->extracted is an indexed array on the proper key but ...
             foreach ($this->extracted as $record) {
                 if (!isset($record[$fromKeyAlias])) {
-                    // Since we do not enforce key alias existance during init
+                    // Since we do not enforce key alias existence during init
                     // we have to do it here
                     throw new YaEtlException("From Key Alias not found in record: $fromKeyAlias");
                 }

@@ -46,7 +46,7 @@ class YaEtlTest extends \TestCase
             $pdoQuery->execute();
             while ($row = $pdoQuery->fetch(\PDO::FETCH_ASSOC)) {
                 $result[] = $row;
-                $this->assertSame($spyInvocations[$idx]->parameters[0], $row, 'argument / result missmatch');
+                $this->assertSame($spyInvocations[$idx]->parameters[0], $row, 'argument / result mismatch');
                 ++$idx;
             }
         }
@@ -83,7 +83,7 @@ class YaEtlTest extends \TestCase
             $pdoQuery->execute();
             while ($row = $pdoQuery->fetch(\PDO::FETCH_ASSOC)) {
                 $result[] = $row;
-                $this->assertSame($spyInvocations[$idx]->parameters[0], $row, 'argument / result missmatch');
+                $this->assertSame($spyInvocations[$idx]->parameters[0], $row, 'argument / result mismatch');
                 ++$idx;
             }
         }

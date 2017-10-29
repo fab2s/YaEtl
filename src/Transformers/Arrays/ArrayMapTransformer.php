@@ -21,14 +21,14 @@ class ArrayMapTransformer extends TransformerAbstract
      *
      * @var callable
      */
-    protected $maper;
+    protected $mapper;
 
     /**
-     * @param callable $maper
+     * @param callable $mapper
      */
-    public function __construct(callable $maper)
+    public function __construct(callable $mapper)
     {
-        $this->maper = $maper;
+        $this->mapper = $mapper;
     }
 
     /**
@@ -40,6 +40,6 @@ class ArrayMapTransformer extends TransformerAbstract
      */
     public function exec($record)
     {
-        return \array_map($this->maper, $record);
+        return \array_map($this->mapper, $record);
     }
 }
