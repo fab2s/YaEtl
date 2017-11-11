@@ -9,6 +9,9 @@
 
 namespace fab2s\YaEtl\Extractors;
 
+use fab2s\NodalFlow\NodalFlowException;
+use fab2s\NodalFlow\YaEtlException;
+
 /**
  * class PdoUniqueKeyExtractor
  */
@@ -40,10 +43,14 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
      *                          '(table.)compositeKey2' => 'aliasNameAsInRecord2',
      *                          // ...
      *                      ]`
+     *
+     * @throws YaEtlException
+     * @throws NodalFlowException
      */
     public function __construct(\PDO $pdo, $extractQuery = null, $uniqueKey = 'id')
     {
         $this->configurePdo($pdo);
+
         parent::__construct($extractQuery, $uniqueKey);
     }
 

@@ -44,7 +44,7 @@ class NullExtractor extends ExtractorBatchLimitAbstract
      *
      * @return \Generator
      */
-    public function getTraversable($param)
+    public function getTraversable($param = null)
     {
         yield null;
     }

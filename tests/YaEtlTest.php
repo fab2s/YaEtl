@@ -7,6 +7,8 @@
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
  */
 
+use fab2s\NodalFlow\NodalFlowException;
+use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Extractors\OnClause;
 use fab2s\YaEtl\Extractors\PdoExtractor;
 use fab2s\YaEtl\Extractors\PdoUniqueKeyExtractor;
@@ -14,6 +16,9 @@ use fab2s\YaEtl\Transformers\CallableTransformer;
 use fab2s\YaEtl\Transformers\NoOpTransformer;
 use fab2s\YaEtl\YaEtl;
 
+/**
+ * Class YaEtlTest
+ */
 class YaEtlTest extends \TestCase
 {
     /**
@@ -22,6 +27,8 @@ class YaEtlTest extends \TestCase
      * @param YaEtl $flow
      * @param array $expectations
      * @param mixed $mocks
+     *
+     * @throws NodalFlowException
      */
     public function testFrom(YaEtl $flow, $expectations, $mocks)
     {
@@ -58,6 +65,8 @@ class YaEtlTest extends \TestCase
      * @param YaEtl $flow
      * @param array $expectations
      * @param mixed $mocks
+     *
+     * @throws NodalFlowException
      */
     public function testJoin(YaEtl $flow, $expectations, $mocks)
     {
@@ -90,6 +99,9 @@ class YaEtlTest extends \TestCase
     }
 
     /**
+     * @throws NodalFlowException
+     * @throws YaEtlException
+     *
      * @return array
      */
     public function joinCasesProvider()
@@ -232,6 +244,9 @@ class YaEtlTest extends \TestCase
     }
 
     /**
+     * @throws NodalFlowException
+     * @throws YaEtlException
+     *
      * @return array
      */
     public function fromCasesProvider()

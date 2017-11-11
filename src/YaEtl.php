@@ -11,11 +11,14 @@ namespace fab2s\YaEtl;
 
 use fab2s\NodalFlow\Flows\FlowStatusInterface;
 use fab2s\NodalFlow\NodalFlow;
-use fab2s\NodalFlow\Nodes\AggregateNode;
+use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\Nodes\AggregateNodeInterface;
 use fab2s\NodalFlow\Nodes\BranchNode;
+use fab2s\NodalFlow\Nodes\BranchNodeInterface;
 use fab2s\NodalFlow\Nodes\NodeInterface;
+use fab2s\NodalFlow\Nodes\TraversableNodeInterface;
 use fab2s\NodalFlow\YaEtlException;
+use fab2s\YaEtl\Extractors\AggregateExtractor;
 use fab2s\YaEtl\Extractors\ExtractorInterface;
 use fab2s\YaEtl\Extractors\JoinableInterface;
 use fab2s\YaEtl\Extractors\OnClauseInterface;
@@ -28,30 +31,21 @@ use fab2s\YaEtl\Transformers\TransformerInterface;
 class YaEtl extends NodalFlow
 {
     /**
-     * The stats items added to NodalFlow's ones
-     *
      * @var array
      */
-    protected $stats = [
-        'start'           => null,
-        'end'             => null,
-        'duration'        => null,
-        'mib'             => null,
-        'report'          => '',
+    protected $flowIncrements = [
         'num_extract'     => 0,
         'num_extractor'   => 0,
         'num_join'        => 0,
         'num_joiner'      => 0,
         'num_merge'       => 0,
-        'num_records'     => 0,
+        'num_records'     => 'num_iterate',
         'num_transform'   => 0,
         'num_transformer' => 0,
         'num_branch'      => 0,
         'num_load'        => 0,
         'num_loader'      => 0,
         'num_flush'       => 0,
-        'invocations'     => [],
-        'nodes'           => [],
     ];
 
     /**
@@ -60,34 +54,6 @@ class YaEtl extends NodalFlow
      * @var array
      */
     protected $reverseAggregateTable = [];
-
-    /**
-     * The branch hash map, used to enforce unicity
-     * Unfortunately, the first static approach is not
-     * a working option as spl_object_hash() does reuse
-     * hash when instances are destroyed, and this can
-     * create collisions in static context when you would
-     * execute several flows with branches in the same
-     * process :
-     * new flow1
-     *      branch1(hash892),branch2(hash111) ...
-     * execute
-     * unset flow1 and branches
-     *
-     * new flow2
-     *      branch3(hash228),branch4(hash892) <====== BOOOMMM
-     *
-     * Using dynamic variable solves this very issue, but does
-     * not provides with the same level of instance unicity enforcement
-     * This opens the gates for node instance reuse in different branches
-     * and parent instances
-     * Since this very feature is there to help enforcing good practice,
-     * it's not vital, it's up to the developer to know if and why he would
-     * be reusing nodes instances after all.
-     *
-     * @var array
-     */
-    protected $branchHashMap;
 
     /**
      * @var bool
@@ -100,18 +66,19 @@ class YaEtl extends NodalFlow
      * @param ExtractorInterface      $extractor
      * @param null|ExtractorInterface $aggregateWith Use the extractor instance you want to aggregate with
      *
+     * @throws YaEtlException
+     * @throws NodalFlowException
+     *
      * @return $this
      */
     public function from(ExtractorInterface $extractor, ExtractorInterface $aggregateWith = null)
     {
-        $this->enforceNodeInstanceUnicity($extractor);
         if ($aggregateWith !== null) {
             $this->aggregateTo($extractor, $aggregateWith);
         } else {
             parent::add($extractor);
+            $this->flowMap->incrementFlow('num_extractor');
         }
-
-        ++$this->stats['num_extractor'];
 
         return $this;
     }
@@ -125,7 +92,7 @@ class YaEtl extends NodalFlow
      */
     public function add(NodeInterface $node)
     {
-        throw new YaEtlException('add() is not directly available, use YaEtl grammar from(), transform(), join() and / or to() instead');
+        throw new YaEtlException('add() is not directly available, use YaEtl grammar instead');
     }
 
     /**
@@ -142,7 +109,7 @@ class YaEtl extends NodalFlow
      * Set to true if you are generating many records in a branch
      * and it makes sense to flush the branch more often
      * Also note that the branch will also be flushed at the end
-     * of its top most parent.
+     * of its top most parent flow.
      *
      * @param bool $forceFlush
      *
@@ -162,17 +129,18 @@ class YaEtl extends NodalFlow
      * @param JoinableInterface $joinFrom
      * @param OnClauseInterface $onClause
      *
+     * @throws NodalFlowException
+     *
      * @return $this
      */
     public function join(JoinableInterface $extractor, JoinableInterface $joinFrom, OnClauseInterface $onClause)
     {
-        $this->enforceNodeInstanceUnicity($extractor);
         $joinFrom->registerJoinerOnClause($onClause);
         $extractor->setJoinFrom($joinFrom);
         $extractor->setOnClause($onClause);
 
         parent::add($extractor);
-        ++$this->stats['num_joiner'];
+        $this->flowMap->incrementFlow('num_joiner');
 
         return $this;
     }
@@ -182,13 +150,14 @@ class YaEtl extends NodalFlow
      *
      * @param TransformerInterface $transformer
      *
+     * @throws NodalFlowException
+     *
      * @return $this
      */
     public function transform(TransformerInterface $transformer)
     {
-        $this->enforceNodeInstanceUnicity($transformer);
         parent::add($transformer);
-        ++$this->stats['num_transformer'];
+        $this->flowMap->incrementFlow('num_transformer');
 
         return $this;
     }
@@ -198,13 +167,14 @@ class YaEtl extends NodalFlow
      *
      * @param LoaderInterface $loader
      *
+     * @throws NodalFlowException
+     *
      * @return $this
      */
     public function to(LoaderInterface $loader)
     {
-        $this->enforceNodeInstanceUnicity($loader);
         parent::add($loader);
-        ++$this->stats['num_loader'];
+        $this->flowMap->incrementFlow('num_loader');
 
         return $this;
     }
@@ -212,33 +182,18 @@ class YaEtl extends NodalFlow
     /**
      * Adds a Branch (Flow) to the Flow
      *
-     * @staticvar type $flowHashes
-     *
      * @param YaEtl $flow            The Branch to add in this Flow
      * @param bool  $isAReturningVal To indicate if this Branch Flow is a true Branch or just
      *                               a bag of Nodes to execute at this location of the Flow
      *
-     * @throws YaEtlException
+     * @throws NodalFlowException
      *
      * @return $this
      */
     public function branch(YaEtl $flow, $isAReturningVal = false)
     {
-        if (!isset($this->branchHashMap)) {
-            $this->branchHashMap = [
-                $this->objectHash($this) => 1,
-            ];
-        }
-
-        $flowHash = $this->objectHash($flow);
-        if (isset($this->branchHashMap[$flowHash])) {
-            throw new YaEtlException('An instance of ' . \get_class($flow) . ' appears to be already in use in this flow. Please clone / re new before reuse');
-        }
-
-        $this->branchHashMap[$flowHash] = 1;
-
         parent::add(new BranchNode($flow, $isAReturningVal));
-        ++$this->stats['num_branch'];
+        $this->flowMap->incrementFlow('num_branch');
 
         return $this;
     }
@@ -264,36 +219,32 @@ class YaEtl extends NodalFlow
      */
     public function getStats()
     {
-        $stats          = $this->processStats(parent::getstats());
-        $stats['nodes'] = $this->getNodeStats();
+        $stats = parent::getstats();
 
-        $this->collectNodeStats($stats);
+        $tpl = '[YaEtl]({FLOW_STATUS}) {NUM_EXTRACTOR_TOTAL} Extractor - {NUM_EXTRACT_TOTAL} Extract - {NUM_RECORDS_TOTAL} Record ({NUM_ITERATE_TOTAL} Iterations)
+[YaEtl] {NUM_JOINER_TOTAL} Joiner - {NUM_JOIN_TOTAL} Join - {NUM_CONTINUE_TOTAL} Continue - {NUM_BREAK_TOTAL} Break - {NUM_BRANCH_TOTAL} Branch
+[YaEtl] {NUM_TRANSFORMER_TOTAL} Transformer - {NUM_TRANSFORM_TOTAL} Transform - {NUM_LOADER_TOTAL} Loader - {NUM_LOAD_TOTAL} Load - {NUM_FLUSH_TOTAL} Flush
+[YaEtl] Time : {DURATION} - Memory: {MIB} MiB';
 
-        $stats['duration'] = $stats['end'] - $stats['start'];
-        $stats             = \array_replace($stats, $this->duration($stats['duration']));
-        $stats['report']   = \sprintf(
-            '[YaEtl](%s) %s Extractor - %s Extract - %s Record (%s Iterations)
-[YaEtl] %s Joiner - %s Join - %s Continue - %s Break - %s Branch
-[YaEtl] %s Transformer - %s Transform - %s Loader - %s Load - %s Flush
-[YaEtl] Time : %s - Memory: %4.2fMiB',
-            $this->flowStatus,
-            \number_format($stats['num_extractor'], 0, '.', ' '),
-            \number_format($stats['num_extract'], 0, '.', ' '),
-            \number_format($stats['num_records'], 0, '.', ' '),
-            \number_format($this->numIterate, 0, '.', ' '),
-            \number_format($stats['num_joiner'], 0, '.', ' '),
-            \number_format($stats['num_join'], 0, '.', ' '),
-            \number_format($this->numContinue, 0, '.', ' '),
-            \number_format($this->numBreak, 0, '.', ' '),
-            \number_format($stats['num_branch'], 0, '.', ' '),
-            \number_format($stats['num_transformer'], 0, '.', ' '),
-            \number_format($stats['num_transform'], 0, '.', ' '),
-            \number_format($stats['num_loader'], 0, '.', ' '),
-            \number_format($stats['num_load'], 0, '.', ' '),
-            \number_format($stats['num_flush'], 0, '.', ' '),
-            $stats['durationStr'],
-            $stats['mib']
-        );
+        $vars = [];
+        foreach ($this->flowIncrements as $key => $ignore) {
+            $stats[$key . '_total'] += $stats[$key];
+        }
+
+        foreach ($stats as $varName => $value) {
+            if (is_array($value)) {
+                continue;
+            }
+
+            if (is_numeric($value)) {
+                $vars['{' . strtoupper($varName) . '}'] = \number_format($stats[$varName], is_int($value) ? 0 : 2, '.', ' ');
+                continue;
+            }
+
+            $vars['{' . strtoupper($varName) . '}'] = $value;
+        }
+
+        $stats['report'] = str_replace(array_keys($vars), array_values($vars), $tpl);
 
         return $stats;
     }
@@ -316,189 +267,45 @@ class YaEtl extends NodalFlow
      * @param ExtractorInterface $aggregateWith
      *
      * @throws YaEtlException
+     * @throws NodalFlowException
      *
      * @return $this
      */
     protected function aggregateTo(ExtractorInterface $extractor, ExtractorInterface $aggregateWith)
     {
         // aggregate with target Node
-        $nodeHash = $aggregateWith->getNodeHash();
-        if (!isset($this->nodeMap[$nodeHash]) && !isset($this->reverseAggregateTable[$nodeHash])) {
+        $aggregateWithNodeId = $aggregateWith->getId();
+        $aggregateWithIdx    = $this->flowMap->getNodeIndex($aggregateWithNodeId);
+        if ($aggregateWithIdx === null && !isset($this->reverseAggregateTable[$aggregateWithNodeId])) {
             throw new YaEtlException('Cannot aggregate with orphaned Node:' . \get_class($aggregateWith));
         }
 
-        $aggregateWithIdx = isset($this->nodeMap[$nodeHash]) ? $this->nodeMap[$nodeHash]['index'] : $this->reverseAggregateTable[$nodeHash];
-        if ($this->nodes[$aggregateWithIdx] instanceof AggregateNodeInterface) {
-            $this->nodes[$aggregateWithIdx]->addTraversable($extractor);
-            // aggregate node did take care of setting carrier and hash
-            $this->reverseAggregateTable[$extractor->getNodeHash()] = $aggregateWithIdx;
+        /** @var TraversableNodeInterface $aggregateWithNode */
+        $aggregateWithNode = $this->nodes[$aggregateWithIdx];
+        if ($aggregateWithNode instanceof AggregateNodeInterface) {
+            $aggregateWithNode->addTraversable($extractor);
+            $this->reverseAggregateTable[$extractor->getId()] = $aggregateWithIdx;
 
             return $this;
         }
 
-        $aggregateNode = new AggregateNode(true);
-        $aggregateNode->addTraversable($this->nodes[$aggregateWithIdx])
-                ->addTraversable($extractor);
+        $aggregateNode = new AggregateExtractor(true);
         // keep track of this extractor before we bury it in the aggregate
-        $this->reverseAggregateTable[$this->nodes[$aggregateWithIdx]->getNodeHash()] = $aggregateWithIdx;
+        $this->reverseAggregateTable[$aggregateWithNode->getId()] = $aggregateWithIdx;
         // now replace its slot in the main tree
         $this->replace($aggregateWithIdx, $aggregateNode);
-        // aggregate node did take care of setting carrier and hash
-        $this->reverseAggregateTable[$aggregateNode->getNodeHash()]                  = $aggregateWithIdx;
-        $this->reverseAggregateTable[$extractor->getNodeHash()]                      = $aggregateWithIdx;
+        $aggregateNode->addTraversable($aggregateWithNode)
+            ->addTraversable($extractor);
+
+        // adjust counters as we did remove the $aggregateWith Extractor from this flow
+        $reg = &$this->registry->get($this->getId());
+        --$reg['flowStats']['num_extractor'];
+
+        // aggregate node did take care of setting carrier
+        $this->reverseAggregateTable[$aggregateNode->getId()] = $aggregateWithIdx;
+        $this->reverseAggregateTable[$extractor->getId()]     = $aggregateWithIdx;
 
         return $this;
-    }
-
-    /**
-     * Collect Nodes stats
-     *
-     * @param array $stats
-     *
-     * @return $this
-     */
-    protected function collectNodeStats(array &$stats)
-    {
-        $stats = \array_replace($this->statsDefault, $stats);
-        foreach ($this->nodes as $nodeIdx => $node) {
-            if (($node instanceof JoinableInterface) && $node->getOnClause()) {
-                $this->nodeStats[$nodeIdx]['num_join'] = $node->getNumRecords();
-                $stats['num_join'] += $this->nodeStats[$nodeIdx]['num_join'];
-            } elseif ($node instanceof ExtractorInterface) {
-                $this->nodeStats[$nodeIdx]['num_records'] = $this->nodeStats[$nodeIdx]['num_iterate'];
-                $this->nodeStats[$nodeIdx]['num_extract'] = $node->getNumExtract();
-                $stats['num_records'] += $this->nodeStats[$nodeIdx]['num_iterate'];
-                $stats['num_extract'] += $this->nodeStats[$nodeIdx]['num_extract'];
-            } elseif ($node instanceof TransformerInterface) {
-                $this->nodeStats[$nodeIdx]['num_transform'] = $this->nodeStats[$nodeIdx]['num_exec'];
-                $stats['num_transform'] += $this->nodeStats[$nodeIdx]['num_transform'];
-            } elseif ($node instanceof LoaderInterface) {
-                $this->nodeStats[$nodeIdx]['num_load'] = $this->nodeStats[$nodeIdx]['num_exec'];
-                $stats['num_load'] += $this->nodeStats[$nodeIdx]['num_load'];
-            } elseif ($node instanceof AggregateNodeInterface) {
-                $this->nodeStats[$nodeIdx]['num_records'] = $this->nodeStats[$nodeIdx]['num_iterate'];
-                $stats['num_records'] += $this->nodeStats[$nodeIdx]['num_iterate'];
-                $this->nodeStats[$nodeIdx]['num_extract'] = 0;
-                foreach ($node->getNodeCollection() as $extractorNode) {
-                    $this->nodeStats[$nodeIdx]['num_extract'] += $extractorNode->getNumExtract();
-                }
-
-                $stats['num_extract'] += $this->nodeStats[$nodeIdx]['num_extract'];
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Replaces a node with another one
-     *
-     * @param int           $nodeIdx
-     * @param NodeInterface $node
-     *
-     * @throws YaEtlException
-     *
-     * @return $this
-     */
-    protected function replace($nodeIdx, NodeInterface $node)
-    {
-        if (!isset($this->nodes[$nodeIdx])) {
-            throw new YaEtlException('Argument 1 should be a valid index in nodes, got:' . \gettype($nodeIdx));
-        }
-
-        unset($this->nodeMap[$this->nodeStats[$nodeIdx]['hash']], $this->nodeStats[$nodeIdx]);
-        $nodeHash = $this->objectHash($node);
-
-        $node->setCarrier($this)->setNodeHash($nodeHash);
-
-        $this->nodes[$nodeIdx]    = $node;
-        $this->nodeMap[$nodeHash] = \array_replace($this->nodeMapDefault, [
-            'class'    => \get_class($node),
-            'branchId' => $this->flowId,
-            'hash'     => $nodeHash,
-            'index'    => $nodeIdx,
-        ]);
-
-        // register references to nodeStats to increment faster
-        // nodeStats can also be used as reverse lookup table
-        $this->nodeStats[$nodeIdx] = &$this->nodeMap[$nodeHash];
-
-        return $this;
-    }
-
-    /**
-     * Compute final stats
-     *
-     * @param array $stats
-     *
-     * @return array
-     */
-    protected function processStats($stats)
-    {
-        if (!empty($stats['nodes'])) {
-            $stats['nodes'] = $this->processStats($stats['nodes']);
-        }
-
-        if (empty($stats['invocations'])) {
-            return $stats;
-        }
-
-        foreach ($stats['invocations'] as &$value) {
-            $value           = \array_replace($value, $this->duration($value['duration']));
-            $value['report'] = \sprintf('[YaEtl] Time : %s - Memory: %4.2fMiB',
-                $value['durationStr'],
-                $value['mib']
-            );
-        }
-
-        return $stats;
-    }
-
-    /**
-     * It could lead to really tricky situation if we where to
-     * allow multiple instances of the same node. It's obviously
-     * wrong with an Extractor, but even a Transformer could
-     * create dark corner cases.
-     *
-     * @param NodeInterface $node
-     *
-     * @throws YaEtlException
-     *
-     * @return $this
-     */
-    protected function enforceNodeInstanceUnicity(NodeInterface $node)
-    {
-        if ($this->findNodeHashInMap($this->objectHash($node), $this->getNodeMap())) {
-            throw new YaEtlException('This instance of ' . \get_class($node) . ' appears to be already in use in this flow. Please deep clone / re new before reuse');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Find a Node by its hash in a node map, used to enforce Node instance unicity
-     *
-     * @param string $hash
-     * @param array  $nodeMap
-     *
-     * @return bool
-     */
-    protected function findNodeHashInMap($hash, $nodeMap)
-    {
-        if (isset($nodeMap[$hash])) {
-            return true;
-        }
-
-        foreach ($nodeMap as $mapData) {
-            if (
-                !empty($mapData['nodes']) &&
-                $this->findNodeHashInMap($hash, $mapData['nodes'])
-            ) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -536,14 +343,18 @@ class YaEtl extends NodalFlow
         foreach ($this->nodes as $node) {
             if ($node instanceof LoaderInterface) {
                 $node->flush($flowStatus);
-                ++$this->stats['num_flush'];
+                $this->flowMap->incrementFlow('num_flush');
                 continue;
             }
 
             // start with only flushing YaEtl and extends
-            if ($node instanceof BranchNode && \is_a($node->getPayload(), static::class)) {
-                $node->getPayload()->flush($flowStatus);
-                ++$this->stats['num_flush'];
+            if ($node instanceof BranchNodeInterface) {
+                $flow = $node->getPayload();
+                if (\is_a($flow, static::class)
+) {
+                    /* @var YaEtl $flow */
+                    $flow->flush($flowStatus);
+                }
             }
         }
 

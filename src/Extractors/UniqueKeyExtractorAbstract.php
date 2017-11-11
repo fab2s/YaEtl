@@ -9,6 +9,7 @@
 
 namespace fab2s\YaEtl\Extractors;
 
+use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\YaEtlException;
 
 /**
@@ -102,10 +103,16 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *                          '(table.)compositeKey2' => 'aliasNameAsInRecord2',
      *                          // ...
      *                      ]`
+     *
+     * @throws NodalFlowException
      */
     public function __construct($extractQuery = null, $uniqueKeySetup = 'id')
     {
         $this->configureUniqueKey($uniqueKeySetup);
+
+        $this->nodeIncrements = array_replace($this->nodeIncrements, [
+            'num_join' => 0,
+        ]);
 
         parent::__construct($extractQuery);
     }
@@ -195,6 +202,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      * Trigger extract
      *
      * @param mixed $param
+     *
+     * @throws YaEtlException
      *
      * @return bool
      */
@@ -287,6 +296,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     /**
      * Trigger an extract in join mode
      *
+     * @throws YaEtlException
+     *
      * @return bool
      */
     protected function joinExtract()
@@ -303,6 +314,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
             // gen record map before we set defaults
             $this->genRecordMap()
                 ->setDefaultExtracted();
+            $this->getCarrier()->getFlowMap()->incrementNode($this->getId(), 'num_join');
 
             return true;
         }
@@ -384,8 +396,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     protected function setDefaultExtracted()
     {
         if ($this->joinFrom !== null) {
-            $defaultrecord    = $this->onClose->isLeftJoin() ? $this->onClose->getDefaultRecord() : false;
-            $defaultExtracted = \array_fill_keys($this->uniqueKeyValues, $defaultrecord);
+            $defaultRecord    = $this->onClose->isLeftJoin() ? $this->onClose->getDefaultRecord() : false;
+            $defaultExtracted = \array_fill_keys($this->uniqueKeyValues, $defaultRecord);
 
             $this->extracted = \array_replace($defaultExtracted, $this->extracted);
         }

@@ -9,6 +9,8 @@
 
 namespace fab2s\YaEtl\Extractors;
 
+use fab2s\NodalFlow\NodalFlowException;
+
 /**
  * abstract Class DbExtractorAbstract
  */
@@ -32,12 +34,16 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
      * Instantiate a DB extractor
      *
      * @param mixed $extractQuery
+     *
+     * @throws NodalFlowException
      */
     public function __construct($extractQuery = null)
     {
         if ($extractQuery !== null) {
             $this->setExtractQuery($extractQuery);
         }
+
+        parent::__construct();
     }
 
     /**
@@ -96,7 +102,7 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
          *
          * Now since using shift() will result in an empty
          * SplDoublyLinkedList at the end of the extraction cycle,
-         * the ETL will end up using less RAM when using multiple forms.
+         * the ETL will end up using less RAM when using multiple from.
          * Otherwise, each extractor would keep its entire last
          * extracted collection in RAM until the end of the whole ETL.
          *
@@ -105,9 +111,8 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
          *     yield $record;
          * }
          *
-         * we can't really say it is.
-         * I quickly measured the time cost of this do/while vs foreach :
-         * => 1M records from two extractors (500K each, 50K records per extract)
+         * but we can't really say it is:
+         * => do/while vs foreach 1M records from two extractors (500K each, 50K records per extract)
          * ==> php 7.1.2
          *      - foreach : 2sec 125ms - Memory: 74.00MiB
          *      - do / while : 1sec 922ms - Memory: 42.00MiB
@@ -120,6 +125,7 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
          */
         while ($this->extract($param)) {
             ++$this->numExtract;
+            $this->getCarrier()->getFlowMap()->incrementNode($this->getId(), 'num_extract');
             do {
                 $record = $this->extracted->shift();
                 $this->extracted->rewind();

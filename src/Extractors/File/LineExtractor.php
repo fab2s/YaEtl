@@ -19,7 +19,7 @@ class LineExtractor extends FileExtractorAbstract
      *
      * @return \Generator
      */
-    public function getTraversable($param)
+    public function getTraversable($param = null)
     {
         if (!$this->extract($param)) {
             return;

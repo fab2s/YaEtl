@@ -42,6 +42,13 @@ abstract class LoaderAbstract extends NodeAbstract implements LoaderInterface
     protected $isAFlow = false;
 
     /**
+     * @var array
+     */
+    protected $nodeIncrements = [
+        'num_load' => 'num_exec',
+    ];
+
+    /**
      * Implement flush as noOp since it's not always
      * required. Besides, if you do implement it
      * while not performing any type of multi insert,

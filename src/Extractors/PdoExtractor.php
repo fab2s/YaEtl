@@ -9,6 +9,9 @@
 
 namespace fab2s\YaEtl\Extractors;
 
+use fab2s\NodalFlow\NodalFlowException;
+use fab2s\NodalFlow\YaEtlException;
+
 /**
  * Class PdoExtractor
  */
@@ -21,6 +24,9 @@ class PdoExtractor extends DbExtractorAbstract
      *
      * @param \PDO        $pdo
      * @param string|null $extractQuery
+     *
+     * @throws NodalFlowException
+     * @throws YaEtlException
      */
     public function __construct(\PDO $pdo, $extractQuery = null)
     {

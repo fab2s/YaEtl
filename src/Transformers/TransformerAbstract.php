@@ -36,4 +36,11 @@ abstract class TransformerAbstract extends NodeAbstract implements TransformerIn
      * @var bool
      */
     protected $isAFlow = false;
+
+    /**
+     * @var array
+     */
+    protected $nodeIncrements = [
+        'num_transform' => 'num_exec',
+    ];
 }

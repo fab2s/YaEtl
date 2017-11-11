@@ -9,6 +9,7 @@
 
 namespace fab2s\YaEtl\Laravel\Extractors;
 
+use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Extractors\PdoUniqueKeyExtractor;
 use Illuminate\Database\Query\Builder;
@@ -33,15 +34,13 @@ class UniqueKeyExtractor extends PdoUniqueKeyExtractor
      *                                   'compositeKey2' => 'desc',
      *                                   // ...
      *                                   ]
+     *
+     * @throws YaEtlException
+     * @throws NodalFlowException
      */
     public function __construct(Builder $extractQuery, $uniqueKey = 'id')
     {
-        $this->configurePdo($extractQuery->getConnection()->getPdo());
-        $this->configureUniqueKey($uniqueKey);
-
-        if ($extractQuery !== null) {
-            $this->setExtractQuery($extractQuery);
-        }
+        parent::__construct($extractQuery->getConnection()->getPdo(), $extractQuery, $uniqueKey);
     }
 
     /**

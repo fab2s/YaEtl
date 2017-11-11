@@ -38,6 +38,14 @@ abstract class ExtractorAbstract extends NodeAbstract implements ExtractorInterf
     protected $isAFlow = false;
 
     /**
+     * @var array
+     */
+    protected $nodeIncrements = [
+        'num_records' => 'num_iterate',
+        'num_extract' => 0,
+    ];
+
+    /**
      * Number of extracts in Flow's execution
      *
      * @var int

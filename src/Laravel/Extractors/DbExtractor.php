@@ -9,6 +9,7 @@
 
 namespace fab2s\YaEtl\Laravel\Extractors;
 
+use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Extractors\PdoExtractor;
 use Illuminate\Database\Query\Builder;
@@ -35,15 +36,16 @@ class DbExtractor extends PdoExtractor
     /**
      * Instantiate the DbExtractor
      *
-     * @param Builder|null $extractQuery
+     * @param Builder $extractQuery
+     *
+     * @throws YaEtlException
+     * @throws NodalFlowException
      */
-    public function __construct(Builder $extractQuery = null)
+    public function __construct(Builder $extractQuery)
     {
-        $this->configurePdo($extractQuery->getConnection()->getPdo());
+        $this->setExtractQuery($extractQuery);
 
-        if ($extractQuery !== null) {
-            $this->setExtractQuery($extractQuery);
-        }
+        parent::__construct($extractQuery->getConnection()->getPdo());
     }
 
     /**
