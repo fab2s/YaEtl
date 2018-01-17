@@ -207,7 +207,7 @@ As the whole flow is an object, it can be serialized, but this is unless it carr
 
 ## Requirements
 
-NodalFlow is tested against php 5.6, 7.0, 7.1 and hhvm, but it may run bellow that (might up to 5.3).
+NodalFlow is tested against php 5.6, 7.0, 7.1, 7.2 and hhvm, but it may run bellow that (might up to 5.3).
 
 ## Contributing
 
