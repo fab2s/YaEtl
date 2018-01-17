@@ -215,7 +215,7 @@ class YaEtl extends NodalFlow
     /**
      * KISS method to expose basic stats
      *
-     * @return array
+     * @return array<string,integer|string>
      */
     public function getStats()
     {
