@@ -3,11 +3,13 @@
 This package comes with ready and easy to use [**Laravel**](https://laravel.com/) implementations.
 
 ## Extractor
+
 Laravel's Extractor extend their PDO counterpart and do all the actual querying using PDO directly. This is done so because they are intended to extract up to many records, and the overhead of using collections and objects for every batch of record would be pretty high. Actually, it could become a problem over couple 100k records, would create less reusable code and without real benefit (the data stays the same).
 
 This means that these class do not differ much from the PDO implementations, as they essentially implement logic to extract the underlying PDO object, query and bindings from Laravel's `Builder`. But they also demonstrate how you could extends the various Abstracts, Interfaces and implementations to create your own.
 
 ### Generic DB extractor
+
 ```php
 use fab2s\YaEtl\YaEtl;
 use fab2s\YaEtl\Laravel\DbExtractor;
@@ -41,6 +43,7 @@ $yaEtl->from($dbExtractor)
 ```
 
 ### Unique Key extractor
+
 In many simple case you can use the handy `UniqueKeyExtractor` which also implement `JoinableInterface`
 
 ```php
@@ -74,6 +77,7 @@ $yaEtl->from($uniqueKeyExtractor)
 ## Loader
 
 ### Generic DB loader
+
 ```php
 use fab2s\YaEtl;
 use fab2s\YaEtl\Laravel\Loaders\DbLoader;

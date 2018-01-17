@@ -1,8 +1,11 @@
 # Usage
 
 ## A fluent grammar
+
 YaEtl can build complex and repeatable workflow fluently:
+
 ### from()
+
 The `from(ExtractorInterface $extractor, ExtractorInterface $aggregateWith = null)` method adds an extractor as a source of records to the flow, which may or may not be aggregated with another one and later referred as Fromer
 
 A fromer is a Traversable Node that will be iterated upon each of his extracted records in the flow. Each records will then pass through all the remaining nodes, which could just be a transformer and a Toer to achieve a simple ETL workflow.
@@ -14,11 +17,13 @@ Each extractor would then consume all its records before the next fromer takes p
 If you where to add a fromer without aggregating it to another, it would then just generate its records, using, or not, each upstream record as argument. This would result into this extractor to generate several records each time it is triggered in the flow, eg, each time a records arrives at its point of execution in the flow.
 
 ### join()
+
 The `join(JoinableInterface $extractor, JoinableInterface $joinFrom, OnClauseInterface $onClause)` methods adds an extractor that will perform a join operation upon another extractor's records, later referred as Joiners
 
 Join operation is pretty similar to a JOIN with a DBMS. Joiner can be used to enrich records and can either "LEFT" join by providing with a default enrichment, when they would not find matching records, or, just a regular join by triggering a "continue" type interruption which will make the flow skip the record and continue with the eventual next record form the first upstream extractor.
 
 The nature of the join is defined by the `$onClause` argument which implements `OnClauseInterface`:
+
 ```php
 $joinOnClause  = new OnClause('fromKeyAliasAsInRecord', 'fromKeyAliasAsInRecord', function ($upstreamRecord, $record) {
     return array_replace($record, $upstreamRecord);
@@ -28,16 +33,19 @@ $leftJoinOnClause  = new OnClause('fromKeyAliasAsInRecord', 'fromKeyAliasAsInRec
 ```
 
 ### transform()
+
 The `transform(TransformerInterface $trasformer)` method adds a transformer to the flow that will transform each record one by one, later referred as Transformer
 
 Transformers are simple really, they just take a record as parameter and return a transformed version of the record. Simplest use case could be to change character encoding, but they could also be used to match a loader data structure, as a way to make it reusable, or just because it is required by the business logic.
 
 ### branch()
+
 The `branch(YaTl $yaEtlWorkflow)` method adds an entire flow in the flow, that will be treated as a single node and later referred as Brancher
 
 Branches currently cannot be traversable. It's something that may be implemented at some point though as it is technically feasible and even could be of some use. As any nodes, branch node accepts one argument and can, or not, pass a value to be used as parameter to the next node.
 
 ### to()
+
 The `to(LoaderInterface $loader)` method adds a loader in the flow, later referred as Toer
 
 Toers are at the end of the line, but they are not necessarily at the end of the flow. They can return a value that would be used as argument to the eventual next node or else the first upstream Extractor. But YaEtl's Loaders are currently not returning values.
@@ -96,24 +104,30 @@ Of course, it's not realistic in many cases to get all records at once, but it's
 YaEtl comes with many partial to complete Extractor implementations to address many use case with some emphasis on databases in general and [PDO](http://php.net/PDO) in particular:
 
 ### ExtractorAbstract
+
 `ExtractorAbstract` implements `ExtractorInterface` which extends NodalFlow's `TraversableInterface`. This is the minimal NodalFlow setup you can extend to create an extractor
 
 ### ExtractorLimitAbstract
+
 `ExtractorLimitAbstract` extends `ExtractorAbstract` and adds logic to handle extraction limits.
 
 ### ExtractorBatchLimitAbstract
 `ExtractorBatchLimitAbstract` extends `ExtractorLimitAbstract` and adds logic to additionally handle batch extraction, eg paginated queries.
 
 ### DbExtractorAbstract
+
 `DbExtractorAbstract` extends `ExtractorBatchLimitAbstract` and adds logic to extract from any DBMS.
 
 ### PdoExtractor
+
 `PdoExtractor` extends `DbExtractorAbstract` and is a ready to use PDO extractor implementation.
 
 ### UniqueKeyExtractorAbstract
+
 `UniqueKeyExtractorAbstract` extends `DbExtractorAbstract` and implements `JoinableIUnterface`. It adds logic to extract and Join from any DBMS provided that the sql query fetches records against a single unique KEY. The unique key may be composite for extraction, but joining is currently only supported against a single unique key. While you can join records on a single unique keys from an extractor that actually query on some other (composite) keys (as long as the Joined key remains unique in the records), you cannot currently Join on a composite unique key directly.
 
 ### PdoUniqueKeyExtractor
+
 `PdoUniqueKeyExtractor` extends `PdoExtractorAbstract` and also implements `JoinableIUnterface`). It is a ready to use PDO `Joinable` (unique key) extractor.
 
 Implementing a `Joinable` extractor requires a bit more work as there is a need to build records maps and transmit them among joiners. But it can be pretty quick using `UniqueKeyExtractorAbstract` and / or `PdoUniqueKeyExtractor` as they provides with much of the work. The Laravel `UniqueKeyExtractor` class is a working example of a class extending `PdoUniqueKeyExtractor`, being itself a working example of a class implementing `UniqueKeyExtractorAbstract`.
@@ -148,6 +162,7 @@ class Transformer extends TransformerAbstract
 ```
 
 YaEtl also includes a ready to use `CallableTransformer` which takes a `callable` as argument to its constructor:
+
 ```php
 use fab2s\YaEtl\Transformers\CallableTransformer;
 
@@ -249,6 +264,7 @@ class Loader extends LoaderAbstract
 ```
 
 ## In practice
+
 ```php
 use fab2s\YaEtl\YaEtl;
 use fab2s\YaEtl\Extractor\OnClose;
@@ -296,6 +312,7 @@ echo $stats['report'];
 ```
 
 But YaEtl also allows things like :
+
 ```php
 // one can even transform before extracting
 // could be useful in case your extractor
@@ -307,21 +324,27 @@ But YaEtl also allows things like :
     ->to(new Loader)
     ->exec($param);
 ```
+
 or:
+
 ```php
 // if you just need to use a transformer alone
 $result = (new YaEtl)->transform(new Transformer)->exec($param);
 // equivalent to
 $result = (new Transformer)->exec($param)
 ```
+
 or :
+
 ```php
 // if you need to re-use loader standalone
 (new YaEtl)->to(new Loader)->exec($param);
 // equivalent to :
 (new Loader)->exec($param)->flush();
 ```
+
 and:
+
 ```php
 // to use an extractor anywhere
 foreach ((new Extractor)->getTraversable($param) as $record) {

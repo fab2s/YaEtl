@@ -203,7 +203,9 @@ YaEtl provides with all the necessary interfaces to implement Join operation in 
 
 ## Serialization
 
-As the whole flow is an object, it can be serialized, but this is unless it carries Closures, which may occur with `OnClose` objects. Closure serialization is not natively supported by PHP, but there are ways around it like [Opis Closure](https://github.com/opis/closure)
+YaEtl is serializable, but this is unless it carries Closures, which may occur with `OnClose` objects, as `Closure` serialization is not natively supported by PHP, but there are ways around it like [Opis Closure](https://github.com/opis/closure).
+
+Please have a look at [NodalFlow documentation](https://github.com/fab2s/NodalFlow/blob/master/docs/serialization.md) for more interesting edge cases with serialization.
 
 ## Requirements
 

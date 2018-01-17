@@ -1,15 +1,19 @@
 # Code re-usability
 
 YaEtl allows vast possibilities to reuse the code once written for an ETL. You can for example use a loader to load one single $record, as you would use a Model to store a record in a database, either directly:
+
 ```php
 $myLoader->exec($record)->flush();
 ```
+
  or wrapped in a flow:
+ 
 ```php
 (new YaEtl)->to($myLoader)->exec($record);
 ```
 
 And the same goes with transformers which can be used alone or grouped without together without the need of any other nodes in the flow:
+
 ```php
 // single transform
 $result = $aTransformer->exec($record);
@@ -20,6 +24,7 @@ $result = (new YaEtl)->transform($aTransformer)->transform($anotherTransformer)-
 ```
 
 Even Extractors can be used directly as data generators:
+
 ```php
 foreach ($myExtractor->getTraversable(null) as $record) {
     // do something with the record

@@ -23,19 +23,23 @@ $flow->setCallBack($callback);
 A `CallbackAbstract` provides with a NoOp implementation of `CallbackInterface` in case you only need to override few of the interface methods without implementing the others.
 
 A FlowStatus object is available within callbacks in case you need to make decisions based on how things went. The FlowStatus can indicate several states:
+
 ## Clean
+
 That is if everything went well up to this point:
 ```php
 $isClean = $flow->getFlowStatus()->isClean();
 ```
 
 ## Dirty
+
 That is if the flow was broken (break interruption) by a node:
 ```php
 $isDirty = $flow->getFlowStatus()->isDirty();
 ```
 
 ## Exception
+
 That is if a node raised an exception during the execution:
 ```php
 $isDirty = $flow->getFlowStatus()->isException();
