@@ -14,6 +14,7 @@ Being Nodal makes it possible to chain arbitrary number of Extract to Load opera
 
 ## YaEtl Documentation
 [![Documentation Status](https://readthedocs.org/projects/yaetl/badge/?version=latest)](http://yaetl.readthedocs.io/en/latest/?badge=latest) Documentation can be found at [ReadTheDocs](http://yaetl.readthedocs.io/en/latest/?badge=latest)
+It is also a good thing to check [NodalFlow documentation](http://nodalflow.readthedocs.io/en/latest/?badge=latest), especially concerning fundamental features which are directly usable in YaEtl such as [Interruption](http://nodalflow.readthedocs.io/en/latest/interruptions/),[Serialization](http://nodalflow.readthedocs.io/en/latest/serialization/) or the `sendTo` feature allowing you to turns your Flows into _executable networks_ of Flows and Nodes.
 
 ## Installation
 
