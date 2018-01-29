@@ -23,6 +23,7 @@ use fab2s\YaEtl\Extractors\ExtractorInterface;
 use fab2s\YaEtl\Extractors\JoinableInterface;
 use fab2s\YaEtl\Extractors\OnClauseInterface;
 use fab2s\YaEtl\Loaders\LoaderInterface;
+use fab2s\YaEtl\Qualifiers\QualifierInterface;
 use fab2s\YaEtl\Transformers\TransformerInterface;
 
 /**
@@ -42,6 +43,7 @@ class YaEtl extends NodalFlow
         'num_records'     => 'num_iterate',
         'num_transform'   => 0,
         'num_transformer' => 0,
+        'num_qualifier'   => 0,
         'num_branch'      => 0,
         'num_load'        => 0,
         'num_loader'      => 0,
@@ -79,6 +81,21 @@ class YaEtl extends NodalFlow
             parent::add($extractor);
             $this->flowMap->incrementFlow('num_extractor');
         }
+
+        return $this;
+    }
+
+    /**
+     * @param QualifierInterface $qualifier
+     *
+     * @throws NodalFlowException
+     *
+     * @return $this
+     */
+    public function qualify(QualifierInterface $qualifier)
+    {
+        parent::add($qualifier);
+        $this->flowMap->incrementFlow('num_qualifier');
 
         return $this;
     }
