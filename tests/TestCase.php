@@ -153,7 +153,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $keep = false;
         $j    = 1;
         for ($i = 1; $i <= $max; ++$i) {
-            $key    = $index . $nonce++;
             $from[] = [
                 'id'      => $i,
                 'join_id' => null,

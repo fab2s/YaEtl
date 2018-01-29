@@ -65,7 +65,7 @@ YaEtl can address several generic use cases with ease, among which some would ot
 ### Pure ETL
 
 YaEtl can, but is not limited to, incarnate a pure ETL flow as seen many times. It's worth nothing to say that YaEtl supports batch extract and load by design.
-```bash
+```
 +---------+                   +---------+
 |         |                   |         |
 |         |                   |         |
@@ -91,7 +91,7 @@ YaEtl can, but is not limited to, incarnate a pure ETL flow as seen many times. 
 ### Mutualized extracts
 
 Being Nodal makes it possible for YaEtl to transparently mutualize extraction across as many use case as necessary, which in the end may even not be a load.
-```bash
+```
 +-------------+
 |             |
 |             |
@@ -127,7 +127,7 @@ Being Nodal makes it possible for YaEtl to transparently mutualize extraction ac
 
 As Extractors will have the up stream return value as argument, it is possible to chain Extractors themselves to obtain items in categories. This can help separate concerns as it makes it possible to extract all items in all categories while still using specialized extractors, eg a category and an item one; provided that the item extractor is also able to extract items by category when passed with the proper category object as argument (which is not the case when you would start with extracting items, unless you specify an argument to the whole flow).
 
-```bash
+```
 +------------+
 |            |
 |            |
@@ -159,7 +159,7 @@ Some time, it could be required to extract data from several physical sources an
 
 This kind of operation is easy with YaEtl as Extractors can be aggregated to each other when building the flow. You could for example wish to extract data spanning over several sources where each would only keep a specific time frame. The same extractor could then be instantiated for each shard with proper sorting to end up extracting all the data as if it was stored in a single repository. YaEtl would then internally consume each extractor's records in the order they where added to the flow and provide them one by one to the remaining nodes strictly as if a single extractor was used.
 
-```bash
+```
      +-------------+  +-------------+     +-------------+
      |             |  |             |     |             |
      |   shard 1   |  |   shard 2   | ... |   shard N   |
@@ -186,7 +186,7 @@ This kind of operation is easy with YaEtl as Extractors can be aggregated to eac
 
 YaEtl provides with all the necessary interfaces to implement Join operation in pretty much the same way a DBMS would (regular and left join). Under the hoods, this require to communicate some kind of record map for joiners to know what record to match in the process. YaEtl comes with a complete `PDO` implementation of a generic Joinable Extractor (against single unique key). Use cases of such feature are endless, especially when you start considering that all the above patterns are fully combineable and even branchable. It is also important to note that YaEtl extractors support extracting records by batches even for joiners which could (and most likely should) be smaller than the extractor joined against (eg smaller sets for `WHERE IN` query types).
 
-```bash
+```
 +-----------+      +------------+
 |           |      |            |
 |           |      |            |

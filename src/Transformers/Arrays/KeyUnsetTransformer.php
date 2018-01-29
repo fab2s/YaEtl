@@ -9,6 +9,7 @@
 
 namespace fab2s\YaEtl\Transformers\Arrays;
 
+use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Transformers\TransformerAbstract;
 
 /**
@@ -25,10 +26,13 @@ class KeyUnsetTransformer extends TransformerAbstract
 
     /**
      * @param array $unsetList array of key to unset
+     *
+     * @throws NodalFlowException
      */
     public function __construct(array $unsetList)
     {
         $this->unsetList = \array_unique($unsetList);
+        parent::__construct();
     }
 
     /**

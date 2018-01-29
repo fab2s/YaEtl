@@ -9,6 +9,7 @@
 
 namespace fab2s\YaEtl\Transformers\Arrays;
 
+use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Transformers\TransformerAbstract;
 
@@ -33,11 +34,14 @@ class ArrayWalkTransformer extends TransformerAbstract
      * @param callable   $callable Worth nothing to say that the first callback argument should
      *                             be a reference if you want anything to append to the record
      * @param null|mixed $userData
+     *
+     * @throws NodalFlowException
      */
     public function __construct(callable $callable, $userData = null)
     {
         $this->callable = $callable;
         $this->userData = $userData;
+        parent::__construct();
     }
 
     /**

@@ -9,6 +9,7 @@
 
 namespace fab2s\YaEtl\Transformers\Arrays;
 
+use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Transformers\TransformerAbstract;
 
 /**
@@ -25,10 +26,13 @@ class KeyRenameTransformer extends TransformerAbstract
 
     /**
      * @param array $aliases
+     *
+     * @throws NodalFlowException
      */
     public function __construct(array $aliases)
     {
         $this->aliases = $aliases;
+        parent::__construct();
     }
 
     /**
