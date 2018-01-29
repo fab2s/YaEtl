@@ -124,7 +124,6 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
          *
          */
         while ($this->extract($param)) {
-            ++$this->numExtract;
             $this->getCarrier()->getFlowMap()->incrementNode($this->getId(), 'num_extract');
             do {
                 $record = $this->extracted->shift();

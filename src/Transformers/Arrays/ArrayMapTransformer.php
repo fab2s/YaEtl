@@ -9,6 +9,7 @@
 
 namespace fab2s\YaEtl\Transformers\Arrays;
 
+use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Transformers\TransformerAbstract;
 
 /**
@@ -25,10 +26,13 @@ class ArrayMapTransformer extends TransformerAbstract
 
     /**
      * @param callable $mapper
+     *
+     * @throws NodalFlowException
      */
     public function __construct(callable $mapper)
     {
         $this->mapper = $mapper;
+        parent::__construct();
     }
 
     /**

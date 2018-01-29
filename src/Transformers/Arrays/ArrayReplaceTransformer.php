@@ -9,6 +9,7 @@
 
 namespace fab2s\YaEtl\Transformers\Arrays;
 
+use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Transformers\TransformerAbstract;
 
 /**
@@ -29,11 +30,14 @@ class ArrayReplaceTransformer extends TransformerAbstract
     /**
      * @param array $default  An array of the default field values to use, if any
      * @param array $override An array of the field to always set to the same value, if any
+     *
+     * @throws NodalFlowException
      */
     public function __construct(array $default, array $override = [])
     {
         $this->default  = $default;
         $this->override = $override;
+        parent::__construct();
     }
 
     /**

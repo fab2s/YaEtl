@@ -6,7 +6,7 @@ YaEtl ("Yay'TL", or YetAnotherEtl) is a PHP implementation of a widely extended 
 ETL workflow comes handy in numerous situations where a lot of records meet with various sources, format and repositories.
 YaEtl widely extends this pattern allowing you to chain any number of E-T-L operation with an extra Join one allowing you to join records among extractors as you would do it with a DBMS. YaEtl can even just Extract and load with no transformation involved, or even just load or transform. If we where to acronym the workflow behind YaEtl, it could result in *NEJTL* for *Nodal-Extract-Join-Transform-Load* workflow.
 
-> [NodalFlow](https://github.com/fab2s/NodalFlow) is the underlying and even more generic implementation of an executable directed graph upon which is build YaEtl. The directed graph are composed of Nodes which are somehow executable, accept one parameter and may be set to return a value that will be used as argument to the next Node; or not, in which case the previous and untouched argument will be passed to the next Node up to the Flow exec argument if any. Nodes can also be traversable (data generators etc ...) in which case they will be iterated over each of their values in the flow until they run out. When a node is "traversed", each of the values yielded will trigger the execution of the successor Nodes with or without the yielded value as argument, depending on the traversable node properties. Each of these directed graph can be invoked by any other instance in the process as well as by each Nodes and at any Node position, which effectively can turn any set of such graph into an executable network of Node.
+> [NodalFlow](https://github.com/fab2s/NodalFlow) is the underlying and even more generic implementation of an executable directed graph upon which is build YaEtl. The directed graphs are composed of Nodes which are somehow executable, accept one parameter and may be set to return a value that will be used as argument to the next Node; or not, in which case the previous and untouched argument will be passed to the next Node up to the Flow exec argument if any. Nodes can also be traversable (data generators etc ...) in which case they will be iterated over each of their values in the flow until they run out. When a node is "traversed", each of the values yielded will trigger the execution of the successor Nodes with or without the yielded value as argument, depending on the traversable node properties. Each of these directed graph can be invoked by any other instance in the process as well as by each Nodes and at any Node position, which effectively can turn any set of such graph into an executable network of Node.
 
 The major interest of such design is, in addition to organize complex task with ease, to create reusable and atomic tasks. Each node in the workflow will be reusable in any other workflow just and strictly as it is. And this can represent tremendous time saving along the way, actually, just more and more over time and as the code base grows.
 
@@ -14,7 +14,7 @@ Being Nodal makes it possible to chain arbitrary number of Extract to Load opera
 
 ## YaEtl Documentation
 [![Documentation Status](https://readthedocs.org/projects/yaetl/badge/?version=latest)](http://yaetl.readthedocs.io/en/latest/?badge=latest) Documentation can be found at [ReadTheDocs](http://yaetl.readthedocs.io/en/latest/?badge=latest)
-It is also a good thing to check [NodalFlow documentation](http://nodalflow.readthedocs.io/en/latest/?badge=latest), especially concerning fundamental features which are directly usable in YaEtl such as [Interruption](http://nodalflow.readthedocs.io/en/latest/interruptions/),[Serialization](http://nodalflow.readthedocs.io/en/latest/serialization/) or the `sendTo` feature allowing you to turns your Flows into _executable networks_ of Flows and Nodes.
+It is also a good thing to check [NodalFlow documentation](http://nodalflow.readthedocs.io/en/latest/?badge=latest), especially concerning fundamental features which are directly usable in YaEtl such as [Interruption](http://nodalflow.readthedocs.io/en/latest/interruptions/), [Serialization](http://nodalflow.readthedocs.io/en/latest/serialization/) or the `sendTo` feature allowing you to turns your Flows into _executable networks_ of Flows and Nodes.
 
 ## Installation
 
@@ -65,7 +65,7 @@ YaEtl can address several generic use cases with ease, among which some would ot
 ### Pure ETL
 
 YaEtl can, but is not limited to, incarnate a pure ETL flow as seen many times. It's worth nothing to say that YaEtl supports batch extract and load by design.
-```bash
+```
 +---------+                   +---------+
 |         |                   |         |
 |         |                   |         |
@@ -91,7 +91,7 @@ YaEtl can, but is not limited to, incarnate a pure ETL flow as seen many times. 
 ### Mutualized extracts
 
 Being Nodal makes it possible for YaEtl to transparently mutualize extraction across as many use case as necessary, which in the end may even not be a load.
-```bash
+```
 +-------------+
 |             |
 |             |
@@ -127,7 +127,7 @@ Being Nodal makes it possible for YaEtl to transparently mutualize extraction ac
 
 As Extractors will have the up stream return value as argument, it is possible to chain Extractors themselves to obtain items in categories. This can help separate concerns as it makes it possible to extract all items in all categories while still using specialized extractors, eg a category and an item one; provided that the item extractor is also able to extract items by category when passed with the proper category object as argument (which is not the case when you would start with extracting items, unless you specify an argument to the whole flow).
 
-```bash
+```
 +------------+
 |            |
 |            |
@@ -159,7 +159,7 @@ Some time, it could be required to extract data from several physical sources an
 
 This kind of operation is easy with YaEtl as Extractors can be aggregated to each other when building the flow. You could for example wish to extract data spanning over several sources where each would only keep a specific time frame. The same extractor could then be instantiated for each shard with proper sorting to end up extracting all the data as if it was stored in a single repository. YaEtl would then internally consume each extractor's records in the order they where added to the flow and provide them one by one to the remaining nodes strictly as if a single extractor was used.
 
-```bash
+```
      +-------------+  +-------------+     +-------------+
      |             |  |             |     |             |
      |   shard 1   |  |   shard 2   | ... |   shard N   |
@@ -186,7 +186,7 @@ This kind of operation is easy with YaEtl as Extractors can be aggregated to eac
 
 YaEtl provides with all the necessary interfaces to implement Join operation in pretty much the same way a DBMS would (regular and left join). Under the hoods, this require to communicate some kind of record map for joiners to know what record to match in the process. YaEtl comes with a complete `PDO` implementation of a generic Joinable Extractor (against single unique key). Use cases of such feature are endless, especially when you start considering that all the above patterns are fully combineable and even branchable. It is also important to note that YaEtl extractors support extracting records by batches even for joiners which could (and most likely should) be smaller than the extractor joined against (eg smaller sets for `WHERE IN` query types).
 
-```bash
+```
 +-----------+      +------------+
 |           |      |            |
 |           |      |            |
