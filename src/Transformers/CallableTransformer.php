@@ -9,6 +9,7 @@
 
 namespace fab2s\YaEtl\Transformers;
 
+use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\Nodes\PayloadNodeAbstract;
 
 /**
@@ -20,6 +21,8 @@ class CallableTransformer extends PayloadNodeAbstract implements TransformerInte
      * Instantiate the transformer
      *
      * @param callable $payload
+     *
+     * @throws NodalFlowException
      */
     public function __construct(callable $payload)
     {
