@@ -9,6 +9,7 @@
 
 namespace fab2s\YaEtl\Extractors\File;
 
+use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Extractors\ExtractorAbstract;
 
@@ -31,6 +32,7 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
      * @param mixed|resource|string $input
      *
      * @throws YaEtlException
+     * @throws NodalFlowException
      */
     public function __construct($input)
     {

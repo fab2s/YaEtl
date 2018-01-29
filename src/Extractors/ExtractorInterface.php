@@ -32,11 +32,4 @@ interface ExtractorInterface extends TraversableNodeInterface
      * @return bool false in case no more records can be fetched
      */
     public function extract($param = null);
-
-    /**
-     * Used to gather stats
-     *
-     * @return int The number of extractions
-     */
-    public function getNumExtract();
 }

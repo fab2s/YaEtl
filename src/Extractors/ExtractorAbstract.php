@@ -44,21 +44,4 @@ abstract class ExtractorAbstract extends NodeAbstract implements ExtractorInterf
         'num_records' => 'num_iterate',
         'num_extract' => 0,
     ];
-
-    /**
-     * Number of extracts in Flow's execution
-     *
-     * @var int
-     */
-    protected $numExtract = 0;
-
-    /**
-     * Used to gather stats
-     *
-     * @return int The number of extractions
-     */
-    public function getNumExtract()
-    {
-        return $this->numExtract;
-    }
 }
