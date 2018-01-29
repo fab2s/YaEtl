@@ -66,6 +66,7 @@ abstract class QualifierAbstract extends NodeAbstract implements QualifierInterf
             $flowInterrupt     = null;
         }
 
+        /* @var null|InterrupterInterface $flowInterrupt */
         $this->carrier->interruptFlow($flowInterruptType, $flowInterrupt);
     }
 }

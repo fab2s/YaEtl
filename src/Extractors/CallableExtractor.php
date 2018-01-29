@@ -18,6 +18,13 @@ use fab2s\NodalFlow\Nodes\PayloadNodeAbstract;
 class CallableExtractor extends PayloadNodeAbstract implements ExtractorInterface
 {
     /**
+     * The underlying executable or traversable Payload
+     *
+     * @var callable
+     */
+    protected $payload;
+
+    /**
      * The record collection
      *
      * @var \Traversable
