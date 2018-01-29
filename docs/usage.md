@@ -262,6 +262,33 @@ class Loader extends LoaderAbstract
 
 }
 ```
+## Qualifier
+
+Qualifiers are designed to isolate conditions that may or may not Qualify a record to be further processed. They can leverage the full power of NodalFlow's [Interruptions](https://github.com/fab2s/NodalFlow/blob/master/docs/interruptions.md) but should in far most cases be used to isolate any conditions required on a record that would otherwise be implemented in other types of Nodes. The Qualifier Node aims at a better separation of concern among Nodes which in returns should increase re-usability. 
+A simple use case could be a user extraction with several possible actions (load) depending on their properties. You could for example be sending a massive newsletter to all your user and add some perks for the mighty ones :
+
+```php
+$yaetl = (new YaEtl)->from(new SuperSlowAndMassiveUserSourceExtractor);
+$premiumBranch = (new YaEtl)->qualify(new CallableQualifier(function($record) {
+        // assuming that we deal with array in this case
+        if ($record['swagg_level'] > 9) {
+            // will get the perk
+            return true;
+        }
+
+        // too bad ^^
+    })
+    ->to(new SendPerkLoader);
+
+// send news letter and perks at once
+// without any such condition in the loaders
+$yaetl->branch($premiumBranch)
+    ->to(new NewLetterLoaderLoader)
+    ->exec();
+```
+
+As you can see, by using a Qualifier, we did not have to put the condition in the Loaders (or Transformer), keeping them more agnostic and easy to re-use.
+This pattern can be used for more complex tasks such as qualifying record dimension in aggregation processes. In such cases, every dimension that can be derived from the same record can be handled by a branch holding the relevant Qualifier, the eventual Transformers and the Loader(s).
 
 ## In practice
 

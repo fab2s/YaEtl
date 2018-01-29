@@ -11,6 +11,7 @@ namespace fab2s\YaEtl\Qualifiers;
 
 use fab2s\NodalFlow\Flows\InterrupterInterface;
 use fab2s\NodalFlow\Nodes\NodeAbstract;
+use fab2s\NodalFlow\YaEtlException;
 
 /**
  * Interface QualifierInterface
@@ -39,34 +40,36 @@ abstract class QualifierAbstract extends NodeAbstract implements QualifierInterf
     protected $isAFlow = false;
 
     /**
-     * The CallableInterruptNode's payload interface is simple :
-     *      - return false to break
-     *      - return true to continue
-     *      - return void|null (whatever) to proceed with the flow
+     * The qualify's method interface is simple :
+     *      - return true to qualify the record, that is to use it
+     *      - return false|null|void to skip the record
+     *      - return InterrupterInterface to leverage complete interruption features
      *
      * @param mixed $param
+     *
+     * @throws YaEtlException
      *
      * @return mixed|void
      */
     public function exec($param)
     {
-        $flowInterrupt = $this->qualify($param);
-        if ($flowInterrupt === null) {
-            // do nothing, let the flow proceed
+        $qualifies = $this->qualify($param);
+        if ($qualifies === true) {
             return;
         }
 
-        if ($flowInterrupt instanceof  InterrupterInterface) {
-            $flowInterruptType = $flowInterrupt->getType();
-        } elseif ($flowInterrupt) {
-            $flowInterruptType = InterrupterInterface::TYPE_CONTINUE;
-            $flowInterrupt     = null;
-        } else {
-            $flowInterruptType = InterrupterInterface::TYPE_BREAK;
-            $flowInterrupt     = null;
+        if (!$qualifies) {
+            $this->carrier->interruptFlow(InterrupterInterface::TYPE_CONTINUE);
+
+            return;
         }
 
-        /* @var null|InterrupterInterface $flowInterrupt */
-        $this->carrier->interruptFlow($flowInterruptType, $flowInterrupt);
+        if ($qualifies instanceof  InterrupterInterface) {
+            $this->carrier->interruptFlow($qualifies->getType(), $qualifies);
+
+            return;
+        }
+
+        throw new YaEtlException('Qualifier returned wrong type, only Boolean and InterrupterInterface are allowed');
     }
 }

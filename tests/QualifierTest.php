@@ -1305,17 +1305,23 @@ class QualifierTest extends \TestCase
      *
      * @return Closure
      */
-    protected function getBreakAt5Closure($return = false)
+    protected function getBreakAt5Closure($return = null)
     {
         return function () use ($return) {
             static $cnt = 1;
             if ($cnt === 5) {
                 ++$cnt;
 
-                return $return;
+                if ($return instanceof InterrupterInterface) {
+                    return $return;
+                }
+
+                return new Interrupter(null, null, InterrupterInterface::TYPE_BREAK);
             }
 
             ++$cnt;
+
+            return true;
         };
     }
 
@@ -1324,17 +1330,23 @@ class QualifierTest extends \TestCase
      *
      * @return Closure
      */
-    protected function getContinueAt5Closure($return = true)
+    protected function getContinueAt5Closure($return = null)
     {
         return function () use ($return) {
             static $cnt = 1;
             if ($cnt === 5) {
                 ++$cnt;
 
-                return $return;
+                if ($return instanceof InterrupterInterface) {
+                    return $return;
+                }
+
+                return false;
             }
 
             ++$cnt;
+
+            return true;
         };
     }
 
