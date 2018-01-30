@@ -58,7 +58,7 @@ $yaEtl->branch(
 // etc ...
 ```
 
-## Usage Pattern
+## Usage Patterns
 
 YaEtl can address several generic use cases with ease, among which some would otherwise require more specialized / complex coding.
 
@@ -201,6 +201,35 @@ YaEtl provides with all the necessary interfaces to implement Join operation in 
 +-----------+      +------------+
 
 ```
+
+## Qualification
+
+YaEtl (> 1.1.0) introduces a `QualifierInterface` partially implemented by `QualifierAbstract` and directly usable with the `CallableQualifier` class. Qualifiers aims at increasing the separation of concerns between Flow conditions (IFs) and Flow actions (Transform and Load), which in return should help out writing more general Transformers and Loarders (which do not need to hold every conditions anymore) and thus increase re-usability.
+
+Using such Node, you can for example share a slow extraction among many usages of the same record by just instantiating one Branch per scenario, each starting with a Qualifier in charge of accepting or not the record based on its properties.
+
+```
+                    +------------------------------------------------+
++-----------+       |  +----------+                                  |
+| Extractor +----+----->Qualifier1+--->... Transform ... ---> Loader1|
++-----------+    |  |  +----------+                      branch1     |
+                 |  +------------------------------------------------+
+                 |
+                 |  +------------------------------------------------+
+                 |  |  +----------+                                  |
+                 +----->Qualifier2+--->... Transform ... ---> Loader2|
+                 |  |  +----------+                      branch2     |
+                 |  +------------------------------------------------+
+                 |
+                 |  +------------------------------------------------+
+                 |  |  +----------+                                  |
+                 +----->QualifierN+--->... Transform ... ---> LoaderN|
+                    |  +----------+                      branchN     |
+                    +------------------------------------------------+
+
+```
+
+In this example, each record would be presented to every branch and each Qualifier would be in charge of accepting the record in its Branch for other Nodes to act on it. As you can see, this pattern creates a lot of occasions to reuse existing Nodes as downstream Transformers and Loaders do not have to know anything about the specific properties we where choosing in the Qualifier. This means that you can write very generic loader strictly in charge of loading a record somewhere, leave the defaulting and formatting (charset etc) to a Transformer that does just that, and reuse these in any conditional use case by just Implementing a qualifier that holds the conditional logic.
 
 ## Serialization
 

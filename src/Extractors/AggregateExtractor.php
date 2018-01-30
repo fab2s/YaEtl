@@ -37,6 +37,7 @@ class AggregateExtractor extends AggregateNode
      */
     public function __construct($isAReturningVal)
     {
+        // DRY won over KISS
         PayloadNodeAbstract::__construct(new YaEtl, $isAReturningVal);
         $this->isATraversable = true;
     }
