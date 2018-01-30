@@ -4,7 +4,7 @@
 
 YaEtl ("Yay'TL", or YetAnotherEtl) is a PHP implementation of a widely extended Extract-Transform-Load (aka ETL) workflow based on [NodalFlow](https://github.com/fab2s/NodalFlow).
 ETL workflow comes handy in numerous situations where a lot of records meet with various sources, format and repositories.
-YaEtl widely extends this pattern allowing you to chain any number of E-T-L operation with an extra Join one allowing you to join records among extractors as you would do it with a DBMS. YaEtl can even just Extract and load with no transformation involved, or even just load or transform. If we where to acronym the workflow behind YaEtl, it could result in *NEJTL* for *Nodal-Extract-Join-Transform-Load* workflow.
+YaEtl extends this pattern allowing you to chain any number of E-T-L operations with some extra capabilities such as Joining and Qualifying. YaEtl can even just Extract and load with no transformation involved, or even just load or transform. If we where to acronym the workflow behind YaEtl, it could result in *NEJQTL* for *Nodal-Extract-Join-Qualify-Transform-Load* workflow.
 
 > [NodalFlow](https://github.com/fab2s/NodalFlow) is the underlying and even more generic implementation of an executable directed graph upon which is build YaEtl. The directed graphs are composed of Nodes which are somehow executable, accept one parameter and may be set to return a value that will be used as argument to the next Node; or not, in which case the previous and untouched argument will be passed to the next Node up to the Flow exec argument if any. Nodes can also be traversable (data generators etc ...) in which case they will be iterated over each of their values in the flow until they run out. When a node is "traversed", each of the values yielded will trigger the execution of the successor Nodes with or without the yielded value as argument, depending on the traversable node properties. Each of these directed graph can be invoked by any other instance in the process as well as by each Nodes and at any Node position, which effectively can turn any set of such graph into an executable network of Node.
 
@@ -88,9 +88,9 @@ YaEtl can, but is not limited to, incarnate a pure ETL flow as seen many times. 
 
 ```
 
-### Mutualized extracts
+### Shared extracts
 
-Being Nodal makes it possible for YaEtl to transparently mutualize extraction across as many use case as necessary, which in the end may even not be a load.
+Being Nodal makes it possible for YaEtl to transparently share extraction across as many use case as necessary, which in the end may even not be a load.
 ```
 +-------------+
 |             |

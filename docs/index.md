@@ -1,16 +1,20 @@
 # YaEtl
 
-[![Documentation Status](https://readthedocs.org/projects/yaetl/badge/?version=latest)](http://yaetl.readthedocs.io/en/latest/?badge=latest) [![Build Status](https://travis-ci.org/fab2s/YaEtl.svg?branch=master)](https://travis-ci.org/fab2s/YaEtl) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/1f24395f-9b33-4d99-acc7-d286a5f54db4/mini.png)](https://insight.sensiolabs.com/projects/1f24395f-9b33-4d99-acc7-d286a5f54db4) [![Code Climate](https://codeclimate.com/github/fab2s/YaEtl/badges/gpa.svg)](https://codeclimate.com/github/fab2s/YaEtl) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/aa2adb7aac514da497b154d6ad37db3c)](https://www.codacy.com/app/fab2s/YaEtl) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/fab2s/YaEtl/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/fab2s/YaEtl/?branch=master) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com) [![License](https://poser.pugx.org/fab2s/nodalflow/license)](https://packagist.org/packages/fab2s/yaetl)
+[![Documentation Status](https://readthedocs.org/projects/yaetl/badge/?version=latest)](http://yaetl.readthedocs.io/en/latest/?badge=latest) [![Build Status](https://travis-ci.org/fab2s/YaEtl.svg?branch=master)](https://travis-ci.org/fab2s/YaEtl) [![Latest Stable Version](https://poser.pugx.org/fab2s/yaetl/v/stable)](https://packagist.org/packages/fab2s/yaetl) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/1f24395f-9b33-4d99-acc7-d286a5f54db4/mini.png)](https://insight.sensiolabs.com/projects/1f24395f-9b33-4d99-acc7-d286a5f54db4) [![Code Climate](https://codeclimate.com/github/fab2s/YaEtl/badges/gpa.svg)](https://codeclimate.com/github/fab2s/YaEtl) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/aa2adb7aac514da497b154d6ad37db3c)](https://www.codacy.com/app/fab2s/YaEtl) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/fab2s/YaEtl/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/fab2s/YaEtl/?branch=master) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com) [![License](https://poser.pugx.org/fab2s/nodalflow/license)](https://packagist.org/packages/fab2s/yaetl)
 
 YaEtl ("Yay'TL", or YetAnotherEtl) is a PHP implementation of a widely extended Extract-Transform-Load (aka ETL) workflow based on [NodalFlow](https://github.com/fab2s/NodalFlow).
-ETL workflows comes handy in numerous situations where a lot of records meet with various sources, format and repositories.
-YaEtl widely extends this pattern allowing you to chain any number of E-T-L operation with an extra Join one allowing you to join records among extractors as you would do it with a DBMS. YaEtl can even just Extract and load with no transformation involved, or even just load or transform. If we where to acronym the workflow behind YaEtl, it could result in *NEJTL* for *Nodal-Extract-Join-Tranform-Load* workflow.
+ETL workflow comes handy in numerous situations where a lot of records meet with various sources, format and repositories.
+YaEtl extends this pattern allowing you to chain any number of E-T-L operations with some extra capabilities such as Joining and Qualifying. YaEtl can even just Extract and load with no transformation involved, or even just load or transform. If we where to acronym the workflow behind YaEtl, it could result in *NEJQTL* for *Nodal-Extract-Join-Qualify-Transform-Load* workflow.
 
-> [NodalFlow](https://github.com/fab2s/NodalFlow) is the underlying and even more generic implementation of an executable directed graph upon which is build YaEtl. The directed graph are composed of Nodes which are somehow executable, accept one parameter and may be set to return a value that will be used as argument to the next Node; or not, in which case the previous and untouched argument will be passed to the next Node up to the Flow exec argument if any. Nodes can also be traversable (data generators etc ...) in which case they will be iterated over each of their values in the flow until they run out. When a node is "traversed", each of the values yielded will trigger the execution of the successor Nodes with or without the yielded value as argument, depending on the traversable node properties. Each of these directed graph can be invoked by any other instance in the process as well as by each Nodes and at any Node position, which effectively can turn any set of such graph into an executable network of Node.
+> [NodalFlow](https://github.com/fab2s/NodalFlow) is the underlying and even more generic implementation of an executable directed graph upon which is build YaEtl. The directed graphs are composed of Nodes which are somehow executable, accept one parameter and may be set to return a value that will be used as argument to the next Node; or not, in which case the previous and untouched argument will be passed to the next Node up to the Flow exec argument if any. Nodes can also be traversable (data generators etc ...) in which case they will be iterated over each of their values in the flow until they run out. When a node is "traversed", each of the values yielded will trigger the execution of the successor Nodes with or without the yielded value as argument, depending on the traversable node properties. Each of these directed graph can be invoked by any other instance in the process as well as by each Nodes and at any Node position, which effectively can turn any set of such graph into an executable network of Node.
 
 The major interest of such design is, in addition to organize complex task with ease, to create reusable and atomic tasks. Each node in the workflow will be reusable in any other workflow just and strictly as it is. And this can represent tremendous time saving along the way, actually, just more and more over time and as the code base grows.
 
 Being Nodal makes it possible to chain arbitrary number of Extract to Load operations which may go through arbitrary number of transform, joins and, to even branch the workflow in case some Loaders require different transformation and or joins before they can do their work.
+
+## YaEtl Documentation
+[![Documentation Status](https://readthedocs.org/projects/yaetl/badge/?version=latest)](http://yaetl.readthedocs.io/en/latest/?badge=latest) Documentation can be found at [ReadTheDocs](http://yaetl.readthedocs.io/en/latest/?badge=latest)
+It is also a good thing to check [NodalFlow documentation](http://nodalflow.readthedocs.io/en/latest/?badge=latest), especially concerning fundamental features which are directly usable in YaEtl such as [Interruption](http://nodalflow.readthedocs.io/en/latest/interruptions/), [Serialization](http://nodalflow.readthedocs.io/en/latest/serialization/) or the `sendTo` feature allowing you to turns your Flows into _executable networks_ of Flows and Nodes.
 
 ## Installation
 
@@ -54,7 +58,7 @@ $yaEtl->branch(
 // etc ...
 ```
 
-## Usage Pattern
+## Usage Patterns
 
 YaEtl can address several generic use cases with ease, among which some would otherwise require more specialized / complex coding.
 
@@ -84,9 +88,9 @@ YaEtl can, but is not limited to, incarnate a pure ETL flow as seen many times. 
 
 ```
 
-### Mutualized extracts
+### Shared extracts
 
-Being Nodal makes it possible for YaEtl to transparently mutualize extraction across as many use case as necessary, which in the end may even not be a load.
+Being Nodal makes it possible for YaEtl to transparently share extraction across as many use case as necessary, which in the end may even not be a load.
 ```
 +-------------+
 |             |
@@ -180,7 +184,7 @@ This kind of operation is easy with YaEtl as Extractors can be aggregated to eac
 
 ### Joins
 
-YaEtl provides with all the necessary interfaces to implement Join operation in pretty much the same way a DBMS would (regular and left join). Under the hoods, this require to communicate some kind of record map for joiners to know what record to match in the process. YaEtl comes with a complete `PDO` implementation of a generic Joinable Extractor (against single unique key). Use cases of such feature are endless, especially when you start considering that all the above patterns are fully combinable and even branchable. It is also important to note that YaEtl extractors support extracting records by batches even for joiners which could (and most likely should) be smaller than the extractor joined against (eg smaller sets for `WHERE IN` query types).
+YaEtl provides with all the necessary interfaces to implement Join operation in pretty much the same way a DBMS would (regular and left join). Under the hoods, this require to communicate some kind of record map for joiners to know what record to match in the process. YaEtl comes with a complete `PDO` implementation of a generic Joinable Extractor (against single unique key). Use cases of such feature are endless, especially when you start considering that all the above patterns are fully combineable and even branchable. It is also important to note that YaEtl extractors support extracting records by batches even for joiners which could (and most likely should) be smaller than the extractor joined against (eg smaller sets for `WHERE IN` query types).
 
 ```
 +-----------+      +------------+
@@ -197,6 +201,35 @@ YaEtl provides with all the necessary interfaces to implement Join operation in 
 +-----------+      +------------+
 
 ```
+
+## Qualification
+
+YaEtl (> 1.1.0) introduces a `QualifierInterface` partially implemented by `QualifierAbstract` and directly usable with the `CallableQualifier` class. Qualifiers aims at increasing the separation of concerns between Flow conditions (IFs) and Flow actions (Transform and Load), which in return should help out writing more general Transformers and Loarders (which do not need to hold every conditions anymore) and thus increase re-usability.
+
+Using such Node, you can for example share a slow extraction among many usages of the same record by just instantiating one Branch per scenario, each starting with a Qualifier in charge of accepting or not the record based on its properties.
+
+```
+                    +------------------------------------------------+
++-----------+       |  +----------+                                  |
+| Extractor +----+----->Qualifier1+--->... Transform ... ---> Loader1|
++-----------+    |  |  +----------+                      branch1     |
+                 |  +------------------------------------------------+
+                 |
+                 |  +------------------------------------------------+
+                 |  |  +----------+                                  |
+                 +----->Qualifier2+--->... Transform ... ---> Loader2|
+                 |  |  +----------+                      branch2     |
+                 |  +------------------------------------------------+
+                 |
+                 |  +------------------------------------------------+
+                 |  |  +----------+                                  |
+                 +----->QualifierN+--->... Transform ... ---> LoaderN|
+                    |  +----------+                      branchN     |
+                    +------------------------------------------------+
+
+```
+
+In this example, each record would be presented to every branch and each Qualifier would be in charge of accepting the record in its Branch for other Nodes to act on it. As you can see, this pattern creates a lot of occasions to reuse existing Nodes as downstream Transformers and Loaders do not have to know anything about the specific properties we where choosing in the Qualifier. This means that you can write very generic loader strictly in charge of loading a record somewhere, leave the defaulting and formatting (charset etc) to a Transformer that does just that, and reuse these in any conditional use case by just Implementing a qualifier that holds the conditional logic.
 
 ## Serialization
 
