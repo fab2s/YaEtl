@@ -34,7 +34,7 @@ $leftJoinOnClause  = new OnClause('fromKeyAliasAsInRecord', 'fromKeyAliasAsInRec
 
 ### transform()
 
-The `transform(TransformerInterface $trasformer)` method adds a transformer to the flow that will transform each record one by one, later referred as Transformer
+The `transform(TransformerInterface $trasformer)` method adds a Transformer to the flow that will transform each record one by one, later referred as Transformer
 
 Transformers are simple really, they just take a record as parameter and return a transformed version of the record. Simplest use case could be to change character encoding, but they could also be used to match a loader data structure, as a way to make it reusable, or just because it is required by the business logic.
 
@@ -43,6 +43,15 @@ Transformers are simple really, they just take a record as parameter and return 
 The `branch(YaTl $yaEtlWorkflow)` method adds an entire flow in the flow, that will be treated as a single node and later referred as Brancher
 
 Branches currently cannot be traversable. It's something that may be implemented at some point though as it is technically feasible and even could be of some use. As any nodes, branch node accepts one argument and can, or not, pass a value to be used as parameter to the next node.
+
+### qualify()
+
+The `qualify(QualifierInterface $qualifier)` method adds a Qualifier to the flow that will qualify each record one by one and decide if and how the downstream Nodes shall proceed with it.
+                                             
+Qualifiers are simple really, they just take a record as parameter and decide what the Flow shall do with it by returning :
+- `true` to accept the record, eg let the Flow proceed untouched
+- `false|null|void` to deny the record, eg trigger a continue on the carrier Flow (not ancestors)
+- `InterrupterInterface` to leverage the full power of NodalFlow's [Interruptions](https://github.com/fab2s/NodalFlow/blob/master/docs/interruptions.md).
 
 ### to()
 
