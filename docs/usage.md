@@ -134,6 +134,13 @@ Implementing a `Joinable` extractor requires a bit more work as there is a need 
 
 Both PDO extractors deactivate MysQl buffered query if needed to speed up fetching large amounts of records.
 
+### Files
+
+YaEtl includes a generic `FileExtractorAbstract` abstract class which can be used as a foundation to file extraction implementations.
+The default constructor accepts both resources and file path as argument, and the partial implementation covers everything except the actual reading.
+
+`LineExtractor` is a complete implementation of a read file line by line extractor. It can be easily extended or coupled with custom transformer to handle any line based format stored in files.
+
 ## Transformer
 
 The Transformer is where records are transformed. Data from various sources provided by the extractor could be assembled into totally different data structures, ready to be handled by the next node.
@@ -161,7 +168,7 @@ class Transformer extends TransformerAbstract
 }
 ```
 
-YaEtl also includes a ready to use `CallableTransformer` which takes a `callable` as argument to its constructor:
+YaEtl includes a ready to use `CallableTransformer` which takes a `callable` as argument to its constructor:
 
 ```php
 use fab2s\YaEtl\Transformers\CallableTransformer;
@@ -175,6 +182,110 @@ $callableTransformer = new CallableTransformer([$someObject, 'relevantMethod']);
 ```
 
 It goes without saying that the `callable` should be relevant with the task.
+
+### Array Transformers
+
+As array is a pretty common record format, YaEtl comes with generic Array Transformer implementations :
+
+- `ArrayMapTransformer` : [array_map()](http://php.net/array_map) simple wrapper
+    
+    ```php
+    /**
+     * @param callable $mapper
+     *
+     * @throws NodalFlowException
+     */
+    // public function __construct(callable $mapper)
+    // action : array_map($this->mapper, $record);
+    $transformer = new ArrayMapTransformer('trim');
+    ```
+    
+- `ArrayReplaceTransformer` : [array_replace()](http://php.net/array_replace) wrapper
+    
+    ```php
+    /**
+     * @param array $default  An array of the default field values to use, if any
+     * @param array $override An array of the field to always set to the same value, if any
+     *
+     * @throws NodalFlowException
+     */
+    // public function __construct(array $default, array $override = [])
+    // action : array_replace($this->default, $record, $this->override);
+    $transformer = new ArrayReplaceTransformer(['key' => 'defaultValue'], ['anotherKey' => 'forcedValue']);
+    ```
+    
+- `ArrayReplaceRecursiveTransformer` : [array_replace_recursive()](http://php.net/array_replace_recursive) wrapper
+    
+    ```php
+    /**
+     * @param array $default  An array of the default field values to use, if any
+     * @param array $override An array of the field to always set to the same value, if any
+     *
+     * @throws NodalFlowException
+     */
+    // public function __construct(array $default, array $override = [])
+    // action : array_replace_recursive($this->default, $record, $this->override);
+    $transformer = new ArrayReplaceRecursiveTransformer(['key' => 'defaultValue'], ['anotherKey' => 'forcedValue']);
+    ```
+    
+- `ArrayWalkTransformer` : [array_walk()](http://php.net/array_walk) wrapper
+    
+    ```php
+    /**
+     * @param callable   $callable Worth nothing to say that the first callback argument should
+     *                             be a reference if you want anything to append to the record
+     * @param null|mixed $userData
+     *
+     * @throws NodalFlowException
+     */
+    // public function __construct(callable $callable, $userData = null)
+    // action : array_walk($record, $this->callable, $this->userData);
+    $transformer = new ArrayWalkTransformer(function (&$value, $key, $userData) {
+      $value = doSomething($userData);
+    });
+    ```
+    
+- `ArrayWalkRecursiveTransformer` : [array_walk_recursive()](http://php.net/array_walk_recursive) wrapper
+    
+    ```php
+    /**
+     * @param callable   $callable Worth nothing to say that the first callback argument should
+     *                             be a reference if you want anything to append to the record
+     * @param null|mixed $userData
+     *
+     * @throws NodalFlowException
+     */
+    // public function __construct(callable $callable, $userData = null)
+    // action : array_walk_recursive($record, $this->callable, $this->userData);
+    $transformer = new ArrayWalkRecursiveTransformer(function (&$value, $key, $userData) {
+      $value = doSomething($userData);
+    });
+    ```
+    
+- `KeyRenameTransformer` : Rename Key(s) in Array, does not preserve key order
+    
+    ```php
+    /**
+     * @param array $aliases
+     *
+     * @throws NodalFlowException
+     */
+    // public function __construct(array $aliases)
+    $transformer = new KeyRenameTransformer(['oldKeyName' => 'newKeyName']);
+    ```
+    
+- `KeyUnsetTransformer` : Unset Key(s) in Array
+    
+    ```php
+    /**
+     * @param array $unsetList array of key to unset
+     *
+     * @throws NodalFlowException
+     */
+    // public function __construct(array $unsetList)
+    $transformer = new KeyUnsetTransformer(['whatever' => 'keyToUnset1', 'KeyToUnset2']);
+    ```
+    
 
 ## Loader
 
