@@ -290,6 +290,22 @@ $yaetl->branch($premiumBranch)
 As you can see, by using a Qualifier, we did not have to put the condition in the Loaders (or Transformer), keeping them more agnostic and easy to re-use.
 This pattern can be used for more complex tasks such as qualifying record dimension in aggregation processes. In such cases, every dimension that can be derived from the same record can be handled by a branch holding the relevant Qualifier, the eventual Transformers and the Loader(s).
 
+The QualifierInterface only defines one method :
+
+```php
+    /**
+     * Qualifies a record to either keep it, skip it or break the flow at the execution point
+     * or at any upstream Node
+     *
+     * @param mixed $param
+     *
+     * @return InterrupterInterface|bool|null|void `true` to accept the record, eg let the Flow proceed untouched
+     *                                             `false|null|void` to deny the record, eg trigger a continue on the carrier Flow (not ancestors)
+     *                                             `InterrupterInterface` to trigger an interrupt with a target (which may be one ancestor)
+     */
+    public function qualify($param);
+```
+
 ## In practice
 
 ```php

@@ -36,7 +36,7 @@ class CallableQualifier extends QualifierAbstract
     }
 
     /**
-     * Qualifies a record to either skip it or break the flow at the execution point
+     * Qualifies a record to either keep it, skip it or break the flow at the execution point
      * or at any upstream Node
      *
      * @param mixed $param
