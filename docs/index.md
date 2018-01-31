@@ -14,7 +14,7 @@ Being Nodal makes it possible to chain arbitrary number of Extract to Load opera
 
 ## YaEtl Documentation
 [![Documentation Status](https://readthedocs.org/projects/yaetl/badge/?version=latest)](http://yaetl.readthedocs.io/en/latest/?badge=latest) Documentation can be found at [ReadTheDocs](http://yaetl.readthedocs.io/en/latest/?badge=latest)
-It is also a good thing to check [NodalFlow documentation](http://nodalflow.readthedocs.io/en/latest/?badge=latest), especially concerning fundamental features which are directly usable in YaEtl such as [Interruption](http://nodalflow.readthedocs.io/en/latest/interruptions/), [Serialization](http://nodalflow.readthedocs.io/en/latest/serialization/) or the `sendTo` feature allowing you to turns your Flows into _executable networks_ of Flows and Nodes.
+It is also a good thing to check [NodalFlow documentation](http://nodalflow.readthedocs.io/en/latest/?badge=latest), especially concerning fundamental features which are directly usable in YaEtl such as [Interruption](http://nodalflow.readthedocs.io/en/latest/interruptions/), [Serialization](http://nodalflow.readthedocs.io/en/latest/serialization/) or the `sendTo()` method allowing you to turns your Flows into _executable networks_ of Flows and Nodes.
 
 ## Installation
 
@@ -204,7 +204,7 @@ YaEtl provides with all the necessary interfaces to implement Join operation in 
 
 ## Qualification
 
-YaEtl (> 1.1.0) introduces a `QualifierInterface` partially implemented by `QualifierAbstract` and directly usable with the `CallableQualifier` class. Qualifiers aims at increasing the separation of concerns between Flow conditions (IFs) and Flow actions (Transform and Load), which in return should help out writing more general Transformers and Loarders (which do not need to hold every conditions anymore) and thus increase re-usability.
+YaEtl (> 1.1.0) introduces a `QualifierInterface` partially implemented by `QualifierAbstract` and directly usable with the `CallableQualifier` class. Qualifiers aims at increasing the separation of concerns between Flow conditions (IFs) and Flow actions (Transform and Load), which in return should help out writing more general Transformers and Loaders (which do not need to hold every conditions anymore) and thus increase re-usability.
 
 Using such Node, you can for example share a slow extraction among many usages of the same record by just instantiating one Branch per scenario, each starting with a Qualifier in charge of accepting or not the record based on its properties.
 
