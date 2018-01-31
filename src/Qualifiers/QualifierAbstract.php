@@ -40,6 +40,13 @@ abstract class QualifierAbstract extends NodeAbstract implements QualifierInterf
     protected $isAFlow = false;
 
     /**
+     * @var array
+     */
+    protected $nodeIncrements = [
+        'num_qualify' => 'num_exec',
+    ];
+
+    /**
      * The qualify's method interface is simple :
      *      - return true to qualify the record, that is to use it
      *      - return false|null|void to skip the record
