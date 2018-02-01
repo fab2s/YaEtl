@@ -196,111 +196,111 @@ It goes without saying that the `callable` should be relevant with the task.
 
 As array is a pretty common record format, YaEtl comes with generic Array Transformer implementations :
 
-- **ArrayMapTransformer** : [array_map()](http://php.net/array_map) simple wrapper
+**ArrayMapTransformer** : [array_map()](http://php.net/array_map) simple wrapper
     
-    ```php
-    /**
-     * @param callable $mapper
-     *
-     * @throws NodalFlowException
-     */
-    // public function __construct(callable $mapper)
-    // action : array_map($this->mapper, $record);
-    $transformer = new ArrayMapTransformer('trim');
-    ```
-    
-    
-- **ArrayReplaceTransformer** : [array_replace()](http://php.net/array_replace) wrapper
-    
-    ```php
-    /**
-     * @param array $default  An array of the default field values to use, if any
-     * @param array $override An array of the field to always set to the same value, if any
-     *
-     * @throws NodalFlowException
-     */
-    // public function __construct(array $default, array $override = [])
-    // action : array_replace($this->default, $record, $this->override);
-    $transformer = new ArrayReplaceTransformer(['key' => 'defaultValue'], ['anotherKey' => 'forcedValue']);
-    ```
-    
-    
-- **ArrayReplaceRecursiveTransformer** : [array_replace_recursive()](http://php.net/array_replace_recursive) wrapper
-    
-    ```php
-    /**
-     * @param array $default  An array of the default field values to use, if any
-     * @param array $override An array of the field to always set to the same value, if any
-     *
-     * @throws NodalFlowException
-     */
-    // public function __construct(array $default, array $override = [])
-    // action : array_replace_recursive($this->default, $record, $this->override);
-    $transformer = new ArrayReplaceRecursiveTransformer(['key' => 'defaultValue'], ['anotherKey' => 'forcedValue']);
-    ```
-    
-    
-- **ArrayWalkTransformer** : [array_walk()](http://php.net/array_walk) wrapper
-    
-    ```php
-    /**
-     * @param callable   $callable Worth nothing to say that the first callback argument should
-     *                             be a reference if you want anything to append to the record
-     * @param null|mixed $userData
-     *
-     * @throws NodalFlowException
-     */
-    // public function __construct(callable $callable, $userData = null)
-    // action : array_walk($record, $this->callable, $this->userData);
-    $transformer = new ArrayWalkTransformer(function (&$value, $key, $userData) {
-      $value = doSomething($userData);
-    });
-    ```
-    
-    
-- **ArrayWalkRecursiveTransformer** : [array_walk_recursive()](http://php.net/array_walk_recursive) wrapper
-    
-    ```php
-    /**
-     * @param callable   $callable Worth nothing to say that the first callback argument should
-     *                             be a reference if you want anything to append to the record
-     * @param null|mixed $userData
-     *
-     * @throws NodalFlowException
-     */
-    // public function __construct(callable $callable, $userData = null)
-    // action : array_walk_recursive($record, $this->callable, $this->userData);
-    $transformer = new ArrayWalkRecursiveTransformer(function (&$value, $key, $userData) {
-      $value = doSomething($userData);
-    });
-    ```
-    
-    
-- **KeyRenameTransformer** : Rename Key(s) in Array, does not preserve key order
-    
-    ```php
-    /**
-     * @param array $aliases
-     *
-     * @throws NodalFlowException
-     */
-    // public function __construct(array $aliases)
-    $transformer = new KeyRenameTransformer(['oldKeyName' => 'newKeyName']);
-    ```
-    
-    
-- **KeyUnsetTransformer** : Unset Key(s) in Array
-    
-    ```php
-    /**
-     * @param array $unsetList array of key to unset
-     *
-     * @throws NodalFlowException
-     */
-    // public function __construct(array $unsetList)
-    $transformer = new KeyUnsetTransformer(['whatever' => 'keyToUnset1', 'KeyToUnset2']);
-    ```
-    
+```php
+/**
+ * @param callable $mapper
+ *
+ * @throws NodalFlowException
+ */
+// public function __construct(callable $mapper)
+// action : array_map($this->mapper, $record);
+$transformer = new ArrayMapTransformer('trim');
+```
+
+
+**ArrayReplaceTransformer** : [array_replace()](http://php.net/array_replace) wrapper
+
+```php
+/**
+ * @param array $default  An array of the default field values to use, if any
+ * @param array $override An array of the field to always set to the same value, if any
+ *
+ * @throws NodalFlowException
+ */
+// public function __construct(array $default, array $override = [])
+// action : array_replace($this->default, $record, $this->override);
+$transformer = new ArrayReplaceTransformer(['key' => 'defaultValue'], ['anotherKey' => 'forcedValue']);
+```
+
+
+**ArrayReplaceRecursiveTransformer** : [array_replace_recursive()](http://php.net/array_replace_recursive) wrapper
+
+```php
+/**
+ * @param array $default  An array of the default field values to use, if any
+ * @param array $override An array of the field to always set to the same value, if any
+ *
+ * @throws NodalFlowException
+ */
+// public function __construct(array $default, array $override = [])
+// action : array_replace_recursive($this->default, $record, $this->override);
+$transformer = new ArrayReplaceRecursiveTransformer(['key' => 'defaultValue'], ['anotherKey' => 'forcedValue']);
+```
+
+
+**ArrayWalkTransformer** : [array_walk()](http://php.net/array_walk) wrapper
+
+```php
+/**
+ * @param callable   $callable Worth nothing to say that the first callback argument should
+ *                             be a reference if you want anything to append to the record
+ * @param null|mixed $userData
+ *
+ * @throws NodalFlowException
+ */
+// public function __construct(callable $callable, $userData = null)
+// action : array_walk($record, $this->callable, $this->userData);
+$transformer = new ArrayWalkTransformer(function (&$value, $key, $userData) {
+  $value = doSomething($userData);
+});
+```
+
+
+**ArrayWalkRecursiveTransformer** : [array_walk_recursive()](http://php.net/array_walk_recursive) wrapper
+
+```php
+/**
+ * @param callable   $callable Worth nothing to say that the first callback argument should
+ *                             be a reference if you want anything to append to the record
+ * @param null|mixed $userData
+ *
+ * @throws NodalFlowException
+ */
+// public function __construct(callable $callable, $userData = null)
+// action : array_walk_recursive($record, $this->callable, $this->userData);
+$transformer = new ArrayWalkRecursiveTransformer(function (&$value, $key, $userData) {
+  $value = doSomething($userData);
+});
+```
+
+
+**KeyRenameTransformer** : Rename Key(s) in Array, does not preserve key order
+
+```php
+/**
+ * @param array $aliases
+ *
+ * @throws NodalFlowException
+ */
+// public function __construct(array $aliases)
+$transformer = new KeyRenameTransformer(['oldKeyName' => 'newKeyName']);
+```
+
+
+**KeyUnsetTransformer** : Unset Key(s) in Array
+
+```php
+/**
+ * @param array $unsetList array of key to unset
+ *
+ * @throws NodalFlowException
+ */
+// public function __construct(array $unsetList)
+$transformer = new KeyUnsetTransformer(['whatever' => 'keyToUnset1', 'KeyToUnset2']);
+```
+
     
 ## Loader
 
@@ -388,6 +388,39 @@ class Loader extends LoaderAbstract
 
 }
 ```
+
+### Chained Loaders
+
+By default, Loaders extending `LoaderAbstract`  are not set to return a value, but this is only by declaration and is not a limitation. You can extend any existing Loader to just set the default as desired :
+
+```php
+/**
+ * Class DbLoader
+ */
+class MyCustomLoader extends LoaderAbstract // could be any other concrete implementation originally extending from LoaderAbstract
+{
+    /**
+     * Loader can return a value, though it is set
+     * to false by default. If you need return values
+     * from a loader, set this to true, and next nodes
+     * will get the returned value as param.
+     *
+     * @var bool
+     */
+    protected $isAReturningVal = true;
+}
+```
+
+or just set :
+
+```php
+$this->isAReturningVal = true;
+```
+
+directly where it make sense.
+
+This can be _very_ useful when you would have a loader in charge of generating UUIDs for new records, as it can in fact be chained with other Loaders that would need the generated ID/UUIDs from the same extraction. 
+A basic example of this could be object synchronisation with updates and insert in several repositories with a need for UUIDs. In such case, the first loader can be set to return a value and put in charge of generating the UUIDs (could also be a basic auto increment that would be required to derive other entries in more repos) for new objects. It then only needs to always return the complete and untouched incoming record from its `load()` method, that is to just add the generated UUIDs in the record for inserts and return it has is for updates.
 
 ## Qualifier
 
@@ -539,36 +572,3 @@ foreach ((new Extractor)->getTraversable($param) as $record) {
 The later does not yet have a strict flow equivalent as Flows and Branches do not yet support traverse-ability.
 
 As every Node gets injected with the carrier flow, you can extend YaEtl to implement whatever context logic you could need to share among all nodes.
-
-### Chained Loaders
-
-By default, Loaders extending `LoaderAbstract`  are not set to return a value, but this is only by declaration and is not a limitation. You can extend any existing Loader to just set the default as desired :
-
-```php
-/**
- * Class DbLoader
- */
-class MyCustomLoader extends LoaderAbstract // could be any other concrete implementation originally extending from LoaderAbstract
-{
-    /**
-     * Loader can return a value, though it is set
-     * to false by default. If you need return values
-     * from a loader, set this to true, and next nodes
-     * will get the returned value as param.
-     *
-     * @var bool
-     */
-    protected $isAReturningVal = true;
-}
-```
-
-or just set :
-
-```php
-$this->isAReturningVal = true;
-```
-
-directly where it make sense.
-
-This can be _very_ useful when you would have a loader in charge of generating UUIDs for new records, as it can in fact be chained with other Loaders that would need the generated ID/UUIDs from the same extraction. 
-A basic example of this could be object synchronisation with updates and insert in several repositories with a need for UUIDs. In such case, the first loader can be set to return a value and put in charge of generating the UUIDs (could also be a basic auto increment that would be required to derive other entries in more repos) for new objects. It then only needs to always return the complete and untouched incoming record from its `load()` method, that is to just add the generated UUIDs in the record for inserts and return it has is for updates.
