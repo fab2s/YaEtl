@@ -389,6 +389,16 @@ class Loader extends LoaderAbstract
 }
 ```
 
+### `flush()` and Branches
+
+In some occasions, you could need to use several branches with a Loader in each. In such case, each branch will actually execute fully with each record from the root Flow. This creates an opportunity to call `flush()` each times the branch flow ends. YaEtl will detect the root Flow's call to `flush()` and by default will _not_ trigger `flush()` among its own Loader(s) until the root Flow does it, which only occurs once per execution, when it ends. 
+This is done so because in most cases it makes more sense to synchronize `flush()` calls and keep the "triggered at the end of the process" logic. Especially since this would otherwise result in one call to `flush()` for every records in every branches. 
+Now if you where to find a use to trigger `flush()` more often among branches, you would just have to force flush on the relevant branches :
+
+```php
+$branchInLoveWithFlush->forceFlush(true);
+```
+
 ### Chained Loaders
 
 By default, Loaders extending `LoaderAbstract`  are not set to return a value, but this is only by declaration and is not a limitation. You can extend any existing Loader to just set the default as desired :
