@@ -209,6 +209,7 @@ As array is a pretty common record format, YaEtl comes with generic Array Transf
     $transformer = new ArrayMapTransformer('trim');
     ```
     
+    
 - **ArrayReplaceTransformer** : [array_replace()](http://php.net/array_replace) wrapper
     
     ```php
@@ -223,6 +224,7 @@ As array is a pretty common record format, YaEtl comes with generic Array Transf
     $transformer = new ArrayReplaceTransformer(['key' => 'defaultValue'], ['anotherKey' => 'forcedValue']);
     ```
     
+    
 - **ArrayReplaceRecursiveTransformer** : [array_replace_recursive()](http://php.net/array_replace_recursive) wrapper
     
     ```php
@@ -236,6 +238,7 @@ As array is a pretty common record format, YaEtl comes with generic Array Transf
     // action : array_replace_recursive($this->default, $record, $this->override);
     $transformer = new ArrayReplaceRecursiveTransformer(['key' => 'defaultValue'], ['anotherKey' => 'forcedValue']);
     ```
+    
     
 - **ArrayWalkTransformer** : [array_walk()](http://php.net/array_walk) wrapper
     
@@ -254,6 +257,7 @@ As array is a pretty common record format, YaEtl comes with generic Array Transf
     });
     ```
     
+    
 - **ArrayWalkRecursiveTransformer** : [array_walk_recursive()](http://php.net/array_walk_recursive) wrapper
     
     ```php
@@ -271,6 +275,7 @@ As array is a pretty common record format, YaEtl comes with generic Array Transf
     });
     ```
     
+    
 - **KeyRenameTransformer** : Rename Key(s) in Array, does not preserve key order
     
     ```php
@@ -283,6 +288,7 @@ As array is a pretty common record format, YaEtl comes with generic Array Transf
     $transformer = new KeyRenameTransformer(['oldKeyName' => 'newKeyName']);
     ```
     
+    
 - **KeyUnsetTransformer** : Unset Key(s) in Array
     
     ```php
@@ -294,6 +300,7 @@ As array is a pretty common record format, YaEtl comes with generic Array Transf
     // public function __construct(array $unsetList)
     $transformer = new KeyUnsetTransformer(['whatever' => 'keyToUnset1', 'KeyToUnset2']);
     ```
+    
     
 ## Loader
 
