@@ -382,6 +382,7 @@ class Loader extends LoaderAbstract
 
 }
 ```
+
 ## Qualifier
 
 Qualifiers are designed to isolate conditions that may or may not Qualify a record to be further processed. They can leverage the full power of NodalFlow's [Interruptions](https://github.com/fab2s/NodalFlow/blob/master/docs/interruptions.md) but should in far most cases be used to isolate any conditions required on a record that would otherwise be implemented in other types of Nodes. The Qualifier Node aims at a better separation of concern among Nodes which in returns should increase re-usability. 
@@ -439,6 +440,7 @@ $rootExtractor = new Extractor;
 $joinOnClose = new OnClose('fromKeyAliasAsInRecord', 'joinKeyAliasAsInRecord', function($upstreamRecord, $record) {
     return array_replace($upstreamRecord, $record);
 });
+
 // or if we want a left join instead
 $leftJoinOnClose new OnClose('fromKeyAliasAsInRecord', 'joinKeyAliasAsInRecord', $aSuitableCallable, [
     // this would be our default record
@@ -447,7 +449,7 @@ $leftJoinOnClose new OnClose('fromKeyAliasAsInRecord', 'joinKeyAliasAsInRecord',
     // ...
     // 'joined_fieldN' => defaultValue,
 ]);
-
+    
 $joinableExtractor = new JoinableExtractor;
 $yaEtl->from($rootExtractor)
     // will join records from $joinableExtractor on $rootExtractor's ones
@@ -462,12 +464,25 @@ $yaEtl->from($rootExtractor)
     ->transform(new AnotherTransformer)
     // ...
     ->to(new Loader)
-    ->to(new AnotherLoader)
-    // ...
+    ->to(new AnotherLoader);
+
+// and why not some qualified branches to do something specialy
+// with a subset of the extract filtered by a qualifier
+// keep this one for later
+$preparePremiumPerkTransformer = new PreparePremiumPerkTransformer;
+$qualifiedBranch = (new YaEtl)->qualify(new PremiumUserQualifier)
+    ->transform($preparePremiumPerkTransformer)
+    ->to(new PerkSenderLoader);
+    
+$yaEtl->branch($qualifiedBranch)
     // optionally set callbacks
     ->setCallBack(new ClassImplementingCallbackInterface)
     // run ETL
     ->exec();
+    
+// send some parameter directly to $qualifiedBranch's Tranformer 
+// without passing through the Qualifier
+$result = $qualifiedBranch->sendTo($preparePremiumPerkTransformer->getId(), $record);
 
 // displays some basic stats
 $stats = $yaEtl->getStats();
@@ -515,6 +530,39 @@ foreach ((new Extractor)->getTraversable($param) as $record) {
 }
 ```
 
-The later does not yet have a strict flow equivalent as Flows and Branches do not yet support traversability.
+The later does not yet have a strict flow equivalent as Flows and Branches do not yet support traverse-ability.
 
 As every Node gets injected with the carrier flow, you can extend YaEtl to implement whatever context logic you could need to share among all nodes.
+
+### Chained Loaders
+
+By default, Loaders extending `LoaderAbstract`  are not set to return a value, but this is only by declaration and is not a limitation. You can extend any existing Loader to just set the default as desired :
+
+```php
+/**
+ * Class DbLoader
+ */
+class MyCustomLoader extends LoaderAbstract // could be any other concrete implementation originally extending from LoaderAbstract
+{
+    /**
+     * Loader can return a value, though it is set
+     * to false by default. If you need return values
+     * from a loader, set this to true, and next nodes
+     * will get the returned value as param.
+     *
+     * @var bool
+     */
+    protected $isAReturningVal = true;
+}
+```
+
+or just set :
+
+```php
+$this->isAReturningVal = true;
+```
+
+directly where it make sense.
+
+This can be _very_ useful when you would have a loader in charge of generating UUIDs for new records, as it can in fact be chained with other Loaders that would need the generated ID/UUIDs from the same extraction. 
+A basic example of this could be object synchronisation with updates and insert in several repositories with a need for UUIDs. In such case, the first loader can be set to return a value and put in charge of generating the UUIDs (could also be a basic auto increment that would be required to derive other entries in more repos) for new objects. It then only needs to always return the complete and untouched incoming record from its `load()` method, that is to just add the generated UUIDs in the record for inserts and return it has is for updates.

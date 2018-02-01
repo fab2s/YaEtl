@@ -14,7 +14,7 @@ use fab2s\NodalFlow\Nodes\NodeAbstract;
 use fab2s\NodalFlow\YaEtlException;
 
 /**
- * Interface QualifierInterface
+ * Abstract Class QualifierAbstract
  */
 abstract class QualifierAbstract extends NodeAbstract implements QualifierInterface
 {
