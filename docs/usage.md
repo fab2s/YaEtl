@@ -196,7 +196,7 @@ It goes without saying that the `callable` should be relevant with the task.
 
 As array is a pretty common record format, YaEtl comes with generic Array Transformer implementations :
 
-- `ArrayMapTransformer` : [array_map()](http://php.net/array_map) simple wrapper
+- **ArrayMapTransformer** : [array_map()](http://php.net/array_map) simple wrapper
     
     ```php
     /**
@@ -209,7 +209,7 @@ As array is a pretty common record format, YaEtl comes with generic Array Transf
     $transformer = new ArrayMapTransformer('trim');
     ```
     
-- `ArrayReplaceTransformer` : [array_replace()](http://php.net/array_replace) wrapper
+- **ArrayReplaceTransformer** : [array_replace()](http://php.net/array_replace) wrapper
     
     ```php
     /**
@@ -223,7 +223,7 @@ As array is a pretty common record format, YaEtl comes with generic Array Transf
     $transformer = new ArrayReplaceTransformer(['key' => 'defaultValue'], ['anotherKey' => 'forcedValue']);
     ```
     
-- `ArrayReplaceRecursiveTransformer` : [array_replace_recursive()](http://php.net/array_replace_recursive) wrapper
+- **ArrayReplaceRecursiveTransformer** : [array_replace_recursive()](http://php.net/array_replace_recursive) wrapper
     
     ```php
     /**
@@ -237,7 +237,7 @@ As array is a pretty common record format, YaEtl comes with generic Array Transf
     $transformer = new ArrayReplaceRecursiveTransformer(['key' => 'defaultValue'], ['anotherKey' => 'forcedValue']);
     ```
     
-- `ArrayWalkTransformer` : [array_walk()](http://php.net/array_walk) wrapper
+- **ArrayWalkTransformer** : [array_walk()](http://php.net/array_walk) wrapper
     
     ```php
     /**
@@ -254,7 +254,7 @@ As array is a pretty common record format, YaEtl comes with generic Array Transf
     });
     ```
     
-- `ArrayWalkRecursiveTransformer` : [array_walk_recursive()](http://php.net/array_walk_recursive) wrapper
+- **ArrayWalkRecursiveTransformer** : [array_walk_recursive()](http://php.net/array_walk_recursive) wrapper
     
     ```php
     /**
@@ -271,7 +271,7 @@ As array is a pretty common record format, YaEtl comes with generic Array Transf
     });
     ```
     
-- `KeyRenameTransformer` : Rename Key(s) in Array, does not preserve key order
+- **KeyRenameTransformer** : Rename Key(s) in Array, does not preserve key order
     
     ```php
     /**
@@ -283,7 +283,7 @@ As array is a pretty common record format, YaEtl comes with generic Array Transf
     $transformer = new KeyRenameTransformer(['oldKeyName' => 'newKeyName']);
     ```
     
-- `KeyUnsetTransformer` : Unset Key(s) in Array
+- **KeyUnsetTransformer** : Unset Key(s) in Array
     
     ```php
     /**
@@ -295,7 +295,6 @@ As array is a pretty common record format, YaEtl comes with generic Array Transf
     $transformer = new KeyUnsetTransformer(['whatever' => 'keyToUnset1', 'KeyToUnset2']);
     ```
     
-
 ## Loader
 
 The Loader holds the responsibility to "load" somehow and somewhere (or at least do something with) the record after it came through all upstream nodes in the flow. In many cases it is also desirable to actually flush many records at once while still getting them one by one from the transformer.
