@@ -143,12 +143,22 @@ Implementing a `Joinable` extractor requires a bit more work as there is a need 
 
 Both PDO extractors deactivate MysQl buffered query if needed to speed up fetching large amounts of records.
 
-### Files
+### FileExtractorAbstract
 
 YaEtl includes a generic `FileExtractorAbstract` abstract class which can be used as a foundation to file extraction implementations.
 The default constructor accepts both resources and file path as argument, and the partial implementation covers everything except the actual reading.
 
 `LineExtractor` is a complete implementation of a read file line by line extractor. It can be easily extended or coupled with custom transformer to handle any line based format stored in files.
+
+### CallableExtractor
+
+`CallableExtractor` is a complete implementation of an Extractor getting its records from a `callable`. Its main purpose is to test YaEtl but it could be also handy in real some cases :
+
+```php
+$extractor = new CallableExtractor(function($param = null) {
+    return range(1, 100);
+});
+```
 
 ## Transformer
 

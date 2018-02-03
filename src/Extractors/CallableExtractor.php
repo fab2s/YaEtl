@@ -13,7 +13,7 @@ use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\Nodes\PayloadNodeAbstract;
 
 /**
- * Class ExtractorAbstract
+ * Class CallableExtractor
  */
 class CallableExtractor extends PayloadNodeAbstract implements ExtractorInterface
 {
@@ -87,7 +87,10 @@ class CallableExtractor extends PayloadNodeAbstract implements ExtractorInterfac
      */
     public function getTraversable($param)
     {
-        $this->extract($param);
+        if (!$this->extract($param)) {
+            return;
+        }
+
         $this->getCarrier()->getFlowMap()->incrementNode($this->getId(), 'num_extract');
         foreach ($this->extracted as $record) {
             yield $record;

@@ -70,6 +70,8 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
             return false;
         }
 
+        $this->getCarrier()->getFlowMap()->incrementNode($this->getId(), 'num_extract');
+
         return rewind($this->handle);
     }
 
