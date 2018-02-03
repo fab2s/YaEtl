@@ -415,7 +415,7 @@ By default, Loaders extending `LoaderAbstract`  are not set to return a value, b
 
 ```php
 /**
- * Class DbLoader
+ * Class MyCustomLoader
  */
 class MyCustomLoader extends LoaderAbstract // could be any other concrete implementation originally extending from LoaderAbstract
 {
