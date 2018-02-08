@@ -204,7 +204,7 @@ YaEtl provides with all the necessary interfaces to implement Join operation in 
 
 ## Qualification
 
-YaEtl (> 1.1.0) introduces a `QualifierInterface` partially implemented by `QualifierAbstract` and directly usable with the `CallableQualifier` class. Qualifiers aims at increasing the separation of concerns between Flow conditions (IFs) and Flow actions (Transform and Load), which in return should help out writing more general Transformers and Loaders (which do not need to hold every conditions anymore) and thus increase re-usability.
+YaEtl (>= 1.1.0) introduces a `QualifierInterface` partially implemented by `QualifierAbstract` and directly usable with the `CallableQualifier` class. Qualifiers aims at increasing the separation of concerns between Flow conditions (IFs) and Flow actions (Transform and Load), which in return should help out writing more general Transformers and Loaders (which do not need to hold every conditions anymore) and thus increase re-usability.
 
 Using such Node, you can for example share a slow extraction among many usages of the same record by just instantiating one Branch per scenario, each starting with a Qualifier in charge of accepting or not the record based on its properties.
 
