@@ -135,8 +135,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     protected function getDataSet()
     {
         $max    = $this->numRecords;
-        $nonce  = 0;
-        $index  = time();
         $result = [
             self::FROM_TABLE             => [],
             self::JOIN_TABLE             => [],
