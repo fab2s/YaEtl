@@ -91,6 +91,7 @@ YaEtl can, but is not limited to, incarnate a pure ETL flow as seen many times. 
 ### Shared extracts
 
 Being Nodal makes it possible for YaEtl to transparently share extraction across as many use case as necessary, which in the end may even not be a load.
+
 ```
 +-------------+
 |             |
@@ -230,6 +231,8 @@ Using such Node, you can for example share a slow extraction among many usages o
 ```
 
 In this example, each record would be presented to every branch and each Qualifier would be in charge of accepting the record in its Branch for other Nodes to act on it. As you can see, this pattern creates a lot of occasions to reuse existing Nodes as downstream Transformers and Loaders do not have to know anything about the specific properties we where choosing in the Qualifier. This means that you can write very generic loader strictly in charge of loading a record somewhere, leave the defaulting and formatting (charset etc) to a Transformer that does just that, and reuse these in any conditional use case by just Implementing a qualifier that holds the conditional logic.
+
+Read [Qualifiers](docs/usage.md#qualifiers) for more on qualification.
 
 ## Serialization
 
