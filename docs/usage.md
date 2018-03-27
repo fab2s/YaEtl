@@ -141,7 +141,7 @@ YaEtl comes with many partial to complete Extractor implementations to address m
 
 Implementing a `Joinable` extractor requires a bit more work as there is a need to build records maps and transmit them among joiners. But it can be pretty quick using `UniqueKeyExtractorAbstract` and / or `PdoUniqueKeyExtractor` as they provides with much of the work. The Laravel `UniqueKeyExtractor` class is a working example of a class extending `PdoUniqueKeyExtractor`, being itself a working example of a class implementing `UniqueKeyExtractorAbstract`.
 
-Both PDO extractors deactivate MysQl buffered query if needed to speed up fetching large amounts of records.
+Both PDO extractors deactivate MySql buffered query if needed to speed up fetching large amounts of records at once.
 
 ### FileExtractorAbstract
 
