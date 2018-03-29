@@ -24,7 +24,7 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
     protected $srcFile;
 
     /**
-     * @var resource
+     * @var resource|false|null
      */
     protected $handle;
 
@@ -66,7 +66,7 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
             $this->handle = fopen($this->srcFile, 'rb');
         }
 
-        if (!$this->handle || !is_resource($this->handle)) {
+        if (!is_resource($this->handle)) {
             return false;
         }
 
