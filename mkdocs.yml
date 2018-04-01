@@ -3,6 +3,7 @@ pages:
     - 'YaEtl Documentation': 'index.md'
     - 'Usage': 'usage.md'
     - 'Laravel': 'laravel.md'
+    - 'Callbacks': 'events.md'
     - 'Callbacks': 'callbacks.md'
     - 'Exceptions': 'exceptions.md'
     - 'Reusability': 'reusability.md'

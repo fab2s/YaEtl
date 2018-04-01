@@ -18,6 +18,7 @@ use fab2s\NodalFlow\Nodes\BranchNodeInterface;
 use fab2s\NodalFlow\Nodes\NodeInterface;
 use fab2s\NodalFlow\Nodes\TraversableNodeInterface;
 use fab2s\NodalFlow\YaEtlException;
+use fab2s\YaEtl\Events\YaEtlEvent;
 use fab2s\YaEtl\Extractors\AggregateExtractor;
 use fab2s\YaEtl\Extractors\ExtractorInterface;
 use fab2s\YaEtl\Extractors\JoinableInterface;
@@ -62,6 +63,17 @@ class YaEtl extends NodalFlow
      * @var bool
      */
     protected $forceFlush = false;
+
+    /**
+     * YaEtl constructor.
+     *
+     * @throws NodalFlowException
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->sharedEvent = new YaEtlEvent($this);
+    }
 
     /**
      * Adds an extractor to the Flow which may be aggregated with another one
@@ -363,6 +375,7 @@ class YaEtl extends NodalFlow
             if ($node instanceof LoaderInterface) {
                 $node->flush($flowStatus);
                 $this->flowMap->incrementFlow('num_flush');
+                $this->triggerEvent(YaEtlEvent::FLOW_FLUSH, $node);
                 continue;
             }
 
