@@ -12,6 +12,7 @@ namespace fab2s\YaEtl\Laravel\Callbacks;
 use fab2s\NodalFlow\Events\FlowEvent;
 use fab2s\NodalFlow\Events\FlowEventInterface;
 use fab2s\NodalFlow\Flows\FlowInterface;
+use fab2s\YaEtl\YaEtl;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
@@ -42,7 +43,7 @@ class ProgressBarSubscriber implements EventSubscriberInterface
      *
      * @var int
      */
-    protected $progressMod = 1;
+    protected $progressMod = 1024;
 
     /**
      * @var ProgressBar
@@ -103,10 +104,16 @@ class ProgressBarSubscriber implements EventSubscriberInterface
 
     /**
      * Triggered when a Flow starts
+     *
+     * @param FlowEventInterface $event
      */
-    public function start()
+    public function start(FlowEventInterface $event)
     {
-        $this->getOutput()->writeln('<info>[YaEtl] Start</info>');
+        /** @var YaEtl $flow */
+        $flow = $event->getFlow();
+        $this->setProgressMod($flow->getProgressMod())
+            ->getOutput()
+            ->writeln('<info>[YaEtl] Start</info>');
         $this->progressBar = new ProgressBar($this->output);
         $this->progressBar->start($this->numRecords);
     }

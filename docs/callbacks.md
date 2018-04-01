@@ -1,4 +1,6 @@
-# Callbacks
+# Callbacks (deprecated)
+
+Although _deprecated_, Callbacks works just exactly as before, but you should consider using the new [Event handling implementation](events.md) for future work.
 
 YaEtl inherits a KISS `CallbackInterface` from NodalFlow which can be used to trigger callback methods in various steps of the process.
 

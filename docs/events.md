@@ -10,7 +10,7 @@ Have a look at [NodalFlow event documentation](https://github.com/fab2s/NodalFlo
 
 ## Usage
 
-In order to make it simple to use any kind of `EventDispatcherInterface` implementation, YaEtl does not instantiate the default Symfony implementation until you actually call `$flow->getDispatcher()` or register a Callback (the old way). 
+In order to make it simple to use any kind of `EventDispatcherInterface` implementation, YaEtl does not instantiate the default Symfony implementation until you actually call `$yaEtl->getDispatcher()` or register a Callback (the old way). 
 
 Flow event are stored as constants in `YaEtlEvent`, but since it extends `FlowEvent`, follows the same naming convention (flow.name) and late static binding is used, you can refer to `FlowEvent` events either by `FlowEvent::FLOW_NAME` or `YaEtlEvent::FLOW_NAME`, which means that NodalFlow event subscribers and handler will work with YaEtl.
 Only the events added by YaEtl can only be mentioned as `YaEtlEvent::FLOW_NAME`.
@@ -18,21 +18,21 @@ Only the events added by YaEtl can only be mentioned as `YaEtlEvent::FLOW_NAME`.
 You can set your own dispatcher before you use it to register YaEtl events (or just set it already setup) :
 
 ```php
-$flow->setDispatcher(new CustomDispatcher);
+$yaEtl->setDispatcher(new CustomDispatcher);
 ```
 
 or : 
 
 ```php
- $flow->setDispatcher($alreadySetupDispatcher);
+ $yaEtl->setDispatcher($alreadySetupDispatcher);
 ```
   
 But you can also just let YaEtl handle instantiation :
 
 ```php
-$flow->getDispatcher()->addListener('flow.event.name', function(FlowEventInterface $event) {
+$yaEtl->getDispatcher()->addListener('flow.name', function(FlowEventInterface $event) {
     // always set 
-    $flow = $event->getFlow();
+    $yaEtl = $event->getFlow();
     // not always set
     $node = $event->getNode();
     
@@ -43,7 +43,7 @@ $flow->getDispatcher()->addListener('flow.event.name', function(FlowEventInterfa
 or even : 
 
 ```php
-$flow->getDispatcher()->addSubscriber(new EventSubscriberInterfaceImplementation());
+$yaEtl->getDispatcher()->addSubscriber(new EventSubscriberInterfaceImplementation());
 ```
 
 It is **important** to note that _each_ Flow instance carries _its own_ dispatcher instance. In most cases, it is ok to just register events on the Root Flow as it is the one controlling the executions of all its eventual children. You still get the big picture with Root Flow events, such as start, end and exceptions, but you do not have access to children iteration events (the `YaEtlEvent::FLOW_PROGRESS` event).
@@ -54,8 +54,8 @@ If you need more granularity, you will need to register events in each Flow you 
 Triggered when the Flow starts, the event only carries the flow instance.
 
 ```php
-$flow->getDispatcher()->addListener(FlowEvent::FLOW_START, function(FlowEventInterface $event) {
-    $flow = $event->getFlow();
+$yaEtl->getDispatcher()->addListener(FlowEvent::FLOW_START, function(FlowEventInterface $event) {
+    $yaEtl = $event->getFlow();
     // do stuff ...
 });
 ```
@@ -65,8 +65,8 @@ $flow->getDispatcher()->addListener(FlowEvent::FLOW_START, function(FlowEventInt
 Triggered when node iterates in the Flow, the event carries the flow and the iterating node instances. 
 
 ```php
-$flow->getDispatcher()->addListener(FlowEvent::FLOW_PROGRESS, function(FlowEventInterface $event) {
-    $flow = $event->getFlow();
+$yaEtl->getDispatcher()->addListener(FlowEvent::FLOW_PROGRESS, function(FlowEventInterface $event) {
+    $yaEtl = $event->getFlow();
     $node = $event->getNode();
     // do stuff ...
 });
@@ -76,9 +76,9 @@ As this is the most called event, a modulo is implemented to only fire it once e
 
 ```php
 // increase to 100k
-$flow->setProgressMod(100000);
+$yaEtl->setProgressMod(100000);
 // or for full granularity
-$flow->setProgressMod(1);
+$yaEtl->setProgressMod(1);
 ```
 
 Since the `$progressMod` modulo is applied to each iterating node iteration count, each iterating node will have an opportunity to fire the event. 
@@ -89,8 +89,8 @@ For example, using a `$progressMod` of 10 and extracting 10 categories chained t
 Triggered when a node triggers a `continue` on the Flow, the event carries the flow and the node instance triggering the `continue`. 
 
 ```php
-$flow->getDispatcher()->addListener(FlowEvent::FLOW_CONTINUE, function(FlowEventInterface $event) {
-    $flow = $event->getFlow();
+$yaEtl->getDispatcher()->addListener(FlowEvent::FLOW_CONTINUE, function(FlowEventInterface $event) {
+    $yaEtl = $event->getFlow();
     $node = $event->getNode();
     // do stuff ...
 });
@@ -101,8 +101,8 @@ $flow->getDispatcher()->addListener(FlowEvent::FLOW_CONTINUE, function(FlowEvent
 Triggered when a node triggers a `break` on the Flow, the event carries the flow and the node instance triggering the `break`. 
 
 ```php
-$flow->getDispatcher()->addListener(FlowEvent::FLOW_BREAK, function(FlowEventInterface $event) {
-    $flow = $event->getFlow();
+$yaEtl->getDispatcher()->addListener(FlowEvent::FLOW_BREAK, function(FlowEventInterface $event) {
+    $yaEtl = $event->getFlow();
     $node = $event->getNode();
     // do stuff ...
 });
@@ -114,8 +114,8 @@ Triggered when a node triggers a `break` on the Flow, the event carries the flow
 This event is purely YaEtl.
 
 ```php
-$flow->getDispatcher()->addListener(FlowEvent::FLOW_BREAK, function(FlowEventInterface $event) {
-    $flow = $event->getFlow();
+$yaEtl->getDispatcher()->addListener(FlowEvent::FLOW_BREAK, function(FlowEventInterface $event) {
+    $yaEtl = $event->getFlow();
     $node = $event->getNode();
     // do stuff ...
 });
@@ -126,8 +126,8 @@ $flow->getDispatcher()->addListener(FlowEvent::FLOW_BREAK, function(FlowEventInt
 Triggered when the Flow completes successfully (eg with no exceptions), the event only carries the flow instance.
 
 ```php
-$flow->getDispatcher()->addListener(FlowEvent::FLOW_SUCCESS, function(FlowEventInterface $event) {
-    $flow = $event->getFlow();
+$yaEtl->getDispatcher()->addListener(FlowEvent::FLOW_SUCCESS, function(FlowEventInterface $event) {
+    $yaEtl = $event->getFlow();
     // do stuff ...
 });
 ```
@@ -137,16 +137,51 @@ $flow->getDispatcher()->addListener(FlowEvent::FLOW_SUCCESS, function(FlowEventI
 Triggered when an exception is raised during Flow execution, the event carries the flow instance, and the node current Node instance in the Flow when the exception was thrown.
 
 ```php
-$flow->getDispatcher()->addListener(FlowEvent::FLOW_FAIL, function(FlowEventInterface $event) {
-    $flow = $event->getFlow();
+$yaEtl->getDispatcher()->addListener(FlowEvent::FLOW_FAIL, function(FlowEventInterface $event) {
+    $yaEtl = $event->getFlow();
     $node = $event->getNode();
     // if you need to inspect the exeption 
-    $exception = $flow->getFlowStatus()->getException();
+    $exception = $yaEtl->getFlowStatus()->getException();
     // do stuff ...
 });
 ```
 
 The original exception is [re-thrown by NodalFlow](exceptions.md) after the execution of FlowEvent::FLOW_FAIL events.
+
+## ProgressBarSubscriber
+
+YaEtl comes with a `ProgressBarSubscriber` class you can use if you want to display a symfony ProgressBar during Flow execution. It is tested against [symfony/console](htttps://symfony.com/doc/current/composents/console.html) versions `2.8.*`, `3.4.*` and `4.0.*` (php > 7.1).
+
+```php
+$progressSubscriber = new ProgressBarSubscriber;
+
+// you can set a custom ConsoleOutputInterface,
+$progressSubscriber->setOutput(new ConsoleOutput);
+
+// a custom OutputInterface (useful for tests)
+$progressSubscriber->setOutput(new StreamOutput(fopen('php://memory', 'r+', false));
+
+// then inject it :
+$yaEtl->getDispatcher()->addSubscriber($progressSubscriber);
+
+// or let YaEtl instantiate a new ConsoleOutput automatically
+$yaEtl->getDispatcher()->addSubscriber(new ProgressBarSubscriber);
+```
+
+If you know the number of records in advance, you can set the count in the ProgressBarSubscriber:
+
+```php
+$progressSubscriber->setNumRecords($count);
+```
+
+This will set the count in the underlying ProgressBar instance and trigger a more accurate advance with percents.
+
+Verbosity can be set in the injected Console instance or by getting a fresh one from ProgressBarSubscriber:
+
+```php
+$output = $progressSubscriber->getOutput();
+$output->setVerbosity(OutputInterface::VERBOSITY_DEBUG);
+```
 
 ## Compatibility
 

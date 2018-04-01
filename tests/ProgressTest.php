@@ -34,7 +34,6 @@ class ProgressTest extends \TestCase
     {
         $progressSubscriber = new ProgressBarSubscriber;
         $progressSubscriber->setOutput(new StreamOutput(fopen('php://memory', 'r+', false)))
-            ->setProgressMod($progressMod)
             ->setNumRecords($limit);
         /** @var StreamOutput $output */
         $output = $progressSubscriber->getOutput();
