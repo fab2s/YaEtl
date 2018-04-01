@@ -7,6 +7,7 @@
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
  */
 
+use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Transformers\Arrays\ArrayReplaceRecursiveTransformer;
 
 class ArrayReplaceRecursiveTransformerTest extends \TestCase
@@ -56,6 +57,8 @@ class ArrayReplaceRecursiveTransformerTest extends \TestCase
      * @param array $default
      * @param array $override
      * @param array $cases
+     *
+     * @throws NodalFlowException
      */
     public function testArrayReplaceRecursiveTransformer(array $default, array $override, array $cases)
     {
