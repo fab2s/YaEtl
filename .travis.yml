@@ -9,9 +9,26 @@ php:
     - 7.2
     - hhvm
 
+cache:
+  directories:
+    - $HOME/.composer
+
+env:
+  - SYMFONY_CONSOLE_VERSION=2.8.*
+  - SYMFONY_CONSOLE_VERSION=3.4.*
+  - SYMFONY_CONSOLE_VERSION=4.0.*
+
+matrix:
+  exclude:
+    - php: 5.6
+      env: SYMFONY_CONSOLE_VERSION=4.0.*
+    - php: 7.0
+      env: SYMFONY_CONSOLE_VERSION=4.0.*
+
 before_script:
     - composer self-update
-    - composer install --no-interaction
+    - if [ "SYMFONY_CONSOLE_VERSION" != "" ]; then composer require "symfony/console:${SYMFONY_CONSOLE_VERSION}" --no-update; fi;
+    - composer update
 
 script:
     - vendor/bin/phpunit
