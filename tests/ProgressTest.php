@@ -32,19 +32,17 @@ class ProgressTest extends \TestCase
      */
     public function testProgress(NodalFlow $flow, $limit, $progressMod, array $expected)
     {
-        $progressSubscriber = new ProgressBarSubscriber;
+        $flow->setProgressMod($progressMod);
+        $progressSubscriber = new ProgressBarSubscriber($flow);
         $progressSubscriber->setOutput(new StreamOutput(fopen('php://memory', 'r+', false)))
             ->setNumRecords($limit);
-        /** @var StreamOutput $output */
-        $output = $progressSubscriber->getOutput();
-
-        $flow->setProgressMod($progressMod)->getDispatcher()->addSubscriber($progressSubscriber);
         $flow->exec();
 
+        /** @var StreamOutput $output */
+        $output  = $progressSubscriber->getOutput();
         $display = $this->getStreamContent($output->getStream());
 
         $this->assertNotEmpty($display);
-
         foreach ($expected['contains'] as $contain) {
             $this->assertContains($contain, $display);
         }

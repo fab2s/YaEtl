@@ -51,6 +51,31 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     protected $progressBar;
 
     /**
+     * ProgressBarSubscriber constructor.
+     *
+     * @param YaEtl|null $flow
+     */
+    public function __construct(YaEtl $flow = null)
+    {
+        if ($flow !== null) {
+            // auto register
+            $this->registerFlow($flow);
+        }
+    }
+
+    /**
+     * @param YaEtl $flow
+     *
+     * @return $this
+     */
+    public function registerFlow(YaEtl $flow)
+    {
+        $flow->getDispatcher()->addSubscriber($this);
+
+        return $this;
+    }
+
+    /**
      * @return OutputInterface
      */
     public function getOutput()

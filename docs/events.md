@@ -152,6 +152,31 @@ The original exception is [re-thrown by NodalFlow](exceptions.md) after the exec
 
 YaEtl comes with a `ProgressBarSubscriber` class you can use if you want to display a symfony ProgressBar during Flow execution. It is tested against [symfony/console](htttps://symfony.com/doc/current/composents/console.html) versions `2.8.*`, `3.4.*` and `4.0.*` (php > 7.1).
 
+**TL;DR:**
+
+```php
+// this is enough to let YaEtl handle all the setup
+new ProgressBarSubscriber($yaEtl);
+```
+
+This will trigger a display similar to (example with one extractor, 100 records and a progressMod of 10):
+
+```
+[YaEtl] Start
+    0 [>---------------------------]
+   ...
+  100 [---------------->-----------]
+
+[YaEtl] Clean Success
+[YaEtl](clean) 1 Extractor - 1 Extract - 100 Record (100 Iterations)
+[YaEtl] 0 Joiner - 0 Join - 0 Continue - 0 Break - 0 Qualifier - 0 Qualify
+[YaEtl] 1 Transformer - 100 Transform - 0 Loader - 0 Load
+[YaEtl] 0 Branch - 0 Continue - 0 Break - 0 Flush
+[YaEtl] Time : 33ms - Memory: 6 MiB
+```
+
+**In details:**
+
 ```php
 $progressSubscriber = new ProgressBarSubscriber;
 
@@ -161,10 +186,13 @@ $progressSubscriber->setOutput(new ConsoleOutput);
 // a custom OutputInterface (useful for tests)
 $progressSubscriber->setOutput(new StreamOutput(fopen('php://memory', 'r+', false));
 
-// then inject it :
+// then inject it form progress instance:
+$progressSubscriber->registerFlow($yaEtl);
+
+// or at a lower level:
 $yaEtl->getDispatcher()->addSubscriber($progressSubscriber);
 
-// or let YaEtl instantiate a new ConsoleOutput automatically
+// or even, let YaEtl instantiate a new ConsoleOutput automatically
 $yaEtl->getDispatcher()->addSubscriber(new ProgressBarSubscriber);
 ```
 
