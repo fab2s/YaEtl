@@ -20,7 +20,7 @@ trait FileHandlerTrait
     protected $bomRegEx = '\xEF\xBB\xBF|\xFE\xFF|\xFF\xFE|\x00\x00\xFE\xFF|\xFF\xFE\x00\x00';
 
     /**
-     * @var resource|false|null
+     * @var resource
      */
     protected $handle;
 

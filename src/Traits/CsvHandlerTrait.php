@@ -15,7 +15,7 @@ namespace fab2s\YaEtl\Traits;
 trait CsvHandlerTrait
 {
     /**
-     * @var array|null
+     * @var array
      */
     protected $header;
 
