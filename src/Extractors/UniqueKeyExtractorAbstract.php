@@ -303,7 +303,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     protected function joinExtract()
     {
         // join mode, get record map
-        $this->uniqueKeyValues = $this->joinFrom->getRecordMap($this->onClose->getFromKeyAlias());
+        $this->uniqueKeyValues = $this->joinFrom->getRecordMap($this->onClose-> /* @scrutinizer ignore-call */ getFromKeyAlias());
         // limit does not apply in join mode
         $this->enforceBatchSize();
         if (empty($this->uniqueKeyValues)) {
@@ -396,7 +396,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     protected function setDefaultExtracted()
     {
         if ($this->joinFrom !== null) {
-            $defaultRecord    = $this->onClose->isLeftJoin() ? $this->onClose->getDefaultRecord() : false;
+            $defaultRecord    = $this->onClose-> /* @scrutinizer ignore-call */ isLeftJoin() ? $this->onClose-> /* @scrutinizer ignore-call */ getDefaultRecord() : false;
             $defaultExtracted = \array_fill_keys($this->uniqueKeyValues, $defaultRecord);
 
             $this->extracted = \array_replace($defaultExtracted, /* @scrutinizer ignore-type */ $this->extracted);

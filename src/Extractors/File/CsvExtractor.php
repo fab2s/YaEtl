@@ -77,24 +77,14 @@ class CsvExtractor extends FileExtractorAbstract
     }
 
     /**
-     * @return string|false
+     * @return string|bool
      */
     protected function getFirstRecord()
     {
-        $useHeader = $this->useHeader;
         while (false !== ($line = fgets($this->handle))) {
             if ($line = trim($this->trimBom($line))) {
-                // obey excel sep
-                if (strpos($line, 'sep=') === 0) {
-                    $this->useSep    = true;
-                    $this->delimiter = $line[4];
-                    continue;
-                }
-
-                $record = str_getcsv($line, $this->delimiter, $this->enclosure, $this->escape);
-                if ($useHeader) {
-                    $this->header = $record;
-                    $useHeader    = false;
+                $record = $this->handleHeader($line);
+                if ($record === false) {
                     continue;
                 }
 
@@ -103,6 +93,31 @@ class CsvExtractor extends FileExtractorAbstract
         }
 
         return false;
+    }
+
+    /**
+     * @param string $line
+     *
+     * @return array|bool
+     */
+    protected function handleHeader($line)
+    {
+        // obey excel sep
+        if (strpos($line, 'sep=') === 0) {
+            $this->useSep    = true;
+            $this->delimiter = $line[4];
+
+            return false;
+        }
+
+        $record = str_getcsv($line, $this->delimiter, $this->enclosure, $this->escape);
+        if ($this->useHeader && !isset($this->header)) {
+            $this->header = array_map('trim', $record);
+
+            return false;
+        }
+
+        return $record;
     }
 
     /**
