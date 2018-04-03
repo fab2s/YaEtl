@@ -280,7 +280,6 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
 
             ++$this->numRecords;
 
-            /* @var OnClauseInterface $this->onClose */
             return $this->onClose->merge($record, $joinRecord);
         }
 
@@ -400,6 +399,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
             $defaultRecord    = $this->onClose->isLeftJoin() ? $this->onClose->getDefaultRecord() : false;
             $defaultExtracted = \array_fill_keys($this->uniqueKeyValues, $defaultRecord);
 
+            /* @var array $this->extracted */
             $this->extracted = \array_replace($defaultExtracted, $this->extracted);
         }
 
