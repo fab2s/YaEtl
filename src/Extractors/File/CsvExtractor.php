@@ -56,10 +56,6 @@ class CsvExtractor extends FileExtractorAbstract
 
         while (false !== ($record = fgetcsv($this->handle, 0, $this->delimiter, $this->enclosure, $this->escape))) {
             /* @var array $record */
-            if (isset($this->header)) {
-                $record = array_combine($this->header, $record);
-            }
-
             yield $this->bakeRecord($record);
         }
 
