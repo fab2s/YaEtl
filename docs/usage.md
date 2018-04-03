@@ -6,19 +6,19 @@ YaEtl can build complex and repeatable workflow fluently:
 
 ### from()
 
-The `from(ExtractorInterface $extractor, ExtractorInterface $aggregateWith = null)` method adds an extractor as a source of records to the flow, which may or may not be aggregated with another one and later referred as Fromer
+The `from(ExtractorInterface $extractor, ExtractorInterface $aggregateWith = null)` method adds an extractor as a source of records to the flow, which may or may not be aggregated with another one
 
-A fromer is a Traversable Node that will be iterated upon each of his extracted records in the flow. Each records will then pass through all the remaining nodes, which could just be a transformer and a Toer to achieve a simple ETL workflow.
+An [Extractor](usage.md#extractor) is a Traversable Node that will be iterated upon each of his extracted records in the flow. Each records will then pass through all the remaining nodes, which could just be a transformer and a Loader to achieve a simple ETL workflow.
 
-The second argument is there to address cases where records are split (sharded) among several sources. Aggregating fromers would then make it possible to extract collections across several sharded repositories within the same E(JT)L operation. For example, if you have sharded records by date, you could instantiate several time the same dedicated extractor with relevant parameters, for each instance to extract from one specific date range and source in the same order and then use each of them as an aggregated fromer in the workflow.
+The second argument is there to address cases where records are split (sharded) among several sources. Aggregating Extractors makes it possible to extract collections across several sharded repositories within the same E(JQT)L operation. For example, if you have sharded records by date, you could instantiate several time the same dedicated extractor with relevant parameters, for each instance to extract from one specific date range and source in the same order and then use each of them as an aggregated Extractor in the workflow.
 
-Each extractor would then consume all its records before the next fromer takes place, allowing you to ETL a large collection of ordered records coming from various physical sources as if you where doing it with a single extractor instance.
+Each Extractor would then consume all its records before the next Extractor takes place, allowing you to ETL a large collection of ordered records coming from various physical sources as if you where doing it with a single extractor instance.
 
-If you where to add a fromer without aggregating it to another, it would then just generate its records, using, or not, each upstream record as argument. This would result into this extractor to generate several records each time it is triggered in the flow, eg, each time a records arrives at its point of execution in the flow.
+If you where to add an Extractor without aggregating it to another, it would then just generate its records, using, or not, each upstream record as argument. This would result into this extractor to generate several records each time it is triggered in the flow, eg, each time a records arrives at its point of execution in the flow.
 
 ### join()
 
-The `join(JoinableInterface $extractor, JoinableInterface $joinFrom, OnClauseInterface $onClause)` methods adds an extractor that will perform a join operation upon another extractor's records, later referred as Joiners
+The `join(JoinableInterface $extractor, JoinableInterface $joinFrom, OnClauseInterface $onClause)` methods adds an extractor that will perform a join operation upon another extractor's records
 
 Join operation is pretty similar to a JOIN with a DBMS. Joiner can be used to enrich records and can either "LEFT" join by providing with a default enrichment, when they would not find matching records, or, just a regular join by triggering a "continue" type interruption which will make the flow skip the record and continue with the eventual next record form the first upstream extractor.
 
@@ -34,34 +34,34 @@ $leftJoinOnClause  = new OnClause('fromKeyAliasAsInRecord', 'fromKeyAliasAsInRec
 
 ### transform()
 
-The `transform(TransformerInterface $trasformer)` method adds a Transformer to the flow that will transform each record one by one, later referred as Transformer
+The `transform(TransformerInterface $trasformer)` method adds a Transformer to the flow that will transform each record one by one
 
-Transformers are simple really, they just take a record as parameter and return a transformed version of the record. Simplest use case could be to change character encoding, but they could also be used to match a loader data structure, as a way to make it reusable, or just because it is required by the business logic.
+[Transformers](usage.md#transformer) are simple really, they just take a record as parameter and return a transformed version of the record. Simplest use case could be to change character encoding, but they could also be used to match a loader data structure, as a way to make it reusable, or just because it is required by the business logic.
 
 ### branch()
 
-The `branch(YaTl $yaEtlWorkflow)` method adds an entire flow in the flow, that will be treated as a single node and later referred as Brancher
+The `branch(YaTl $yaEtlWorkflow)` method adds an entire flow in the flow, that will be treated as a single node in its carrier
 
-Branches currently cannot be traversable. It's something that may be implemented at some point though as it is technically feasible and even could be of some use. As any nodes, branch node accepts one argument and can, or not, pass a value to be used as parameter to the next node.
+Branches currently cannot be traversable. It's something that may be implemented at some point though, as it is technically feasible and even could be of some use. As any nodes, branch node accepts one argument and can, or not, pass a value to be used as parameter to the next node.
 
 ### qualify()
 
 The `qualify(QualifierInterface $qualifier)` method adds a Qualifier to the flow that will qualify each record one by one and decide if and how the downstream Nodes shall proceed with it.
                                              
-Qualifiers are simple really, they just take a record as parameter and decide what the Flow shall do with it by returning :
+[Qualifiers](usage.md#qualifiers) are simple really, they just take a record as parameter and decide what the Flow shall do with it by returning :
 - `true` to accept the record, eg let the Flow proceed untouched
 - `false|null|void` to deny the record, eg trigger a continue on the carrier Flow (not ancestors)
 - `InterrupterInterface` to leverage the full power of NodalFlow's [Interruptions](https://github.com/fab2s/NodalFlow/blob/master/docs/interruptions.md).
 
 ### to()
 
-The `to(LoaderInterface $loader)` method adds a loader in the flow, later referred as Toer
+The `to(LoaderInterface $loader)` method adds a loader in the flow
 
-Toers are at the end of the line, but they are not necessarily at the end of the flow. They can return a value that would be used as argument to the eventual next node or else the first upstream Extractor. But YaEtl's Loaders are currently not returning values.
+[Loaders](usage.md#loader) are at the end of the line, but they are not necessarily at the end of the flow. They can return a value that would be used as argument to the eventual next node or else the first upstream Extractor. But YaEtl's Loaders are currently not returning values by default.
 
-You can for example add toers at some point in the flow because the required record state is reached, but still continue with more transformations and data enrichment on the same input record for another set of toers in the same flow, which goes down to sharing the extraction among many related tasks.
+You can for example add a Loader at some point in the flow because the required record state is reached, but still continue with more transformations and data enrichment on the same input record for another set of Loaders in the same flow, which goes down to sharing the extraction among several related tasks.
 
-This only could be a decent, organized and repeatable optimization if you where to often extract data from a relatively slow REST API that is needed by many different services in your infrastructure, with themselves specific APIs and so on.
+This only could be a decent, organized and repeatable optimization if you where to often extract data from a relatively slow REST API that is needed by many different services in your infrastructure, with specific APIs and so on.
 
 Again, each piece you build is reusable, the extractor written to get a list of records from a db to dump documents can be reused "as is" to push the same records into a remote REST API.
 

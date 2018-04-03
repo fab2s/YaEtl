@@ -46,16 +46,28 @@ $yaEtl->transform(new AnotherTransformer)
 
 // oh but what if ...
 $yaEtl->branch(
-    (new YaEtl)->transform(new SwaggyTransformer)
+        (new YaEtl)->transform(new SwaggyTransformer)
         // Enrich $extractor's records
         ->join($extractor, new HypeJoiner($pdo, $query, new OnClose('upstreamFieldName', 'joinerFieldName', function($upstreamRecord, $joinerRecord) {
             return array_replace($joinerRecord, $upstreamRecord);
         })))
         ->transform(new PutItAllTogetherTransformer)
         ->to(new SuperSpecializedLoader)
-    )->exec();
+)->exec();
 
-// etc ...
+// or another branch for a subset of the extraction
+$yaEtl->branch(
+    (new YaEtl)->qualify(new CallableQuualifier(function($record) {
+            return !empty($record['is_great']);
+        })
+        ->transform(new GreatTransformer)
+        ->to(new GreatLoader)
+)->exec();
+
+// need a Progress Bar ?
+$progressSubscriber = new ProgressBarSubscriber($yaEtl);
+// with count ?
+$progressSubscriber->setNumRecords($count);
 ```
 
 ## Usage Patterns
@@ -242,7 +254,7 @@ Please have a look at [NodalFlow documentation](https://github.com/fab2s/NodalFl
 
 ## Requirements
 
-NodalFlow is tested against php 5.6, 7.0, 7.1, 7.2 and hhvm, but it may run bellow that (might up to 5.3).
+YaEtl is tested against php 5.6, 7.0, 7.1, 7.2 and hhvm, but it may run bellow that (might up to 5.3).
 
 ## Contributing
 
@@ -251,4 +263,4 @@ In all cases, do not hesitate to open issues and submit pull requests.
 
 ## License
 
-NodalFlow is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+YaEtl is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
