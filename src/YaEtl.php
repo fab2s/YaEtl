@@ -382,8 +382,7 @@ class YaEtl extends NodalFlow
             // start with only flushing YaEtl and extends
             if ($node instanceof BranchNodeInterface) {
                 $flow = $node->getPayload();
-                if (\is_a($flow, static::class)
-) {
+                if (is_a($flow, static::class)) {
                     /* @var YaEtl $flow */
                     $flow->flush($flowStatus);
                 }

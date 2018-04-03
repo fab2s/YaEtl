@@ -48,12 +48,16 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
     /**
      * @param mixed $param
      *
+     * @throws YaEtlException
+     *
      * @return bool
      */
     public function extract($param = null)
     {
         if ($this->srcFile !== null) {
-            $this->handle = fopen($this->srcFile, 'rb');
+            if (!($this->handle = fopen($this->srcFile, 'rb'))) {
+                throw new YaEtlException('Cannot open file in read mode');
+            }
         }
 
         if (!is_resource($this->handle)) {

@@ -87,10 +87,16 @@ trait CsvHandlerTrait
      */
     protected function initCsvOptions($delimiter = null, $enclosure = null, $escape = null)
     {
-        foreach (['delimiter', 'enclosure', 'escape'] as $varName) {
-            if ($$varName !== null) {
-                $this->$varName = $$varName;
-            }
+        if ($delimiter !== null) {
+            $this->delimiter = $delimiter;
+        }
+
+        if ($enclosure !== null) {
+            $this->enclosure = $enclosure;
+        }
+
+        if ($escape !== null) {
+            $this->escape = $escape;
         }
 
         return $this;
