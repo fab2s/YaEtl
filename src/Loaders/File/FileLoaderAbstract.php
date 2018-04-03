@@ -7,27 +7,22 @@
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
  */
 
-namespace fab2s\YaEtl\Extractors\File;
+namespace fab2s\YaEtl\Loaders\File;
 
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\YaEtlException;
-use fab2s\YaEtl\Extractors\ExtractorAbstract;
+use fab2s\YaEtl\Loaders\LoaderAbstract;
 use fab2s\YaEtl\Traits\FileHandlerTrait;
 
 /**
- * Class FileExtractorAbstract
+ * Class FileLoaderAbstract
  */
-abstract class FileExtractorAbstract extends ExtractorAbstract
+abstract class FileLoaderAbstract extends LoaderAbstract
 {
     use FileHandlerTrait;
 
     /**
-     * @var string
-     */
-    protected $srcFile;
-
-    /**
-     * @param resource|string $input
+     * @param mixed|resource|string $input
      *
      * @throws YaEtlException
      * @throws NodalFlowException
@@ -37,31 +32,19 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
         if (is_resource($input)) {
             $this->handle = $input;
         } elseif (is_file($input)) {
-            $this->srcFile = $input;
+            $this->handle = fopen($input, 'wb');
+            if (!$this->handle) {
+                throw new YaEtlException('CsvLoader : destination cannot be opened in write mode');
+            }
         } else {
             throw new YaEtlException('Input is either not a resource or not a file');
         }
 
+        $metaData = stream_get_meta_data($this->handle);
+        if (!is_writable($metaData['uri'])) {
+            throw new YaEtlException('CsvLoader : destination cannot be opened in write mode');
+        }
+
         parent::__construct();
-    }
-
-    /**
-     * @param mixed $param
-     *
-     * @return bool
-     */
-    public function extract($param = null)
-    {
-        if ($this->srcFile !== null) {
-            $this->handle = fopen($this->srcFile, 'rb');
-        }
-
-        if (!is_resource($this->handle)) {
-            return false;
-        }
-
-        $this->getCarrier()->getFlowMap()->incrementNode($this->getId(), 'num_extract');
-
-        return rewind($this->handle);
     }
 }
