@@ -22,11 +22,6 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
     use FileHandlerTrait;
 
     /**
-     * @var string
-     */
-    protected $srcFile;
-
-    /**
      * @param resource|string $input
      *
      * @throws YaEtlException
@@ -34,13 +29,7 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
      */
     public function __construct($input)
     {
-        if (is_resource($input)) {
-            $this->handle = $input;
-        } elseif (is_file($input)) {
-            $this->srcFile = $input;
-        } else {
-            throw new YaEtlException('Input is either not a resource or not a file');
-        }
+        $this->initHandle($input, 'rb');
 
         parent::__construct();
     }
@@ -48,22 +37,10 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
     /**
      * @param mixed $param
      *
-     * @throws YaEtlException
-     *
      * @return bool
      */
     public function extract($param = null)
     {
-        if ($this->srcFile !== null) {
-            if (!($this->handle = fopen($this->srcFile, 'rb'))) {
-                throw new YaEtlException('Cannot open file in read mode');
-            }
-        }
-
-        if (!is_resource($this->handle)) {
-            return false;
-        }
-
         $this->getCarrier()->getFlowMap()->incrementNode($this->getId(), 'num_extract');
 
         return rewind($this->handle);

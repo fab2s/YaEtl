@@ -29,16 +29,7 @@ abstract class FileLoaderAbstract extends LoaderAbstract
      */
     public function __construct($input)
     {
-        if (is_resource($input)) {
-            $this->handle = $input;
-        } elseif (is_file($input)) {
-            $this->handle = fopen($input, 'wb');
-            if (!$this->handle) {
-                throw new YaEtlException('CsvLoader : destination cannot be opened in write mode');
-            }
-        } else {
-            throw new YaEtlException('Input is either not a resource or not a file');
-        }
+        $this->initHandle($input, 'wb');
 
         $metaData = stream_get_meta_data($this->handle);
         if (!is_writable($metaData['uri'])) {

@@ -9,6 +9,8 @@
 
 namespace fab2s\YaEtl\Traits;
 
+use fab2s\NodalFlow\YaEtlException;
+
 /**
  * Trait FileHandlerTrait
  */
@@ -54,6 +56,30 @@ trait FileHandlerTrait
         }
 
         $this->handle = null;
+
+        return $this;
+    }
+
+    /**
+     * @param resource|string $input
+     * @param string          $mode
+     *
+     * @throws YaEtlException
+     *
+     * @return $this
+     */
+    protected function initHandle($input, $mode)
+    {
+        if (is_resource($input)) {
+            $this->handle = $input;
+        } elseif (is_file($input)) {
+            $this->handle = fopen($input, $mode);
+            if (!$this->handle) {
+                throw new YaEtlException('Handle could not be opened in mode:' . $mode);
+            }
+        } else {
+            throw new YaEtlException('$input is either not a resource or not a file');
+        }
 
         return $this;
     }

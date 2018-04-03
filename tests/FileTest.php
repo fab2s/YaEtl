@@ -80,9 +80,7 @@ class FileTest extends \TestCase
                 static $i = 0;
                 $header = $csvExtractor->getHeader();
                 $this->assertSame($expected['header'], $expected['header']);
-
                 $this->assertSame($header ? array_combine($header, $expected['values'][$i]) : $expected['values'][$i], $record);
-
                 ++$i;
             }))
             ->exec();

@@ -45,26 +45,35 @@ class CsvExtractor extends FileExtractorAbstract
      */
     public function getTraversable($param = null)
     {
-        if (!$this->extract($param) || false === ($firstRecord = $this->getFirstRecord())) {
+        if (!$this->extract($param)) {
             return;
         }
 
-        $firstRecord = str_getcsv($firstRecord, $this->delimiter, $this->enclosure, $this->escape);
-        if ($this->useHeader) {
-            $this->header = $firstRecord;
-        } else {
-            yield $firstRecord;
+        if (false !== ($firstRecord = $this->getFirstRecord())) {
+            /* @var array $firstRecord */
+            yield $this->bakeRecord($firstRecord);
         }
 
         while (false !== ($record = fgetcsv($this->handle, 0, $this->delimiter, $this->enclosure, $this->escape))) {
-            if ($this->useHeader) {
+            /* @var array $record */
+            if (isset($this->header)) {
                 $record = array_combine($this->header, $record);
             }
 
-            yield $record;
+            yield $this->bakeRecord($record);
         }
 
         $this->releaseHandle();
+    }
+
+    /**
+     * @param array $record
+     *
+     * @return array
+     */
+    protected function bakeRecord(array $record)
+    {
+        return isset($this->header) ? array_combine($this->header, $record) : $record;
     }
 
     /**
@@ -72,8 +81,9 @@ class CsvExtractor extends FileExtractorAbstract
      */
     protected function getFirstRecord()
     {
+        $useHeader = $this->useHeader;
         while (false !== ($line = fgets($this->handle))) {
-            if ($line = $this->trimBom(trim($line))) {
+            if ($line = trim($this->trimBom($line))) {
                 // obey excel sep
                 if (strpos($line, 'sep=') === 0) {
                     $this->useSep    = true;
@@ -81,7 +91,14 @@ class CsvExtractor extends FileExtractorAbstract
                     continue;
                 }
 
-                return $line;
+                $record = str_getcsv($line, $this->delimiter, $this->enclosure, $this->escape);
+                if ($useHeader) {
+                    $this->header = $record;
+                    $useHeader    = false;
+                    continue;
+                }
+
+                return $record;
             }
         }
 
