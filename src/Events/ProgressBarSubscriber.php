@@ -15,7 +15,6 @@ use fab2s\NodalFlow\Flows\FlowInterface;
 use fab2s\YaEtl\YaEtl;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -27,7 +26,7 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     /**
      * The Laravel output object, extracted from the command object
      *
-     * @var ConsoleOutputInterface
+     * @var OutputInterface
      */
     protected $output;
 

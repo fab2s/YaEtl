@@ -84,11 +84,11 @@ class DbLoader extends LoaderAbstract
      * We assume here that transformed data is a name/value pair
      * array of fields to update/insert
      *
-     * @param array|null $param The record to load
+     * @param array $param The record to load
      *
      * @return mixed|void
      */
-    public function exec($param = null)
+    public function exec($param)
     {
         // clone query object in order to prevent where clause stacking
         $loadQuery   = clone $this->loadQuery;

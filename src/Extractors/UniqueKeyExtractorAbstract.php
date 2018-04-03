@@ -280,6 +280,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
 
             ++$this->numRecords;
 
+            /* @var OnClauseInterface $this->onClose */
             return $this->onClose->merge($record, $joinRecord);
         }
 

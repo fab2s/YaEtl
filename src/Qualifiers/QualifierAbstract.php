@@ -65,7 +65,7 @@ abstract class QualifierAbstract extends NodeAbstract implements QualifierInterf
             return;
         }
 
-        if (!$qualifies) {
+        if (empty($qualifies)) {
             $this->carrier->interruptFlow(InterrupterInterface::TYPE_CONTINUE);
 
             return;
