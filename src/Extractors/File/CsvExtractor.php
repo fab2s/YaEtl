@@ -49,7 +49,7 @@ class CsvExtractor extends FileExtractorAbstract
             return;
         }
 
-        if (false == ($firstLine = $this->getNextNonEmptyLine(true))) {
+        if (false === ($firstLine = $this->getNextNonEmptyLine(true))) {
             return;
         }
 

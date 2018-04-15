@@ -49,7 +49,7 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
     /**
      * @param bool $lookUpBom
      *
-     * @return string|bool
+     * @return string|false
      */
     protected function getNextNonEmptyLine($lookUpBom = false)
     {

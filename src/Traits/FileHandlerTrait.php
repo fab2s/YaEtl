@@ -75,7 +75,7 @@ trait FileHandlerTrait
     /**
      * @param string $string
      *
-     * @return bool
+     * @return string
      */
     public function readBom($string)
     {
@@ -91,7 +91,7 @@ trait FileHandlerTrait
     /**
      * @param string $string
      *
-     * @return bool
+     * @return string
      */
     public function prependBom($string)
     {
