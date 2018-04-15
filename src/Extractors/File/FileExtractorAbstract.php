@@ -45,4 +45,29 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
 
         return rewind($this->handle);
     }
+
+    /**
+     * @param bool $lookUpBom
+     *
+     * @return string|bool
+     */
+    protected function getNextNonEmptyLine($lookUpBom = false)
+    {
+        while (false !== ($line = fgets($this->handle))) {
+            if ('' === ($line = trim($line))) {
+                continue;
+            }
+
+            if ($lookUpBom) {
+                $lookUpBom = false;
+                if ('' === ($line = $this->readBom($line))) {
+                    continue;
+                }
+            }
+
+            return $line;
+        }
+
+        return false;
+    }
 }

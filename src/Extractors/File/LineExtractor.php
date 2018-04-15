@@ -25,7 +25,15 @@ class LineExtractor extends FileExtractorAbstract
             return;
         }
 
+        if (false !== ($line = $this->getNextNonEmptyLine(true))) {
+            yield $line;
+        }
+
         while (false !== ($line = fgets($this->handle))) {
+            if ('' === ($line = trim($line))) {
+                continue;
+            }
+
             yield $line;
         }
 

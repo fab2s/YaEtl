@@ -49,10 +49,23 @@ class CsvLoader extends FileLoaderAbstract
      */
     public function exec($param)
     {
-        // take care about header etc
+        $this->handleFirstLine($param)->writeCsvLine($param);
+    }
+
+    /**
+     * @param array $param
+     *
+     * @return $this
+     */
+    protected function handleFirstLine($param)
+    {
         if ($this->isFirstLine) {
+            if ($this->useBom && ($bom = $this->prependBom(''))) {
+                fwrite($this->handle, $bom);
+            }
+
             if ($this->useSep) {
-                fwrite($this->handle, "sep=$this->delimiter\n");
+                fwrite($this->handle, "sep=$this->delimiter" . PHP_EOL);
             }
 
             if ($this->useHeader) {
@@ -66,7 +79,7 @@ class CsvLoader extends FileLoaderAbstract
             $this->isFirstLine = false;
         }
 
-        $this->writeCsvLine($param);
+        return $this;
     }
 
     /**

@@ -10,6 +10,7 @@
 namespace fab2s\YaEtl\Traits;
 
 use fab2s\NodalFlow\YaEtlException;
+use fab2s\OpinHelpers\Bom;
 
 /**
  * Trait FileHandlerTrait
@@ -17,14 +18,19 @@ use fab2s\NodalFlow\YaEtlException;
 trait FileHandlerTrait
 {
     /**
-     * @var string UTF8 | UTF16_BE | UTF16_LE | UTF32_BE | UTF32_LE
-     */
-    protected $bomRegEx = '\xEF\xBB\xBF|\xFE\xFF|\xFF\xFE|\x00\x00\xFE\xFF|\xFF\xFE\x00\x00';
-
-    /**
      * @var resource
      */
     protected $handle;
+
+    /**
+     * @var string
+     */
+    protected $encoding;
+
+    /**
+     * @var bool
+     */
+    protected $useBom;
 
     /**
      * make sure we do not hold un-necessary handles
@@ -35,13 +41,65 @@ trait FileHandlerTrait
     }
 
     /**
-     * @param $string
-     *
      * @return string
      */
-    public function trimBom($string)
+    public function getEncoding()
     {
-        return preg_replace('`^' . $this->bomRegEx . '`', '', $string);
+        return $this->encoding;
+    }
+
+    /**
+     * @param string $encoding
+     *
+     * @return $this
+     */
+    public function setEncoding($encoding)
+    {
+        $this->encoding = $encoding;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $useBom
+     *
+     * @return $this
+     */
+    public function setUseBom($useBom)
+    {
+        $this->useBom = (bool) $useBom;
+
+        return $this;
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return bool
+     */
+    public function readBom($string)
+    {
+        if ($bom = Bom::extract($string)) {
+            $this->encoding = Bom::getBomEncoding($bom);
+
+            return trim(Bom::drop($string));
+        }
+
+        return $string;
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return bool
+     */
+    public function prependBom($string)
+    {
+        if ($this->encoding && ($bom = Bom::getEncodingBom($this->encoding))) {
+            return $bom . $string;
+        }
+
+        return $string;
     }
 
     /**
@@ -73,7 +131,7 @@ trait FileHandlerTrait
         if (is_resource($input)) {
             $this->handle = $input;
         } elseif (is_file($input)) {
-            $this->handle = fopen($input, $mode);
+            $this->handle = fopen($input, $mode) ?: null;
             if (!$this->handle) {
                 throw new YaEtlException('Handle could not be opened in mode:' . $mode);
             }

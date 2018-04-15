@@ -22,7 +22,7 @@ class CsvExtractor extends FileExtractorAbstract
     use CsvHandlerTrait;
 
     /**
-     * CsvLoader constructor.
+     * CsvExtractor constructor
      *
      * @param resource|string $input
      * @param string|null     $delimiter
@@ -49,7 +49,11 @@ class CsvExtractor extends FileExtractorAbstract
             return;
         }
 
-        if (false !== ($firstRecord = $this->getFirstRecord())) {
+        if (false == ($firstLine = $this->getNextNonEmptyLine(true))) {
+            return;
+        }
+
+        if (false !== ($firstRecord = $this->handleHeader($firstLine))) {
             /* @var array $firstRecord */
             yield $this->bakeRecord($firstRecord);
         }
@@ -73,25 +77,6 @@ class CsvExtractor extends FileExtractorAbstract
     }
 
     /**
-     * @return string|bool
-     */
-    protected function getFirstRecord()
-    {
-        while (false !== ($line = fgets($this->handle))) {
-            if ($line = trim($this->trimBom($line))) {
-                $record = $this->handleHeader($line);
-                if ($record === false) {
-                    continue;
-                }
-
-                return $record;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * @param string $line
      *
      * @return array|bool
@@ -102,8 +87,9 @@ class CsvExtractor extends FileExtractorAbstract
         if (strpos($line, 'sep=') === 0) {
             $this->useSep    = true;
             $this->delimiter = $line[4];
-
-            return false;
+            if (false === ($line = $this->getNextNonEmptyLine(false))) {
+                return false;
+            }
         }
 
         $record = str_getcsv($line, $this->delimiter, $this->enclosure, $this->escape);
