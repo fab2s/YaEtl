@@ -17,6 +17,7 @@ interface ExtractorLimitInterface extends ExtractorInterface
     /**
      * Set extract limit
 
+     *
      * @param int $limit
      *
      * @return $this

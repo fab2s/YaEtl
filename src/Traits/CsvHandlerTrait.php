@@ -39,7 +39,7 @@ trait CsvHandlerTrait
     /**
      * @var bool
      */
-    protected $useHeader = true;
+    protected $useHeader = false;
 
     /**
      * @var bool
@@ -52,6 +52,18 @@ trait CsvHandlerTrait
     public function getHeader()
     {
         return $this->header;
+    }
+
+    /**
+     * @param array $header
+     *
+     * @return $this
+     */
+    public function setHeader(array $header)
+    {
+        $this->header = $header;
+
+        return  $this;
     }
 
     /**
@@ -74,30 +86,6 @@ trait CsvHandlerTrait
     public function setUseSep($useSep)
     {
         $this->useSep = (bool) $useSep;
-
-        return $this;
-    }
-
-    /**
-     * @param string|null $delimiter
-     * @param string|null $enclosure
-     * @param string|null $escape
-     *
-     * @return $this
-     */
-    protected function initCsvOptions($delimiter = null, $enclosure = null, $escape = null)
-    {
-        if ($delimiter !== null) {
-            $this->delimiter = $delimiter;
-        }
-
-        if ($enclosure !== null) {
-            $this->enclosure = $enclosure;
-        }
-
-        if ($escape !== null) {
-            $this->escape = $escape;
-        }
 
         return $this;
     }

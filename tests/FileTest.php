@@ -23,7 +23,7 @@ class FileTest extends \TestCase
      * @var array
      */
     protected $expectedCsv = [
-        ['1', 'Sonsing', '思宇', 'Uganda', 'Kotido', "a\"6A'R`à1,;h"],
+        ['1', 'Sonsing', '思宇', 'Uganda', 'Kotido', "a\"6\nA'R`à1,;h"],
         ['2', 'Cookley', '思宇', 'Poland', 'Leśna Podlaska', "a\"0L'F`àH,;f"],
         ['3', 'Prodder', '思宇', 'Yemen', 'Al Ḩazm', "o\"1H'O`à4,;c"],
         ['4', 'Alpha', '宇涵', 'China', 'Zhencheng', "d\"7N'Z`à4,;5"],
@@ -51,13 +51,16 @@ class FileTest extends \TestCase
      */
     public function testLineExtractor($srcPath, array $expected)
     {
-        (new YaEtl)->from(new LineExtractor($srcPath))
+        $lineExtractor = new LineExtractor($srcPath);
+        (new YaEtl)->from($lineExtractor)
             ->transform(new CallableTransformer(function ($line) use ($expected) {
                 static $i = 0;
                 $this->assertSame($expected['values'][$i], (int) trim($line));
                 ++$i;
             }))
             ->exec();
+
+        $this->assertSame($expected['encoding'], $lineExtractor->getEncoding());
     }
 
     /**
@@ -76,14 +79,16 @@ class FileTest extends \TestCase
         $csvExtractor->setUseHeader($useHeader);
 
         (new YaEtl)->from($csvExtractor)
-            ->transform(new CallableTransformer(function ($record) use ($csvExtractor, $expected) {
+            ->transform(new CallableTransformer(function ($record) use ($csvExtractor, $expected, $useHeader) {
                 static $i = 0;
-                $header = $csvExtractor->getHeader();
-                $this->assertSame($expected['header'], $expected['header']);
-                $this->assertSame($header ? array_combine($header, $expected['values'][$i]) : $expected['values'][$i], $record);
+                $expected = $useHeader ? array_combine($csvExtractor->getHeader(), $expected['values'][$i]) : $expected['values'][$i];
+                $this->assertSame($expected, $record);
                 ++$i;
             }))
             ->exec();
+
+        $this->assertSame($expected['header'], $csvExtractor->getHeader());
+        $this->assertSame($expected['encoding'], $csvExtractor->getEncoding());
     }
 
     /**
@@ -96,40 +101,45 @@ class FileTest extends \TestCase
                 'src'       => __DIR__ . '/data/data_header_nl_eof.csv',
                 'useHeader' => true,
                 'expected'  => [
-                    'values' => $this->expectedCsv,
-                    'header' => $this->expectedCsvHeader,
+                    'values'   => $this->expectedCsv,
+                    'header'   => $this->expectedCsvHeader,
+                    'encoding' => null,
                 ],
             ],
             [
                 'src'       => __DIR__ . '/data/data_header.csv',
                 'useHeader' => true,
                 'expected'  => [
-                    'values' => $this->expectedCsv,
-                    'header' => $this->expectedCsvHeader,
+                    'values'   => $this->expectedCsv,
+                    'header'   => $this->expectedCsvHeader,
+                    'encoding' => null,
                 ],
             ],
             [
                 'src'       => __DIR__ . '/data/data.csv',
                 'useHeader' => false,
                 'expected'  => [
-                    'values' => $this->expectedCsv,
-                    'header' => null,
+                    'values'   => $this->expectedCsv,
+                    'header'   => null,
+                    'encoding' => null,
                 ],
             ],
             [
                 'src'       => __DIR__ . '/data/data_header_bom_utf8.csv',
                 'useHeader' => true,
                 'expected'  => [
-                    'values' => $this->expectedCsv,
-                    'header' => $this->expectedCsvHeader,
+                    'values'   => $this->expectedCsv,
+                    'header'   => $this->expectedCsvHeader,
+                    'encoding' => 'UTF-8',
                 ],
             ],
             [
                 'src'       => __DIR__ . '/data/data_header_sep.csv',
                 'useHeader' => true,
                 'expected'  => [
-                    'values' => $this->expectedCsv,
-                    'header' => $this->expectedCsvHeader,
+                    'values'   => $this->expectedCsv,
+                    'header'   => $this->expectedCsvHeader,
+                    'encoding' => null,
                 ],
             ],
         ];
@@ -144,13 +154,22 @@ class FileTest extends \TestCase
             [
                 'src'      => __DIR__ . '/data/lines_nl_eof',
                 'expected' => [
-                    'values' => range(1, 10),
+                    'values'   => range(1, 10),
+                    'encoding' => null,
                 ],
             ],
             [
                 'src'      => __DIR__ . '/data/lines',
                 'expected' => [
-                    'values' => range(1, 10),
+                    'values'   => range(1, 10),
+                    'encoding' => null,
+                ],
+            ],
+            [
+                'src'      => __DIR__ . '/data/lines_bom_utf8',
+                'expected' => [
+                    'values'   => range(1, 10),
+                    'encoding' => 'UTF-8',
                 ],
             ],
         ];

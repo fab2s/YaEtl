@@ -21,20 +21,14 @@ class LineExtractor extends FileExtractorAbstract
      */
     public function getTraversable($param = null)
     {
-        if (!$this->extract($param)) {
-            return;
-        }
-
-        if (false !== ($line = $this->getNextNonEmptyLine(true))) {
-            yield $line;
-        }
-
-        while (false !== ($line = fgets($this->handle))) {
-            if ('' === ($line = trim($line))) {
-                continue;
+        while ($this->extract($param)) {
+            if (!$this->readBom()) {
+                return;
             }
 
-            yield $line;
+            while (false !== ($line = $this->getNextNonEmptyLine())) {
+                yield $line;
+            }
         }
 
         $this->releaseHandle();

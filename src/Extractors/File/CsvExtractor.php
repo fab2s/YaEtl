@@ -25,17 +25,19 @@ class CsvExtractor extends FileExtractorAbstract
      * CsvExtractor constructor
      *
      * @param resource|string $input
-     * @param string|null     $delimiter
-     * @param string|null     $enclosure
-     * @param string|null     $escape
+     * @param string          $delimiter
+     * @param string          $enclosure
+     * @param string          $escape
      *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function __construct($input, $delimiter = null, $enclosure = null, $escape = null)
+    public function __construct($input, $delimiter = ',', $enclosure = '"', $escape = '"')
     {
         parent::__construct($input);
-        $this->initCsvOptions($delimiter, $enclosure, $escape);
+        $this->delimiter = $delimiter;
+        $this->enclosure = $enclosure;
+        $this->escape    = $escape;
     }
 
     /**
@@ -45,22 +47,17 @@ class CsvExtractor extends FileExtractorAbstract
      */
     public function getTraversable($param = null)
     {
-        if (!$this->extract($param)) {
-            return;
-        }
+        while ($this->extract($param)) {
+            if (!$this->readBom() || !$this->readSep() || false === ($firstRecord = $this->readHeader())) {
+                return;
+            }
 
-        if (false === ($firstLine = $this->getNextNonEmptyLine(true))) {
-            return;
-        }
-
-        if (false !== ($firstRecord = $this->handleHeader($firstLine))) {
             /* @var array $firstRecord */
             yield $this->bakeRecord($firstRecord);
-        }
-
-        while (false !== ($record = fgetcsv($this->handle, 0, $this->delimiter, $this->enclosure, $this->escape))) {
-            /* @var array $record */
-            yield $this->bakeRecord($record);
+            while (false !== ($record = fgetcsv($this->handle, 0, $this->delimiter, $this->enclosure, $this->escape))) {
+                /* @var array $record */
+                yield $this->bakeRecord($record);
+            }
         }
 
         $this->releaseHandle();
@@ -71,44 +68,81 @@ class CsvExtractor extends FileExtractorAbstract
      *
      * @return array
      */
-    protected function bakeRecord(array $record)
+    protected function bakeRecord($record)
     {
         return isset($this->header) ? array_combine($this->header, $record) : $record;
     }
 
     /**
-     * @param string $line
-     *
-     * @return array|bool
+     * @return bool
      */
-    protected function handleHeader($line)
+    protected function readHeader()
     {
-        // obey excel sep
-        if (strpos($line, 'sep=') === 0) {
-            $this->useSep    = true;
-            $this->delimiter = $line[4];
-            if (false === ($line = $this->getNextNonEmptyLine(false))) {
-                return false;
-            }
-        }
-
-        $record = str_getcsv($line, $this->delimiter, $this->enclosure, $this->escape);
-        if ($this->useHeader && !isset($this->header)) {
-            $this->header = array_map('trim', $record);
-
+        if (false === ($firstRecord = $this->getNextNonEmptyRecord())) {
             return false;
         }
 
-        return $record;
+        if ($this->useHeader && !isset($this->header)) {
+            $this->header = array_map('trim', $firstRecord);
+
+            return $this->getNextNonEmptyRecord();
+        }
+
+        return $firstRecord;
     }
 
     /**
-     * @param array $record
-     *
-     * @return bool|int
+     * @return bool
      */
-    protected function writeCsvLine(array $record)
+    protected function readSep()
     {
-        return fputcsv($this->handle, $record, $this->delimiter, $this->enclosure, $this->escape);
+        if (false === ($firstChar = $this->getNextNonEmptyChars())) {
+            return false;
+        }
+
+        $firstCharPos = ftell($this->handle);
+        /* @var string $firstChar */
+        if ($firstChar === 's') {
+            if (false === ($chars = fread($this->handle, 4))) {
+                return false;
+            }
+
+            /* @var string $chars */
+            $line = $firstChar . $chars;
+
+            if (strpos($line, 'sep=') === 0) {
+                $this->useSep    = true;
+                $this->delimiter = $line[4];
+
+                return !fseek($this->handle, $firstCharPos + 5);
+            }
+        }
+
+        return !fseek($this->handle, $firstCharPos - 1);
+    }
+
+    /**
+     * @return array|false
+     */
+    protected function getNextNonEmptyRecord()
+    {
+        $lastPos = ftell($this->handle);
+        do {
+            $record = fgetcsv($this->handle, 0, $this->delimiter, $this->enclosure, $this->escape);
+            // since it is unclear if all PHP versions do return false, empty array or array(null)
+            // for blank lines, we won't rely on false for EOF
+            if (empty($record) || $record === [null]) {
+                // at least make sure we go forward
+                $pos = ftell($this->handle);
+                if (feof($this->handle) || $pos <= $lastPos) {
+                    return false;
+                }
+
+                $lastPos = $pos;
+                continue;
+            }
+
+            return $record;
+        } while (!feof($this->handle));
     }
 }

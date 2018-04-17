@@ -43,31 +43,36 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
     {
         $this->getCarrier()->getFlowMap()->incrementNode($this->getId(), 'num_extract');
 
-        return rewind($this->handle);
+        return !feof($this->handle);
     }
 
     /**
-     * @param bool $lookUpBom
-     *
      * @return string|false
      */
-    protected function getNextNonEmptyLine($lookUpBom = false)
+    protected function getNextNonEmptyLine()
     {
         while (false !== ($line = fgets($this->handle))) {
             if ('' === ($line = trim($line))) {
                 continue;
             }
 
-            if ($lookUpBom) {
-                $lookUpBom = false;
-                if ('' === ($line = $this->readBom($line))) {
-                    continue;
-                }
-            }
-
             return $line;
         }
 
         return false;
+    }
+
+    /**
+     * @return string|false
+     */
+    protected function getNextNonEmptyChars()
+    {
+        do {
+            if (false === ($char = fread($this->handle, 1))) {
+                return false;
+            }
+        } while (trim($char) === '');
+
+        return $char;
     }
 }

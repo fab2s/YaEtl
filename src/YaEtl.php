@@ -220,7 +220,7 @@ class YaEtl extends NodalFlow
      *
      * @return $this
      */
-    public function branch(YaEtl $flow, $isAReturningVal = false)
+    public function branch(self $flow, $isAReturningVal = false)
     {
         parent::add(new BranchNode($flow, $isAReturningVal));
         $this->flowMap->incrementFlow('num_branch');

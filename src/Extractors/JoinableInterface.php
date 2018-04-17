@@ -36,9 +36,10 @@ interface JoinableInterface extends ExtractorInterface, ExecNodeInterface
      * Set the extractor to get record map from
      *
      * @param JoinableInterface $joinFrom
-     *                                    return $this
+     *
+     * @return $this
      */
-    public function setJoinFrom(JoinableInterface $joinFrom);
+    public function setJoinFrom(self $joinFrom);
 
     /**
      * Set Joiner's ON clause. Only used in Join mode

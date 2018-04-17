@@ -22,20 +22,21 @@ abstract class FileLoaderAbstract extends LoaderAbstract
     use FileHandlerTrait;
 
     /**
-     * @param mixed|resource|string $input
+     * @param resource|string $input
      *
      * @throws YaEtlException
      * @throws NodalFlowException
      */
     public function __construct($input)
     {
-        $this->initHandle($input, 'wb');
-
-        $metaData = stream_get_meta_data($this->handle);
-        if (!is_writable($metaData['uri'])) {
-            throw new YaEtlException('CsvLoader : destination cannot be opened in write mode');
+        if (is_resource($input)) {
+            $metaData = stream_get_meta_data($input);
+            if (!is_writable($metaData['uri'])) {
+                throw new YaEtlException('CsvLoader : destination cannot be opened in write mode');
+            }
         }
 
+        $this->initHandle($input, 'wb');
         parent::__construct();
     }
 }

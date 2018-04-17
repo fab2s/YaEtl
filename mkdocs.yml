@@ -1,6 +1,7 @@
 site_name: 'YaEtl'
 pages:
     - 'YaEtl Documentation': 'index.md'
+    - 'Citizens': 'citizens.md'
     - 'Usage': 'usage.md'
     - 'Laravel': 'laravel.md'
     - 'Events': 'events.md'

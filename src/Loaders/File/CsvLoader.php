@@ -28,18 +28,20 @@ class CsvLoader extends FileLoaderAbstract
     /**
      * CsvLoader constructor.
      *
-     * @param string      $destination
-     * @param string|null $delimiter
-     * @param string|null $enclosure
-     * @param string|null $escape
+     * @param string $destination
+     * @param string $delimiter
+     * @param string $enclosure
+     * @param string $escape
      *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function __construct($destination, $delimiter = null, $enclosure = null, $escape = null)
+    public function __construct($destination, $delimiter = ',', $enclosure = '"', $escape = '"')
     {
         parent::__construct($destination);
-        $this->initCsvOptions($delimiter, $enclosure, $escape);
+        $this->delimiter = $delimiter;
+        $this->enclosure = $enclosure;
+        $this->escape    = $escape;
     }
 
     /**
@@ -54,26 +56,9 @@ class CsvLoader extends FileLoaderAbstract
     }
 
     /**
-     * @param array $param
-     *
      * @return $this
      */
-    protected function handleFirstLine($param)
-    {
-        if ($this->isFirstLine) {
-            $this->handleBom()
-                ->handleSep()
-                ->handleHeader($param);
-            $this->isFirstLine = false;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    protected function handleBom()
+    public function writeBom()
     {
         if ($this->useBom && ($bom = $this->prependBom(''))) {
             fwrite($this->handle, $bom);
@@ -85,7 +70,7 @@ class CsvLoader extends FileLoaderAbstract
     /**
      * @return $this
      */
-    protected function handleSep()
+    public function writeSep()
     {
         if ($this->useSep) {
             fwrite($this->handle, "sep=$this->delimiter" . PHP_EOL);
@@ -99,7 +84,7 @@ class CsvLoader extends FileLoaderAbstract
      *
      * @return $this
      */
-    protected function handleHeader(array $param)
+    public function writeHeader(array $param)
     {
         if ($this->useHeader) {
             if (!isset($this->header)) {
@@ -117,8 +102,25 @@ class CsvLoader extends FileLoaderAbstract
      *
      * @return bool|int
      */
-    protected function writeCsvLine(array $record)
+    public function writeCsvLine(array $record)
     {
         return fputcsv($this->handle, $record, $this->delimiter, $this->enclosure, $this->escape);
+    }
+
+    /**
+     * @param array $param
+     *
+     * @return $this
+     */
+    protected function handleFirstLine($param)
+    {
+        if ($this->isFirstLine) {
+            $this->writeBom()
+                ->writeSep()
+                ->writeHeader($param);
+            $this->isFirstLine = false;
+        }
+
+        return $this;
     }
 }

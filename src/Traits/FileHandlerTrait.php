@@ -77,22 +77,6 @@ trait FileHandlerTrait
      *
      * @return string
      */
-    public function readBom($string)
-    {
-        if ($bom = Bom::extract($string)) {
-            $this->encoding = Bom::getBomEncoding($bom);
-
-            return trim(Bom::drop($string));
-        }
-
-        return $string;
-    }
-
-    /**
-     * @param string $string
-     *
-     * @return string
-     */
     public function prependBom($string)
     {
         if ($this->encoding && ($bom = Bom::getEncodingBom($this->encoding))) {
@@ -116,6 +100,32 @@ trait FileHandlerTrait
         $this->handle = null;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function readBom()
+    {
+        if (false === ($buffer = $this->getNextNonEmptyChars())) {
+            return false;
+        }
+
+        /* @var string $buffer */
+        $firstCharPos = ftell($this->handle);
+        if (false === ($chars = fread($this->handle, 3))) {
+            return false;
+        }
+
+        /* @var string $chars */
+        $buffer .= $chars;
+        if ($bom = Bom::extract($buffer)) {
+            $this->encoding = Bom::getBomEncoding($bom);
+
+            return !fseek($this->handle, $firstCharPos + strlen($bom) - 1);
+        }
+
+        return !fseek($this->handle, $firstCharPos - 1);
     }
 
     /**
