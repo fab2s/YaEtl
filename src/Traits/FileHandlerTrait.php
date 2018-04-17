@@ -103,32 +103,6 @@ trait FileHandlerTrait
     }
 
     /**
-     * @return bool
-     */
-    protected function readBom()
-    {
-        if (false === ($buffer = $this->getNextNonEmptyChars())) {
-            return false;
-        }
-
-        /* @var string $buffer */
-        $firstCharPos = ftell($this->handle);
-        if (false === ($chars = fread($this->handle, 3))) {
-            return false;
-        }
-
-        /* @var string $chars */
-        $buffer .= $chars;
-        if ($bom = Bom::extract($buffer)) {
-            $this->encoding = Bom::getBomEncoding($bom);
-
-            return !fseek($this->handle, $firstCharPos + strlen($bom) - 1);
-        }
-
-        return !fseek($this->handle, $firstCharPos - 1);
-    }
-
-    /**
      * @param resource|string $input
      * @param string          $mode
      *
