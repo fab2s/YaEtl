@@ -57,7 +57,7 @@ $yaEtl->branch(
 
 // or another branch for a subset of the extraction
 $yaEtl->branch(
-    (new YaEtl)->qualify(new CallableQuualifier(function($record) {
+    (new YaEtl)->qualify(new CallableQualifier(function($record) {
             return !empty($record['is_great']);
         })
         ->transform(new GreatTransformer)
