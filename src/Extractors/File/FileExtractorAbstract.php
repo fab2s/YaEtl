@@ -52,25 +52,18 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
      */
     protected function readBom()
     {
-        if (false === ($buffer = $this->getNextNonEmptyChars())) {
+        if (false === ($bomCandidate = fread($this->handle, 4))) {
             return false;
         }
 
-        /* @var string $buffer */
-        $firstCharPos = ftell($this->handle);
-        if (false === ($chars = fread($this->handle, 3))) {
-            return false;
-        }
-
-        /* @var string $chars */
-        $buffer .= $chars;
-        if ($bom = Bom::extract($buffer)) {
+        /* @var string $bomCandidate */
+        if ($bom = Bom::extract($bomCandidate)) {
             $this->encoding = Bom::getBomEncoding($bom);
 
-            return !fseek($this->handle, $firstCharPos + strlen($bom) - 1);
+            return !fseek($this->handle, strlen($bom));
         }
 
-        return !fseek($this->handle, $firstCharPos - 1);
+        return rewind($this->handle);
     }
 
     /**

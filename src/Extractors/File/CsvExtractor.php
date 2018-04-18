@@ -54,7 +54,7 @@ class CsvExtractor extends FileExtractorAbstract
 
             /* @var array $firstRecord */
             yield $this->bakeRecord($firstRecord);
-            while (false !== ($record = fgetcsv($this->handle, 0, $this->delimiter, $this->enclosure, $this->escape))) {
+            while (false !== ($record = $this->getNextNonEmptyRecord())) {
                 /* @var array $record */
                 yield $this->bakeRecord($record);
             }
@@ -109,7 +109,6 @@ class CsvExtractor extends FileExtractorAbstract
 
             /* @var string $chars */
             $line = $firstChar . $chars;
-
             if (strpos($line, 'sep=') === 0) {
                 $this->useSep    = true;
                 $this->delimiter = $line[4];
@@ -126,19 +125,13 @@ class CsvExtractor extends FileExtractorAbstract
      */
     protected function getNextNonEmptyRecord()
     {
-        $lastPos = ftell($this->handle);
         do {
-            $record = fgetcsv($this->handle, 0, $this->delimiter, $this->enclosure, $this->escape);
-            // since it is unclear if all PHP versions do return false, empty array or array(null)
-            // for blank lines, we won't rely on false for EOF
-            if (empty($record) || $record === [null]) {
-                // at least make sure we go forward
-                $pos = ftell($this->handle);
-                if (feof($this->handle) || $pos <= $lastPos) {
-                    return false;
-                }
+            if (false === ($record = fgetcsv($this->handle, 0, $this->delimiter, $this->enclosure, $this->escape))) {
+                return false;
+            }
 
-                $lastPos = $pos;
+            if ($record === [null]) {
+                // empty line
                 continue;
             }
 
