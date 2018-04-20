@@ -32,7 +32,7 @@ class CsvExtractor extends FileExtractorAbstract
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function __construct($input, $delimiter = ',', $enclosure = '"', $escape = '"')
+    public function __construct($input, $delimiter = ',', $enclosure = '"', $escape = '\\')
     {
         parent::__construct($input);
         $this->delimiter = $delimiter;
@@ -68,7 +68,7 @@ class CsvExtractor extends FileExtractorAbstract
      *
      * @return array
      */
-    protected function bakeRecord($record)
+    protected function bakeRecord(array $record)
     {
         return isset($this->header) ? array_combine($this->header, $record) : $record;
     }

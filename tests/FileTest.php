@@ -9,8 +9,10 @@
 
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\YaEtlException;
+use fab2s\YaEtl\Extractors\CallableExtractor;
 use fab2s\YaEtl\Extractors\File\LineExtractor;
 use fab2s\YaEtl\Loaders\File\CsvExtractor;
+use fab2s\YaEtl\Loaders\File\CsvLoader;
 use fab2s\YaEtl\Transformers\CallableTransformer;
 use fab2s\YaEtl\YaEtl;
 
@@ -23,7 +25,7 @@ class FileTest extends \TestCase
      * @var array
      */
     protected $expectedCsv = [
-        ['1', 'Sonsing', '思宇', 'Uganda', 'Kotido', "a\"6\nA'R`à1,;h"],
+        ['1', 'Sonsing', '思宇', 'Uganda', 'Kotido', "a\"6\nA'R`à1,;\h"],
         ['2', 'Cookley', '思宇', 'Poland', 'Leśna Podlaska', "a\"0L'F`àH,;f"],
         ['3', 'Prodder', '思宇', 'Yemen', 'Al Ḩazm', "o\"1H'O`à4,;c"],
         ['4', 'Alpha', '宇涵', 'China', 'Zhencheng', "d\"7N'Z`à4,;5"],
@@ -92,6 +94,39 @@ class FileTest extends \TestCase
     }
 
     /**
+     * @dataProvider csvExtractorProvider
+     *
+     * @param string $srcPath
+     * @param bool   $useHeader
+     * @param array  $expected
+     *
+     * @throws NodalFlowException
+     * @throws YaEtlException
+     */
+    public function testCsvLoader($srcPath, $useHeader, array $expected)
+    {
+        $srcPath   = $this->getTmpFile();
+        $sep       = $expected['sep'] ?: ',';
+        $csvLoader = new CsvLoader($srcPath, $sep);
+        $csvLoader->setUseSep((bool) $expected['sep']);
+        if ($useHeader) {
+            $csvLoader->setUseHeader(true)->setHeader($expected['header']);
+        }
+
+        if (!empty($expected['encoding'])) {
+            $csvLoader->setUseBom(true)->setEncoding($expected['encoding']);
+        }
+
+        (new YaEtl)->from(new CallableExtractor(function () use ($expected) {
+            return $expected['values'];
+        }))->to($csvLoader)
+            ->exec();
+
+        // check if what we just wrote passes the read test
+        $this->testCsvExtractor($srcPath, $useHeader, $expected);
+    }
+
+    /**
      * @return array
      */
     public function csvExtractorProvider()
@@ -104,6 +139,7 @@ class FileTest extends \TestCase
                     'values'   => $this->expectedCsv,
                     'header'   => $this->expectedCsvHeader,
                     'encoding' => null,
+                    'sep'      => null,
                 ],
             ],
             [
@@ -113,6 +149,7 @@ class FileTest extends \TestCase
                     'values'   => $this->expectedCsv,
                     'header'   => $this->expectedCsvHeader,
                     'encoding' => null,
+                    'sep'      => null,
                 ],
             ],
             [
@@ -122,6 +159,7 @@ class FileTest extends \TestCase
                     'values'   => $this->expectedCsv,
                     'header'   => null,
                     'encoding' => null,
+                    'sep'      => null,
                 ],
             ],
             [
@@ -131,6 +169,7 @@ class FileTest extends \TestCase
                     'values'   => $this->expectedCsv,
                     'header'   => $this->expectedCsvHeader,
                     'encoding' => 'UTF-8',
+                    'sep'      => null,
                 ],
             ],
             [
@@ -140,6 +179,7 @@ class FileTest extends \TestCase
                     'values'   => $this->expectedCsv,
                     'header'   => $this->expectedCsvHeader,
                     'encoding' => null,
+                    'sep'      => ';',
                 ],
             ],
         ];
@@ -173,5 +213,13 @@ class FileTest extends \TestCase
                 ],
             ],
         ];
+    }
+
+    /**
+     * @return bool|string
+     */
+    protected function getTmpFile()
+    {
+        return tempnam(sys_get_temp_dir(), 'Cl_');
     }
 }

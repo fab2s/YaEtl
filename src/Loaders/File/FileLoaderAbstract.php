@@ -39,4 +39,16 @@ abstract class FileLoaderAbstract extends LoaderAbstract
         $this->initHandle($input, 'wb');
         parent::__construct();
     }
+
+    /**
+     * @return $this
+     */
+    public function writeBom()
+    {
+        if ($this->useBom && ($bom = $this->prependBom(''))) {
+            fwrite($this->handle, $bom);
+        }
+
+        return $this;
+    }
 }

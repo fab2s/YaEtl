@@ -9,9 +9,11 @@
 
 namespace fab2s\YaEtl\Loaders\File;
 
+use fab2s\NodalFlow\Events\FlowEventInterface;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Traits\CsvHandlerTrait;
+use fab2s\YaEtl\YaEtl;
 
 /**
  * Class CsvLoader
@@ -36,12 +38,20 @@ class CsvLoader extends FileLoaderAbstract
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function __construct($destination, $delimiter = ',', $enclosure = '"', $escape = '"')
+    public function __construct($destination, $delimiter = ',', $enclosure = '"', $escape = '\\')
     {
         parent::__construct($destination);
         $this->delimiter = $delimiter;
         $this->enclosure = $enclosure;
         $this->escape    = $escape;
+
+        /* @var YaEtl $carrier */
+        /*$carrier = $this->getCarrier();
+        $carrier->getDispatcher()
+            ->addListener(FlowEvent::FLOW_START, function(FlowEventInterface $event) {
+            $yaEtl = $event->getFlow();
+            // do stuff ...
+        });*/
     }
 
     /**
@@ -53,18 +63,6 @@ class CsvLoader extends FileLoaderAbstract
     {
         $this->handleFirstLine($param)
             ->writeCsvLine($param);
-    }
-
-    /**
-     * @return $this
-     */
-    public function writeBom()
-    {
-        if ($this->useBom && ($bom = $this->prependBom(''))) {
-            fwrite($this->handle, $bom);
-        }
-
-        return $this;
     }
 
     /**

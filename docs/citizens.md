@@ -163,11 +163,11 @@ Constructor is pretty obvious:
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function __construct($input,  $delimiter = ',', $enclosure = '"', $escape = '"')
+    public function __construct($input,  $delimiter = ',', $enclosure = '"', $escape = '\\')
 ```
 
-And uses the same CSV parameters as [fgetcsv()](https://php.net/fgetcsv) with a bettter suited default for `$escape = '"'` as the default "\" is less universal and makes it more difficult to escape EOLs.
-CsvExtractor auto-detects the infamous `sep=` instruction from Excel but will not attemps to read a header by default.
+And uses the same CSV parameters as [fgetcsv()](https://php.net/fgetcsv).
+CsvExtractor auto-detects the infamous `sep=` instruction from Excel but will not attempts to read a header by default.
 
 When `$input` is a resource, extraction starts at the resource pointer, which means you can `fseek()` it before you pass it to CsvExtractor.
 
@@ -496,9 +496,10 @@ Every File based loader should (and does for YaEtl's one) extend `FileLoaderAbst
     public function __construct($input)
 ```
 
-Since v1.1.1, YaEtl includes [OpinHelpers](https://github.com/fab2s/OpinHelpers), and `FileLoaderAbstract` based class will inherit the same BOM/encoding handling as [FileExtractorAbstract](#FileExtractorAbstract).
+Since v1.1.1, YaEtl includes [OpinHelpers](https://github.com/fab2s/OpinHelpers), and `FileLoaderAbstract` based class will inherit the same BOM/encoding handling as [FileExtractorAbstract](#FileExtractorAbstract) from `FileHandlerTrait`.
 
-Similarily, if you need to lock the file/resource being written, you can use [FileLock](https://github.com/fab2s/OpinHelpers/docs/filelock.md):
+Similarly, if you need to lock the file/resource being written, you can use [FileLock](https://github.com/fab2s/OpinHelpers/docs/filelock.md):
+
 ```php
 $fileLock = FileLock::open($filePath, 'wb');
 if ($fileLock) {
