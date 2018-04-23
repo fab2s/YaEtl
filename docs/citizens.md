@@ -138,6 +138,12 @@ $lineExtractor->setUseBom(false);
 foreach($lineExtractor as $line) {
 	// do something with trimed non empty $line
 }
+
+// or in a Flow
+// (new YaEtl)->from($lineExtractor)-> ... // you get a line as record
+
+// handle is released upon destruction, but you can do it earlier
+$lineExtractor->releaseHandle();
 ```
 
 ### CsvExtractor
@@ -187,6 +193,12 @@ $csvExtractor->setHeader($header);
 foreach($csvExtractor as $record) {
 	// do something with $record array
 }
+
+// or in a Flow
+// (new YaEtl)->from($csvExtractor)-> ... // you get an array as record
+
+// handle is released upon destruction, but you can do it earlier
+$csvExtractor->releaseHandle();
 ```
 
 ### CallableExtractor
@@ -543,11 +555,18 @@ $csvLoader->setUseHeader(true);
 // note that header field order is IMPORTANT
 $csvLoader->setHeader(['title', 'first', 'last']);
 
+// in case you whish to add the infamous sep=$this->delimiter
+$csvLoader->setUseSep(true);
+
+// or a BOM, provided that you set an unicode encoding
+$csvLoader->setUseBom(true)->setEncoding('UTF-16LE');
+
 // standalone
 $csvLoader->load(['Mr', 'John', 'Doe']); 
 
 /*
 * will write 
+\xFE\xFFsep=,
 title,first,last
 Mr,John,Doe
 * To the output file
@@ -560,6 +579,12 @@ $csvLoader->load(['Mrs', 'Jane', 'Doe']);
 Mrs,Jane,Doe
 * To the output file
 */
+
+// or in a Flow
+// (new YaEtl)->from($soemExtractor)-> ... ->to($csvLoader)->exec();// take an array as record
+
+// handle is released upon destruction, but you can do it earlier
+$csvLoader->releaseHandle();
 ```
 
 
