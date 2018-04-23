@@ -1,5 +1,7 @@
 # Citizens
 
+YaEtl has _no_ opinion about what a record should be. Though since array'ish structures are pretty common when dealing with data structures, many examples bellow will assume that `$record` is some kind of array.
+
 ## Extractor
 
 An extractor should usually fetch many records at once using its `extract()` method and should return them one by one through its `getTraversable()` method, inherited from Nodalflow's `TraversableInterface`.
