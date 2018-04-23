@@ -81,7 +81,8 @@ Both PDO extractors deactivate MySql buffered query if needed to speed up fetchi
 ### FileExtractorAbstract
 
 YaEtl includes a generic `FileExtractorAbstract` abstract class which can be used as a foundation to file/resource extraction implementations.
-The default constructor accepts both resources and file path as argument, and the partial implementation covers everything except the actual reading.
+The default constructor accepts both resources and file path as argument, and the partial implementation covers everything except the actual reading. Handles are released upon object destruction, but you also have access to `releaseHandle()` if you wish to do it earlier.
+
 Every File based extractor should (and does for YaEtl's one) extend `FileExtractorAbstract`.
 
 `FileExtractorAbstract` comes with a constructor handling both File Path or resource as input:
@@ -142,9 +143,11 @@ foreach($lineExtractor as $line) {
 ### CsvExtractor
 
 Unfortunately, at some point, one has to deal with CSV. While it could seem that this could be done using a simple [str_getcsv()](https://php.net/str_getcsv) based transformer after a `LineExtractor`, things are a bit more complex in practice. Because a line based extraction is very likely to fail for csv fields including EOLs as it will not check if it is enclosed or not.
+
 For this very reason, CsvExtractor will first go through the file byte by byte until it reaches the first byte that _could_ be a CSV record, eg, non empty, not a BOM and not an infamous `sep=`. Of course, sep and BOM are handled when present, and the file handle is ultimately fseek'd to the first char of the first eventual CSV record (could be the header), and then starts extraction using the EOL safe [fgetcsv()](https://php.net/fgetcsv).
 
 [SplFileObject](https://php.net/SplFileObject) could have been a solution, but since it does not let you access the underlying handle, it would limit options IRL. The excellent [CSV handler](https://csv.thephpleague.com/) by the PHP league is of course a strong candidate to handle CSV manipulations, and building an Extractor based on it would be pretty trivial.
+
 But, while, [fgetcsv()](https://php.net/fgetcsv) is not perfect and has some pitfalls, it is still pretty reliable when properly used, and doing so, we get the full speed of direct extraction with no other fancy computation.
 
 CsvExtractor will ignore blank lines that could be found at any place in the file (while handling BOMs, `sep=` and parsing CSV records)
@@ -166,7 +169,7 @@ Constructor is pretty obvious:
     public function __construct($input,  $delimiter = ',', $enclosure = '"', $escape = '\\')
 ```
 
-And uses the same CSV parameters as [fgetcsv()](https://php.net/fgetcsv).
+It just uses the same CSV parameters as [fgetcsv()](https://php.net/fgetcsv).
 CsvExtractor auto-detects the infamous `sep=` instruction from Excel but will not attempts to read a header by default.
 
 When `$input` is a resource, extraction starts at the resource pointer, which means you can `fseek()` it before you pass it to CsvExtractor.
@@ -481,7 +484,8 @@ A basic example of this could be object synchronisation with updates and insert 
 ### FileLoaderAbstract
 
 YaEtl includes a generic `FileLoaderAbstract` abstract class which can be used as a foundation to file/resource load implementations.
-The default constructor accepts both resources and file path as argument, and the partial implementation covers everything except the actual writing.
+The default constructor accepts both resources and file path as argument, and the partial implementation covers everything except the actual writing. Handles are released upon object destruction, but you also have access to `releaseHandle()` if you wish to do it earlier.
+
 Every File based loader should (and does for YaEtl's one) extend `FileLoaderAbstract`.
 
 `FileLoaderAbstract` comes with a constructor handling both File Path or resource as input:
@@ -506,6 +510,58 @@ if ($fileLock) {
 	$fileLoader = new SomeFileLoader($fileLock->getHandle());
 }
 ```
+
+### CsvLoader
+
+Since one got to deal with CSV at some point, YaEtl comes with a `CsvLoader` implementation. It mostly follows the same spirit as [CsvExtractor](#CsvExtractor)  with a pretty obvious constructor:
+
+```php
+    /**
+     * CsvLoader constructor.
+     *
+     * @param string $destination
+     * @param string $delimiter
+     * @param string $enclosure
+     * @param string $escape
+     *
+     * @throws NodalFlowException
+     * @throws YaEtlException
+     */
+    public function __construct($destination, $delimiter = ',', $enclosure = '"', $escape = '\\')
+
+```
+
+Again, it justs uses the same CSV parameters as [fputcsv()](https://php.net/fputcsv).
+
+
+```php
+$csvLoader = new CsvLoader($filePathOrHandle);
+// if you wish to add header (first record array keys by default)
+$csvLoader->setUseHeader(true);
+
+// or if you prefer to define it manually
+// note that header field order is IMPORTANT
+$csvLoader->setHeader(['title', 'first', 'last']);
+
+// standalone
+$csvLoader->load(['Mr', 'John', 'Doe']); 
+
+/*
+* will write 
+title,first,last
+Mr,John,Doe
+* To the output file
+*/
+
+$csvLoader->load(['Mrs', 'Jane', 'Doe']);
+
+/*
+* will append 
+Mrs,Jane,Doe
+* To the output file
+*/
+```
+
 
 ## Qualifiers 
 

@@ -9,11 +9,9 @@
 
 namespace fab2s\YaEtl\Loaders\File;
 
-use fab2s\NodalFlow\Events\FlowEventInterface;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Traits\CsvHandlerTrait;
-use fab2s\YaEtl\YaEtl;
 
 /**
  * Class CsvLoader
@@ -44,14 +42,6 @@ class CsvLoader extends FileLoaderAbstract
         $this->delimiter = $delimiter;
         $this->enclosure = $enclosure;
         $this->escape    = $escape;
-
-        /* @var YaEtl $carrier */
-        /*$carrier = $this->getCarrier();
-        $carrier->getDispatcher()
-            ->addListener(FlowEvent::FLOW_START, function(FlowEventInterface $event) {
-            $yaEtl = $event->getFlow();
-            // do stuff ...
-        });*/
     }
 
     /**
