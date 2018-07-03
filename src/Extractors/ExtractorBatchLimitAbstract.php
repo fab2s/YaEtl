@@ -12,7 +12,7 @@ namespace fab2s\YaEtl\Extractors;
 /**
  * Class ExtractorBatchLimitAbstract
  */
-abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract
+abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implements ExtractorBatchLimitInterface
 {
     /**
      * The query offset
