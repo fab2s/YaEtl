@@ -137,7 +137,7 @@ $lineExtractor->setEncoding('UTF-8');
 $lineExtractor->setUseBom(false);
 
 // standalone
-foreach($lineExtractor as $line) {
+foreach($lineExtractor->getTraversable() as $line) {
 	// do something with trimed non empty $line
 }
 
@@ -192,7 +192,7 @@ $csvExtractor->setUseHeader(true);
 $csvExtractor->setHeader($header);
 
 // standalone
-foreach($csvExtractor as $record) {
+foreach($csvExtractor->getTraversable() as $record) {
 	// do something with $record array
 }
 

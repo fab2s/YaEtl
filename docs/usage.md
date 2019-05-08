@@ -25,11 +25,11 @@ Join operation is pretty similar to a JOIN with a DBMS. Joiner can be used to en
 The nature of the join is defined by the `$onClause` argument which implements `OnClauseInterface`:
 
 ```php
-$joinOnClause  = new OnClause('fromKeyAliasAsInRecord', 'fromKeyAliasAsInRecord', function ($upstreamRecord, $record) {
+$joinOnClause  = new OnClause('fromKeyAliasAsInRecord', 'joinKeyAliasAsInRecord', function ($upstreamRecord, $record) {
     return array_replace($record, $upstreamRecord);
 });
 
-$leftJoinOnClause  = new OnClause('fromKeyAliasAsInRecord', 'fromKeyAliasAsInRecord', [$suitableObject, 'suitableMethod], $defaultRecord);
+$leftJoinOnClause  = new OnClause('fromKeyAliasAsInRecord', 'joinKeyAliasAsInRecord', [$suitableObject, 'suitableMethod], $defaultRecord);
 ```
 
 ### transform()
@@ -49,6 +49,7 @@ Branches currently cannot be traversable. It's something that may be implemented
 The `qualify(QualifierInterface $qualifier)` method adds a Qualifier to the flow that will qualify each record one by one and decide if and how the downstream Nodes shall proceed with it.
                                              
 [Qualifiers](usage.md#qualifiers) are simple really, they just take a record as parameter and decide what the Flow shall do with it by returning :
+
 - `true` to accept the record, eg let the Flow proceed untouched
 - `false|null|void` to deny the record, eg trigger a continue on the carrier Flow (not ancestors)
 - `InterrupterInterface` to leverage the full power of NodalFlow's [Interruptions](https://github.com/fab2s/NodalFlow/blob/master/docs/interruptions.md).

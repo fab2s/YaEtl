@@ -77,6 +77,7 @@ YaEtl can address several generic use cases with ease, among which some would ot
 ### Pure ETL
 
 YaEtl can, but is not limited to, incarnate a pure ETL flow as seen many times. It's worth nothing to say that YaEtl supports batch extract and load by design.
+
 ```
 +---------+                   +---------+
 |         |                   |         |
