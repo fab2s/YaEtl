@@ -6,7 +6,7 @@ YaEtl events are compatible and tested with [symfony/event-dispatcher](https://s
 
 YaEtl provides each `dispatch()` call with a `YaEtlEvent` instance, extending NodalFlow's `FlowEvent` which extends Symfony `Event` and implement `FlowEventInterface`. Each YaEtlEvent instance carries the dispatcher's Flow instance, and eventually a Node instance, when the event is tied to a specific Node.
 
-Have a look at [NodalFlow event documentation](https://github.com/fab2s/NodalFlow/docs/events.md) for more details.
+Have a look at [NodalFlow event documentation](https://github.com/fab2s/NodalFlow/blob/master/docs/events.md) for more details.
 
 ## Usage
 
