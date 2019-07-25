@@ -10,8 +10,10 @@
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Extractors\CallableExtractor;
+use fab2s\YaEtl\Extractors\File\CsvExtractor;
+use fab2s\YaEtl\Extractors\File\FileExtractorAbstract;
 use fab2s\YaEtl\Extractors\File\LineExtractor;
-use fab2s\YaEtl\Loaders\File\CsvExtractor;
+use fab2s\YaEtl\Loaders\File\CsvExtractor as DeprecatedCsvExtractor;
 use fab2s\YaEtl\Loaders\File\CsvLoader;
 use fab2s\YaEtl\Transformers\CallableTransformer;
 use fab2s\YaEtl\YaEtl;
@@ -77,20 +79,22 @@ class FileTest extends \TestCase
      */
     public function testCsvExtractor($srcPath, $useHeader, array $expected)
     {
-        $csvExtractor = new CsvExtractor($srcPath);
-        $csvExtractor->setUseHeader($useHeader);
+        $this->csvExtractorAssertions(new CsvExtractor($srcPath), $useHeader, $expected);
+    }
 
-        (new YaEtl)->from($csvExtractor)
-            ->transform(new CallableTransformer(function ($record) use ($csvExtractor, $expected, $useHeader) {
-                static $i = 0;
-                $expected = $useHeader ? array_combine($csvExtractor->getHeader(), $expected['values'][$i]) : $expected['values'][$i];
-                $this->assertSame($expected, $record);
-                ++$i;
-            }))
-            ->exec();
-
-        $this->assertSame($expected['header'], $csvExtractor->getHeader());
-        $this->assertSame($expected['encoding'], $csvExtractor->getEncoding());
+    /**
+     * @dataProvider csvExtractorProvider
+     *
+     * @param string $srcPath
+     * @param bool   $useHeader
+     * @param array  $expected
+     *
+     * @throws NodalFlowException
+     * @throws YaEtlException
+     */
+    public function testDeprecatedCsvExtractor($srcPath, $useHeader, array $expected)
+    {
+        $this->csvExtractorAssertions(new DeprecatedCsvExtractor($srcPath), $useHeader, $expected);
     }
 
     /**
@@ -213,6 +217,32 @@ class FileTest extends \TestCase
                 ],
             ],
         ];
+    }
+
+    /**
+     * @param FileExtractorAbstract $csvExtractor
+     * @param                       $useHeader
+     * @param array                 $expected
+     *
+     * @throws NodalFlowException
+     * @throws YaEtlException
+     */
+    protected function csvExtractorAssertions(FileExtractorAbstract $csvExtractor, $useHeader, array $expected)
+    {
+        /* @var  CsvExtractor $csvExtractor */
+        $csvExtractor->setUseHeader($useHeader);
+
+        (new YaEtl)->from($csvExtractor)
+            ->transform(new CallableTransformer(function ($record) use ($csvExtractor, $expected, $useHeader) {
+                static $i = 0;
+                $expected = $useHeader ? array_combine($csvExtractor->getHeader(), $expected['values'][$i]) : $expected['values'][$i];
+                $this->assertSame($expected, $record);
+                ++$i;
+            }))
+            ->exec();
+
+        $this->assertSame($expected['header'], $csvExtractor->getHeader());
+        $this->assertSame($expected['encoding'], $csvExtractor->getEncoding());
     }
 
     /**

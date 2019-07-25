@@ -7,11 +7,10 @@
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
  */
 
-namespace fab2s\YaEtl\Loaders\File;
+namespace fab2s\YaEtl\Extractors\File;
 
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\YaEtlException;
-use fab2s\YaEtl\Extractors\File\FileExtractorAbstract;
 use fab2s\YaEtl\Traits\CsvHandlerTrait;
 
 /**
