@@ -43,6 +43,9 @@
     "autoload": {
         "classmap": [
             "src"
+        ],
+        "files": [
+            "src/support/deprecated.php"
         ]
     }
 }
