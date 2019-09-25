@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -58,7 +58,7 @@ abstract class QualifierAbstract extends NodeAbstract implements QualifierInterf
      *
      * @return mixed|void
      */
-    public function exec($param)
+    public function exec($param = null)
     {
         $qualifies = $this->qualify($param);
         if ($qualifies === true) {

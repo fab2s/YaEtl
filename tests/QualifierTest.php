@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -38,7 +38,7 @@ class QualifierTest extends \TestCase
      *
      * @return array
      */
-    public function interruptProvider()
+    public function interruptProvider(): array
     {
         $breakAt5Node1    = new CallableQualifier($this->getBreakAt5Closure());
         $extractor1       = new CallableExtractor($this->getTraversable10Closure());
@@ -1281,7 +1281,7 @@ class QualifierTest extends \TestCase
     /**
      * @return Closure
      */
-    protected function getNoOpClosure()
+    protected function getNoOpClosure(): \Closure
     {
         return function ($record) {
             return $record;
@@ -1291,7 +1291,7 @@ class QualifierTest extends \TestCase
     /**
      * @return Closure
      */
-    protected function getTraversable10Closure()
+    protected function getTraversable10Closure(): \Closure
     {
         return function () {
             for ($i = 1; $i <= 10; ++$i) {
@@ -1305,7 +1305,7 @@ class QualifierTest extends \TestCase
      *
      * @return Closure
      */
-    protected function getBreakAt5Closure($return = null)
+    protected function getBreakAt5Closure($return = null): \Closure
     {
         return function () use ($return) {
             static $cnt = 1;
@@ -1330,7 +1330,7 @@ class QualifierTest extends \TestCase
      *
      * @return Closure
      */
-    protected function getContinueAt5Closure($return = null)
+    protected function getContinueAt5Closure($return = null): \Closure
     {
         return function () use ($return) {
             static $cnt = 1;

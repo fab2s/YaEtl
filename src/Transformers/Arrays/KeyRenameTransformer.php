@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -39,11 +39,11 @@ class KeyRenameTransformer extends TransformerAbstract
      * Replace keys in array
      * This method does not preserve incoming order
      *
-     * @param mixed $record
+     * @param array $record
      *
-     * @return mixed
+     * @return array
      */
-    public function exec($record)
+    public function exec($record = null)
     {
         foreach ($this->aliases as $inputKeyName => $outputKeyName) {
             if (\array_key_exists($inputKeyName, $record)) {

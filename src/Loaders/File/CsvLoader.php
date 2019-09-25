@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -28,15 +28,15 @@ class CsvLoader extends FileLoaderAbstract
     /**
      * CsvLoader constructor.
      *
-     * @param string $destination
-     * @param string $delimiter
-     * @param string $enclosure
-     * @param string $escape
+     * @param resource|string $destination
+     * @param string          $delimiter
+     * @param string          $enclosure
+     * @param string          $escape
      *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function __construct($destination, $delimiter = ',', $enclosure = '"', $escape = '\\')
+    public function __construct($destination, string $delimiter = ',', string $enclosure = '"', string $escape = '\\')
     {
         parent::__construct($destination);
         $this->delimiter = $delimiter;
@@ -49,16 +49,16 @@ class CsvLoader extends FileLoaderAbstract
      *
      * @param array $param
      */
-    public function exec($param)
+    public function exec($param = null)
     {
         $this->handleFirstLine($param)
             ->writeCsvLine($param);
     }
 
     /**
-     * @return $this
+     * @return static
      */
-    public function writeSep()
+    public function writeSep(): self
     {
         if ($this->useSep) {
             fwrite($this->handle, "sep=$this->delimiter" . PHP_EOL);
@@ -70,9 +70,9 @@ class CsvLoader extends FileLoaderAbstract
     /**
      * @param array $param
      *
-     * @return $this
+     * @return static
      */
-    public function writeHeader(array $param)
+    public function writeHeader(array $param): self
     {
         if ($this->useHeader) {
             if (!isset($this->header)) {
@@ -98,9 +98,9 @@ class CsvLoader extends FileLoaderAbstract
     /**
      * @param array $param
      *
-     * @return $this
+     * @return static
      */
-    protected function handleFirstLine($param)
+    protected function handleFirstLine($param): self
     {
         if ($this->isFirstLine) {
             $this->writeBom()

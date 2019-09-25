@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -43,7 +43,7 @@ class CallableTransformer extends PayloadNodeAbstract implements TransformerInte
      *
      * @return mixed
      */
-    public function exec($param)
+    public function exec($param = null)
     {
         return \call_user_func($this->payload, $param);
     }

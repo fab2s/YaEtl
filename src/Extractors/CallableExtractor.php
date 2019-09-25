@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -47,7 +47,7 @@ class CallableExtractor extends PayloadNodeAbstract implements ExtractorInterfac
      *
      * @throws NodalFlowException
      */
-    public function __construct(callable $payload, $isAReturningVal = true)
+    public function __construct(callable $payload, bool $isAReturningVal = true)
     {
         parent::__construct($payload, $isAReturningVal, true);
     }
@@ -67,7 +67,7 @@ class CallableExtractor extends PayloadNodeAbstract implements ExtractorInterfac
      *
      * @return bool false in case no more records can be fetched
      */
-    public function extract($param = null)
+    public function extract($param = null): bool
     {
         $this->extracted = \call_user_func($this->payload, $param);
 
@@ -85,7 +85,7 @@ class CallableExtractor extends PayloadNodeAbstract implements ExtractorInterfac
      *
      * @return \Generator
      */
-    public function getTraversable($param)
+    public function getTraversable($param = null)
     {
         if (!$this->extract($param)) {
             return;

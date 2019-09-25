@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -54,9 +54,9 @@ class ProgressCallback extends CallbackAbstract
      *
      * @param int $progressMod
      *
-     * @return $this
+     * @return static
      */
-    public function setProgressMod($progressMod)
+    public function setProgressMod(int $progressMod): self
     {
         $this->progressMod = max(1, (int) $progressMod);
 
@@ -68,9 +68,9 @@ class ProgressCallback extends CallbackAbstract
      *
      * @param int $numRecords
      *
-     * @return $this
+     * @return static
      */
-    public function setNumRecords($numRecords)
+    public function setNumRecords(int $numRecords): self
     {
         $this->numRecords = $numRecords;
 
@@ -82,9 +82,9 @@ class ProgressCallback extends CallbackAbstract
      *
      * @param Command $command
      *
-     * @return $this
+     * @return static
      */
-    public function setCommand(Command $command)
+    public function setCommand(Command $command): self
     {
         $this->command = $command;
 

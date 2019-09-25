@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -28,7 +28,7 @@ class NullExtractor extends ExtractorBatchLimitAbstract
      *
      * @return bool
      */
-    public function extract($param = null)
+    public function extract($param = null): bool
     {
         if ($this->numRecords >= $this->limit) {
             return false;

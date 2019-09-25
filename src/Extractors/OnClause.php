@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -66,7 +66,7 @@ class OnClause implements OnClauseInterface
      *
      * @throws YaEtlException
      */
-    public function __construct($fromKeyAlias, $joinKeyAlias, callable $merger, $defaultRecord = null)
+    public function __construct(string $fromKeyAlias, string $joinKeyAlias, callable $merger, $defaultRecord = null)
     {
         $this->fromKeyAlias = \trim($fromKeyAlias);
         $this->joinKeyAlias = \trim($joinKeyAlias);
@@ -88,7 +88,7 @@ class OnClause implements OnClauseInterface
      *
      * @return string The From extractor unique key name as exposed in each record
      */
-    public function getFromKeyAlias()
+    public function getFromKeyAlias(): string
     {
         return $this->fromKeyAlias;
     }
@@ -98,7 +98,7 @@ class OnClause implements OnClauseInterface
      *
      * @return string The Join extractor unique key name as exposed in each record
      */
-    public function getJoinKeyAlias()
+    public function getJoinKeyAlias(): string
     {
         return $this->joinKeyAlias;
     }
@@ -122,7 +122,7 @@ class OnClause implements OnClauseInterface
      *
      * @return bool
      */
-    public function isLeftJoin()
+    public function isLeftJoin(): bool
     {
         return $this->leftJoin;
     }

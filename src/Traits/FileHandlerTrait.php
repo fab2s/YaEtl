@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -9,8 +9,8 @@
 
 namespace fab2s\YaEtl\Traits;
 
+use fab2s\Bom\Bom;
 use fab2s\NodalFlow\YaEtlException;
-use fab2s\OpinHelpers\Bom;
 
 /**
  * Trait FileHandlerTrait
@@ -41,9 +41,9 @@ trait FileHandlerTrait
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getEncoding()
+    public function getEncoding(): ?string
     {
         return $this->encoding;
     }
@@ -51,9 +51,9 @@ trait FileHandlerTrait
     /**
      * @param string $encoding
      *
-     * @return $this
+     * @return static
      */
-    public function setEncoding($encoding)
+    public function setEncoding(string $encoding): self
     {
         $this->encoding = $encoding;
 
@@ -63,11 +63,11 @@ trait FileHandlerTrait
     /**
      * @param bool $useBom
      *
-     * @return $this
+     * @return static
      */
-    public function setUseBom($useBom)
+    public function setUseBom(bool $useBom): self
     {
-        $this->useBom = (bool) $useBom;
+        $this->useBom = $useBom;
 
         return $this;
     }
@@ -77,7 +77,7 @@ trait FileHandlerTrait
      *
      * @return string
      */
-    public function prependBom($string)
+    public function prependBom(string $string): string
     {
         if ($this->encoding && ($bom = Bom::getEncodingBom($this->encoding))) {
             return $bom . $string;
@@ -89,9 +89,9 @@ trait FileHandlerTrait
     /**
      * release handle
      *
-     * @return $this
+     * @return static
      */
-    public function releaseHandle()
+    public function releaseHandle(): self
     {
         if (is_resource($this->handle)) {
             fclose($this->handle);
@@ -108,9 +108,9 @@ trait FileHandlerTrait
      *
      * @throws YaEtlException
      *
-     * @return $this
+     * @return static
      */
-    protected function initHandle($input, $mode)
+    protected function initHandle($input, string $mode): self
     {
         if (is_resource($input)) {
             $this->handle = $input;

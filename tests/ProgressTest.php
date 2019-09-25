@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -29,8 +29,9 @@ class ProgressTest extends \TestCase
      * @param array     $expected
      *
      * @throws NodalFlowException
+     * @throws ReflectionException
      */
-    public function testProgress(NodalFlow $flow, $limit, $progressMod, array $expected)
+    public function testProgress(NodalFlow $flow, ?int $limit, int $progressMod, array $expected)
     {
         $flow->setProgressMod($progressMod);
         $progressSubscriber = new ProgressBarSubscriber($flow);
@@ -44,7 +45,7 @@ class ProgressTest extends \TestCase
 
         $this->assertNotEmpty($display);
         foreach ($expected['contains'] as $contain) {
-            $this->assertContains($contain, $display);
+            $this->assertStringContainsString($contain, $display);
         }
 
         $limit = $limit ?: 100;
@@ -56,7 +57,7 @@ class ProgressTest extends \TestCase
      *
      * @return array
      */
-    public function progressProvider()
+    public function progressProvider(): array
     {
         return [
             [
@@ -122,7 +123,7 @@ class ProgressTest extends \TestCase
      *
      * @return string The display
      */
-    protected function getStreamContent($stream, $normalize = false)
+    protected function getStreamContent($stream, bool $normalize = false): string
     {
         rewind($stream);
         $display = stream_get_contents($stream);
@@ -136,7 +137,7 @@ class ProgressTest extends \TestCase
     /**
      * @return Closure
      */
-    protected function getNoOpClosure()
+    protected function getNoOpClosure(): \Closure
     {
         return function ($record) {
             return $record;
@@ -144,11 +145,11 @@ class ProgressTest extends \TestCase
     }
 
     /**
-     * @param mixed $limit
+     * @param int $limit
      *
      * @return Closure
      */
-    protected function getTraversableClosure($limit = 10)
+    protected function getTraversableClosure($limit = 10): \Closure
     {
         return function () use ($limit) {
             for ($i = 1; $i <= $limit; ++$i) {

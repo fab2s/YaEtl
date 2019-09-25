@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -106,7 +106,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *
      * @throws NodalFlowException
      */
-    public function __construct($extractQuery = null, $uniqueKeySetup = 'id')
+    public function __construct(?string $extractQuery = null, $uniqueKeySetup = 'id')
     {
         $this->configureUniqueKey($uniqueKeySetup);
 
@@ -122,7 +122,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *
      * @return OnClauseInterface|null
      */
-    public function getOnClause()
+    public function getOnClause(): ?OnClauseInterface
     {
         return $this->onClose;
     }
@@ -134,7 +134,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *
      * @return $this
      */
-    public function setOnClause(OnClauseInterface $onClause)
+    public function setOnClause(OnClauseInterface $onClause): JoinableInterface
     {
         $this->onClose = $onClause;
 
@@ -148,7 +148,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *
      * @return $this
      */
-    public function registerJoinerOnClause(OnClauseInterface $onClause)
+    public function registerJoinerOnClause(OnClauseInterface $onClause): JoinableInterface
     {
         $this->joinerOnCloses[] = $onClause;
 
@@ -164,7 +164,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *
      * @return $this
      */
-    public function setJoinFrom(JoinableInterface $joinFrom)
+    public function setJoinFrom(JoinableInterface $joinFrom): JoinableInterface
     {
         // at least make sure this joinable extends this very class
         // to enforce getRecordMap() type
@@ -193,7 +193,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *
      * @return array [keyValue1, keyValue2, ...]
      */
-    public function getRecordMap($fromKeyAlias = null)
+    public function getRecordMap(?string $fromKeyAlias = null)
     {
         return $fromKeyAlias === null ? $this->recordMap : $this->recordMap[$fromKeyAlias];
     }
@@ -207,7 +207,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *
      * @return bool
      */
-    public function extract($param = null)
+    public function extract($param = null): bool
     {
         if (isset($this->joinFrom)) {
             return $this->joinExtract();
@@ -232,9 +232,9 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     /**
      * Enforce batch size consistency
      *
-     * @return $this
+     * @return static
      */
-    public function enforceBatchSize()
+    public function enforceBatchSize(): ExtractorBatchLimitInterface
     {
         if (isset($this->joinFrom)) {
             // obey batch size to allow fromer to fetch a huge amount of records
@@ -264,7 +264,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *
      * @return mixed The result of the join
      */
-    public function exec($record)
+    public function exec($record = null)
     {
         $uniqueKeyValue = $record[$this->uniqueKeyAlias];
 
@@ -300,7 +300,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *
      * @return bool
      */
-    protected function joinExtract()
+    protected function joinExtract(): bool
     {
         // join mode, get record map
         $this->uniqueKeyValues = $this->joinFrom->getRecordMap($this->onClose-> /* @scrutinizer ignore-call */ getFromKeyAlias());
@@ -345,9 +345,9 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *                          // ...
      *                      ]`
      *
-     * @return $this
+     * @return static
      */
-    protected function configureUniqueKey($uniqueKeySetup)
+    protected function configureUniqueKey($uniqueKeySetup): self
     {
         $uniqueKeySetup            = \is_array($uniqueKeySetup) ? $uniqueKeySetup : [$uniqueKeySetup];
         $this->compositeKey        = [];
@@ -381,7 +381,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *
      * @return string
      */
-    protected function cleanUpKeyName($keyName)
+    protected function cleanUpKeyName($keyName): string
     {
         return \trim($keyName, '` ');
     }
@@ -391,9 +391,9 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      * to break branch execution when no match are found in join more
      * or default to be later merged in left join mode
      *
-     * @return $this
+     * @return static
      */
-    protected function setDefaultExtracted()
+    protected function setDefaultExtracted(): self
     {
         if ($this->joinFrom !== null) {
             $defaultRecord    = $this->onClose-> /* @scrutinizer ignore-call */ isLeftJoin() ? $this->onClose-> /* @scrutinizer ignore-call */ getDefaultRecord() : false;
@@ -410,9 +410,9 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *
      * @throws YaEtlException
      *
-     * @return $this
+     * @return static
      */
-    protected function genRecordMap()
+    protected function genRecordMap(): self
     {
         // here we need to build record map ready for all joiners
         $this->recordMap = [];

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -33,9 +33,9 @@ abstract class ExtractorLimitAbstract extends ExtractorAbstract implements Extra
      *
      * @param int $limit
      *
-     * @return $this
+     * @return static
      */
-    public function setLimit($limit)
+    public function setLimit(int $limit): ExtractorLimitInterface
     {
         $this->limit = max(0, (int) $limit);
 
@@ -47,7 +47,7 @@ abstract class ExtractorLimitAbstract extends ExtractorAbstract implements Extra
      *
      * @return int
      */
-    public function getLimit()
+    public function getLimit(): int
     {
         return $this->limit;
     }
@@ -57,7 +57,7 @@ abstract class ExtractorLimitAbstract extends ExtractorAbstract implements Extra
      *
      * @return int
      */
-    public function getNumRecords()
+    public function getNumRecords(): int
     {
         return $this->numRecords;
     }
@@ -67,7 +67,7 @@ abstract class ExtractorLimitAbstract extends ExtractorAbstract implements Extra
      *
      * @return bool true if limit is reached
      */
-    public function isLimitReached()
+    public function isLimitReached(): bool
     {
         return $this->limit && ($this->numRecords >= $this->limit);
     }

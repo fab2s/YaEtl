@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -21,7 +21,7 @@ class NoOpLoader extends LoaderAbstract
      *
      * @return bool
      */
-    public function exec($record)
+    public function exec($record = null)
     {
         return !empty($record);
     }

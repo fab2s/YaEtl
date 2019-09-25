@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -25,21 +25,21 @@ interface OnClauseInterface
      *                                  used each time there is no match
      *                                  just like a left join would
      */
-    public function __construct($fromKeyAlias, $joinKeyAlias, callable $merger, $defaultRecord = null);
+    public function __construct(string $fromKeyAlias, string $joinKeyAlias, callable $merger, $defaultRecord = null);
 
     /**
      * Get the from key alias
      *
      * @return string The From extractor unique key name as exposed in each record
      */
-    public function getFromKeyAlias();
+    public function getFromKeyAlias(): string;
 
     /**
      * Get the join key alias
      *
      * @return string The Join extractor unique key name as exposed in each record
      */
-    public function getJoinKeyAlias();
+    public function getJoinKeyAlias(): string;
 
     /**
      * Merge Joined data into the original record
@@ -56,7 +56,7 @@ interface OnClauseInterface
      *
      * @return bool
      */
-    public function isLeftJoin();
+    public function isLeftJoin(): bool;
 
     /**
      * Get the default record to use when no matching
