@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -49,7 +49,7 @@ trait CsvHandlerTrait
     /**
      * @return array|null
      */
-    public function getHeader()
+    public function getHeader(): ?array
     {
         return $this->header;
     }
@@ -57,9 +57,9 @@ trait CsvHandlerTrait
     /**
      * @param array $header
      *
-     * @return $this
+     * @return static
      */
-    public function setHeader(array $header)
+    public function setHeader(array $header): self
     {
         $this->header = $header;
 
@@ -69,11 +69,11 @@ trait CsvHandlerTrait
     /**
      * @param bool $useHeader
      *
-     * @return $this
+     * @return static
      */
-    public function setUseHeader($useHeader)
+    public function setUseHeader(bool $useHeader): self
     {
-        $this->useHeader = (bool) $useHeader;
+        $this->useHeader = $useHeader;
 
         return $this;
     }
@@ -81,11 +81,11 @@ trait CsvHandlerTrait
     /**
      * @param bool $useSep
      *
-     * @return $this
+     * @return static
      */
-    public function setUseSep($useSep)
+    public function setUseSep(bool $useSep): self
     {
-        $this->useSep = (bool) $useSep;
+        $this->useSep = $useSep;
 
         return $this;
     }

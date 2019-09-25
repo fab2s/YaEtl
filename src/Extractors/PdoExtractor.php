@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -28,7 +28,7 @@ class PdoExtractor extends DbExtractorAbstract
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function __construct(\PDO $pdo, $extractQuery = null)
+    public function __construct(\PDO $pdo, ?string $extractQuery = null)
     {
         $this->configurePdo($pdo);
 
@@ -52,7 +52,7 @@ class PdoExtractor extends DbExtractorAbstract
      *
      * @return bool
      */
-    public function fetchRecords()
+    public function fetchRecords(): bool
     {
         $extractQuery = $this->getPaginatedQuery();
 
@@ -82,7 +82,7 @@ class PdoExtractor extends DbExtractorAbstract
      *
      * @return string the paginated query with current offset and limit
      */
-    protected function getPaginatedQuery()
+    protected function getPaginatedQuery(): string
     {
         return $this->extractQuery . $this->getLimitOffsetBit();
     }

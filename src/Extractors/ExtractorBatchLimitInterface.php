@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -20,30 +20,38 @@ interface ExtractorBatchLimitInterface extends ExtractorLimitInterface
      *
      * @param int $offset The query offset
      *
-     * @return $this
+     * @return static
      */
-    public function setOffset($offset);
+    public function setOffset(int $offset): self;
 
     /**
      * Get current query offset
      *
      * @return int
      */
-    public function getOffset();
+    public function getOffset(): int;
 
     /**
      * Get current batch size
      *
      * @return int
      */
-    public function getBatchSize();
+    public function getBatchSize(): int;
 
     /**
      * Set batch size
      *
      * @param int $batchSize
      *
-     * @return $this
+     * @return static
      */
-    public function setBatchSize($batchSize);
+    public function setBatchSize(int $batchSize): self;
+
+    /**
+     * makes sure that offset + batchSize does not exceed limit
+     * by setting $this->batchSize to 0 when going beyond $this->limit
+     *
+     * @return static
+     */
+    public function enforceBatchSize(): self;
 }

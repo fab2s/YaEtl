@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -30,32 +30,32 @@ interface JoinableInterface extends ExtractorInterface, ExecNodeInterface
      *               against, and know what to do when one of their record
      *               is missing from their own extract collection
      */
-    public function getRecordMap($fromKeyAlias = null);
+    public function getRecordMap(?string $fromKeyAlias = null);
 
     /**
      * Set the extractor to get record map from
      *
      * @param JoinableInterface $joinFrom
      *
-     * @return $this
+     * @return static
      */
-    public function setJoinFrom(self $joinFrom);
+    public function setJoinFrom(self $joinFrom): self;
 
     /**
      * Set Joiner's ON clause. Only used in Join mode
      *
      * @param OnClauseInterface $onClause
      *
-     * @return $this
+     * @return static
      */
-    public function setOnClause(OnClauseInterface $onClause);
+    public function setOnClause(OnClauseInterface $onClause): self;
 
     /**
      * Get Joiner's ON clause. Only used in Join mode
      *
-     * @return OnClauseInterface
+     * @return OnClauseInterface|null
      */
-    public function getOnClause();
+    public function getOnClause(): ?OnClauseInterface;
 
     /**
      * exec will join incoming $record with the joined record from its
@@ -68,7 +68,7 @@ interface JoinableInterface extends ExtractorInterface, ExecNodeInterface
      *
      * @return mixed the result of the join
      */
-    public function exec($record);
+    public function exec($record = null);
 
     /**
      * Register ON clause field mapping. Used by an eventual joiner to this
@@ -76,7 +76,7 @@ interface JoinableInterface extends ExtractorInterface, ExecNodeInterface
      *
      * @param OnClauseInterface $onClause
      *
-     * @return $this
+     * @return static
      */
-    public function registerJoinerOnClause(OnClauseInterface $onClause);
+    public function registerJoinerOnClause(OnClauseInterface $onClause): self;
 }

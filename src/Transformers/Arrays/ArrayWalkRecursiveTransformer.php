@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -47,13 +47,13 @@ class ArrayWalkRecursiveTransformer extends TransformerAbstract
     /**
      * Execute the array_map call
      *
-     * @param mixed $record
+     * @param array $record
      *
      * @throws YaEtlException
      *
-     * @return mixed
+     * @return array
      */
-    public function exec($record)
+    public function exec($record = null)
     {
         if (!\array_walk_recursive($record, $this->callable, $this->userData)) {
             throw new YaEtlException('array_walk_recursive call failed', 1, null, [

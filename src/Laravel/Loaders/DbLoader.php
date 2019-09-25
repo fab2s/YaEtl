@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -54,9 +54,9 @@ class DbLoader extends LoaderAbstract
      *
      * @param Builder $loadQuery
      *
-     * @return $this
+     * @return static
      */
-    public function setLoadQuery(Builder $loadQuery)
+    public function setLoadQuery(Builder $loadQuery): self
     {
         $this->loadQuery = $loadQuery;
 
@@ -68,9 +68,9 @@ class DbLoader extends LoaderAbstract
      *
      * @param array $whereFields
      *
-     * @return $this
+     * @return static
      */
-    public function setWhereFields(array $whereFields)
+    public function setWhereFields(array $whereFields): self
     {
         $this->whereFields = $whereFields;
 
@@ -88,7 +88,7 @@ class DbLoader extends LoaderAbstract
      *
      * @return mixed|void
      */
-    public function exec($param)
+    public function exec($param = null)
     {
         // clone query object in order to prevent where clause stacking
         $loadQuery   = clone $this->loadQuery;

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -31,7 +31,7 @@ class CsvExtractor extends FileExtractorAbstract
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function __construct($input, $delimiter = ',', $enclosure = '"', $escape = '\\')
+    public function __construct($input, string $delimiter = ',', string $enclosure = '"', string $escape = '\\')
     {
         parent::__construct($input);
         $this->delimiter = $delimiter;
@@ -53,7 +53,7 @@ class CsvExtractor extends FileExtractorAbstract
 
             /* @var array $firstRecord */
             yield $this->bakeRecord($firstRecord);
-            while (false !== ($record = $this->getNextNonEmptyRecord())) {
+            while (null !== ($record = $this->getNextNonEmptyRecord())) {
                 /* @var array $record */
                 yield $this->bakeRecord($record);
             }
@@ -67,18 +67,18 @@ class CsvExtractor extends FileExtractorAbstract
      *
      * @return array
      */
-    protected function bakeRecord(array $record)
+    protected function bakeRecord(array $record): array
     {
         return isset($this->header) ? array_combine($this->header, $record) : $record;
     }
 
     /**
-     * @return bool
+     * @return array|null
      */
-    protected function readHeader()
+    protected function readHeader(): ?array
     {
-        if (false === ($firstRecord = $this->getNextNonEmptyRecord())) {
-            return false;
+        if (null === ($firstRecord = $this->getNextNonEmptyRecord())) {
+            return null;
         }
 
         if ($this->useHeader && !isset($this->header)) {
@@ -93,9 +93,9 @@ class CsvExtractor extends FileExtractorAbstract
     /**
      * @return bool
      */
-    protected function readSep()
+    protected function readSep(): bool
     {
-        if (false === ($firstChar = $this->getNextNonEmptyChars())) {
+        if (null === ($firstChar = $this->getNextNonEmptyChars())) {
             return false;
         }
 
@@ -120,13 +120,13 @@ class CsvExtractor extends FileExtractorAbstract
     }
 
     /**
-     * @return array|false
+     * @return array|null
      */
-    protected function getNextNonEmptyRecord()
+    protected function getNextNonEmptyRecord(): ? array
     {
         do {
             if (false === ($record = fgetcsv($this->handle, 0, $this->delimiter, $this->enclosure, $this->escape))) {
-                return false;
+                return null;
             }
 
             if ($record === [null]) {

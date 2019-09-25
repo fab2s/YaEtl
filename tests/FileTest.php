@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -13,7 +13,6 @@ use fab2s\YaEtl\Extractors\CallableExtractor;
 use fab2s\YaEtl\Extractors\File\CsvExtractor;
 use fab2s\YaEtl\Extractors\File\FileExtractorAbstract;
 use fab2s\YaEtl\Extractors\File\LineExtractor;
-use fab2s\YaEtl\Loaders\File\CsvExtractor as DeprecatedCsvExtractor;
 use fab2s\YaEtl\Loaders\File\CsvLoader;
 use fab2s\YaEtl\Transformers\CallableTransformer;
 use fab2s\YaEtl\YaEtl;
@@ -80,21 +79,6 @@ class FileTest extends \TestCase
     public function testCsvExtractor($srcPath, $useHeader, array $expected)
     {
         $this->csvExtractorAssertions(new CsvExtractor($srcPath), $useHeader, $expected);
-    }
-
-    /**
-     * @dataProvider csvExtractorProvider
-     *
-     * @param string $srcPath
-     * @param bool   $useHeader
-     * @param array  $expected
-     *
-     * @throws NodalFlowException
-     * @throws YaEtlException
-     */
-    public function testDeprecatedCsvExtractor($srcPath, $useHeader, array $expected)
-    {
-        $this->csvExtractorAssertions(new DeprecatedCsvExtractor($srcPath), $useHeader, $expected);
     }
 
     /**

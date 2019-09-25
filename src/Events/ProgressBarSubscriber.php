@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -53,6 +53,8 @@ class ProgressBarSubscriber implements EventSubscriberInterface
      * ProgressBarSubscriber constructor.
      *
      * @param YaEtl|null $flow
+     *
+     * @throws \ReflectionException
      */
     public function __construct(YaEtl $flow = null)
     {
@@ -65,9 +67,11 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     /**
      * @param YaEtl $flow
      *
-     * @return $this
+     * @throws \ReflectionException
+     *
+     * @return static
      */
-    public function registerFlow(YaEtl $flow)
+    public function registerFlow(YaEtl $flow): self
     {
         $flow->getDispatcher()->addSubscriber($this);
 
@@ -89,9 +93,9 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     /**
      * @param OutputInterface $output
      *
-     * @return ProgressBarSubscriber
+     * @return static
      */
-    public function setOutput(OutputInterface $output)
+    public function setOutput(OutputInterface $output): self
     {
         $this->output = $output;
 
@@ -103,9 +107,9 @@ class ProgressBarSubscriber implements EventSubscriberInterface
      *
      * @param int $progressMod
      *
-     * @return $this
+     * @return static
      */
-    public function setProgressMod($progressMod)
+    public function setProgressMod(int $progressMod): self
     {
         $this->progressMod = max(1, (int) $progressMod);
 
@@ -115,11 +119,11 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     /**
      * Set the total number of records prior to FLow execution
      *
-     * @param int $numRecords
+     * @param int|null $numRecords
      *
-     * @return $this
+     * @return static
      */
-    public function setNumRecords($numRecords)
+    public function setNumRecords(?int $numRecords): self
     {
         $this->numRecords = $numRecords;
 
@@ -187,7 +191,7 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     /**
      * @return array
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             FlowEvent::FLOW_START    => ['start', 0],
@@ -200,9 +204,9 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     /**
      * @param FlowInterface $flow
      *
-     * @return $this
+     * @return static
      */
-    protected function displayReport(FlowInterface $flow)
+    protected function displayReport(FlowInterface $flow): self
     {
         $flowStats = $flow->getStats();
         $this->output->writeln($flowStats['report']);

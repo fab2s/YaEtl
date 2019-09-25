@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -47,7 +47,7 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
      * @throws YaEtlException
      * @throws NodalFlowException
      */
-    public function __construct(\PDO $pdo, $extractQuery = null, $uniqueKey = 'id')
+    public function __construct(\PDO $pdo, ?string $extractQuery = null, $uniqueKey = 'id')
     {
         $this->configurePdo($pdo);
 
@@ -71,7 +71,7 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
      *
      * @return bool
      */
-    public function fetchRecords()
+    public function fetchRecords(): bool
     {
         $extractQuery = $this->getPaginatedQuery();
 
@@ -106,7 +106,7 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
      *
      * @return string the paginated query with current offset and limit
      */
-    protected function getPaginatedQuery()
+    protected function getPaginatedQuery(): string
     {
         if ($this->joinFrom) {
             $this->queryBindings = array_values($this->uniqueKeyValues);

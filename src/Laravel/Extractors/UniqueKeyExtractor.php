@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -11,6 +11,7 @@ namespace fab2s\YaEtl\Laravel\Extractors;
 
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\YaEtlException;
+use fab2s\YaEtl\Extractors\DbExtractorAbstract;
 use fab2s\YaEtl\Extractors\PdoUniqueKeyExtractor;
 use Illuminate\Database\Query\Builder;
 
@@ -50,9 +51,9 @@ class UniqueKeyExtractor extends PdoUniqueKeyExtractor
      *
      * @throws YaEtlException
      *
-     * @return $this
+     * @return static
      */
-    public function setExtractQuery($extractQuery)
+    public function setExtractQuery($extractQuery): DbExtractorAbstract
     {
         if (!($extractQuery instanceof Builder)) {
             throw new YaEtlException('Argument 1 passed to ' . __METHOD__ . ' must be an instance of ' . Builder::class . ', ' . \gettype($extractQuery) . ' given');
@@ -68,15 +69,15 @@ class UniqueKeyExtractor extends PdoUniqueKeyExtractor
      *
      * @return string the paginated query with current offset and limit
      */
-    protected function getPaginatedQuery()
+    protected function getPaginatedQuery(): string
     {
         if ($this->joinFrom) {
             $extractQuery = $this->extractQuery
                 ->whereIn($this->uniqueKeyName, $this->uniqueKeyValues);
         } else {
             $extractQuery = $this->extractQuery
-                ->skip($this->offset)
-                ->take($this->batchSize);
+                ->offset($this->offset)
+                ->limit($this->batchSize);
         }
 
         $this->queryBindings = $extractQuery->getRawBindings();

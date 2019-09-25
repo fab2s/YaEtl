@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -9,6 +9,8 @@
 
 namespace fab2s\YaEtl;
 
+use fab2s\NodalFlow\Flows\FlowEventAbstract;
+use fab2s\NodalFlow\Flows\FlowInterface;
 use fab2s\NodalFlow\Flows\FlowStatusInterface;
 use fab2s\NodalFlow\NodalFlow;
 use fab2s\NodalFlow\NodalFlowException;
@@ -65,17 +67,6 @@ class YaEtl extends NodalFlow
     protected $forceFlush = false;
 
     /**
-     * YaEtl constructor.
-     *
-     * @throws NodalFlowException
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->sharedEvent = new YaEtlEvent($this);
-    }
-
-    /**
      * Adds an extractor to the Flow which may be aggregated with another one
      *
      * @param ExtractorInterface      $extractor
@@ -84,9 +75,9 @@ class YaEtl extends NodalFlow
      * @throws YaEtlException
      * @throws NodalFlowException
      *
-     * @return $this
+     * @return static
      */
-    public function from(ExtractorInterface $extractor, ExtractorInterface $aggregateWith = null)
+    public function from(ExtractorInterface $extractor, ExtractorInterface $aggregateWith = null): self
     {
         if ($aggregateWith !== null) {
             $this->aggregateTo($extractor, $aggregateWith);
@@ -103,9 +94,9 @@ class YaEtl extends NodalFlow
      *
      * @throws NodalFlowException
      *
-     * @return $this
+     * @return static
      */
-    public function qualify(QualifierInterface $qualifier)
+    public function qualify(QualifierInterface $qualifier): self
     {
         parent::add($qualifier);
         $this->flowMap->incrementFlow('num_qualifier');
@@ -119,8 +110,10 @@ class YaEtl extends NodalFlow
      * @param NodeInterface $node
      *
      * @throws YaEtlException
+     *
+     * @return FlowInterface
      */
-    public function add(NodeInterface $node)
+    public function add(NodeInterface $node): FlowInterface
     {
         throw new YaEtlException('add() is not directly available, use YaEtl grammar instead');
     }
@@ -143,11 +136,11 @@ class YaEtl extends NodalFlow
      *
      * @param bool $forceFlush
      *
-     * @return $this
+     * @return static
      */
-    public function forceFlush($forceFlush)
+    public function forceFlush(bool $forceFlush): self
     {
-        $this->forceFlush = (bool) $forceFlush;
+        $this->forceFlush = $forceFlush;
 
         return $this;
     }
@@ -161,9 +154,9 @@ class YaEtl extends NodalFlow
      *
      * @throws NodalFlowException
      *
-     * @return $this
+     * @return static
      */
-    public function join(JoinableInterface $extractor, JoinableInterface $joinFrom, OnClauseInterface $onClause)
+    public function join(JoinableInterface $extractor, JoinableInterface $joinFrom, OnClauseInterface $onClause): self
     {
         $joinFrom->registerJoinerOnClause($onClause);
         $extractor->setJoinFrom($joinFrom);
@@ -182,9 +175,9 @@ class YaEtl extends NodalFlow
      *
      * @throws NodalFlowException
      *
-     * @return $this
+     * @return static
      */
-    public function transform(TransformerInterface $transformer)
+    public function transform(TransformerInterface $transformer): self
     {
         parent::add($transformer);
         $this->flowMap->incrementFlow('num_transformer');
@@ -199,9 +192,9 @@ class YaEtl extends NodalFlow
      *
      * @throws NodalFlowException
      *
-     * @return $this
+     * @return static
      */
-    public function to(LoaderInterface $loader)
+    public function to(LoaderInterface $loader): self
     {
         parent::add($loader);
         $this->flowMap->incrementFlow('num_loader');
@@ -218,9 +211,9 @@ class YaEtl extends NodalFlow
      *
      * @throws NodalFlowException
      *
-     * @return $this
+     * @return static
      */
-    public function branch(self $flow, $isAReturningVal = false)
+    public function branch(self $flow, $isAReturningVal = false): self
     {
         parent::add(new BranchNode($flow, $isAReturningVal));
         $this->flowMap->incrementFlow('num_branch');
@@ -231,9 +224,9 @@ class YaEtl extends NodalFlow
     /**
      * Triggered right after the flow stops
      *
-     * @return $this
+     * @return static
      */
-    public function flowEnd()
+    public function flowEnd(): NodalFlow
     {
         $this->flush();
 
@@ -247,7 +240,7 @@ class YaEtl extends NodalFlow
      *
      * @return array<string,integer|string>
      */
-    public function getStats()
+    public function getStats(): array
     {
         $stats = parent::getstats();
 
@@ -286,9 +279,24 @@ class YaEtl extends NodalFlow
      *
      * @return bool
      */
-    public function isForceFlush()
+    public function isForceFlush(): bool
     {
         return !empty($this->forceFlush);
+    }
+
+    /**
+     * @param string $class
+     *
+     * @throws \ReflectionException
+     *
+     * @return static
+     */
+    protected function initDispatchArgs(string $class): FlowEventAbstract
+    {
+        parent::initDispatchArgs($class);
+        $this->dispatchArgs[$this->eventInstanceKey] = new YaEtlEvent($this);
+
+        return $this;
     }
 
     /**
@@ -300,9 +308,9 @@ class YaEtl extends NodalFlow
      * @throws YaEtlException
      * @throws NodalFlowException
      *
-     * @return $this
+     * @return static
      */
-    protected function aggregateTo(ExtractorInterface $extractor, ExtractorInterface $aggregateWith)
+    protected function aggregateTo(ExtractorInterface $extractor, ExtractorInterface $aggregateWith): self
     {
         // aggregate with target Node
         $aggregateWithNodeId = $aggregateWith->getId();
@@ -344,9 +352,9 @@ class YaEtl extends NodalFlow
      *
      * @param FlowStatusInterface|null $flowStatus
      *
-     * @return $this
+     * @return static
      */
-    protected function flush(FlowStatusInterface $flowStatus = null)
+    protected function flush(FlowStatusInterface $flowStatus = null): self
     {
         if ($flowStatus === null) {
             if ($this->hasParent() && !$this->isForceFlush()) {
@@ -367,9 +375,9 @@ class YaEtl extends NodalFlow
      *
      * @param FlowStatusInterface $flowStatus
      *
-     * @return $this
+     * @return static
      */
-    protected function flushNodes(FlowStatusInterface $flowStatus)
+    protected function flushNodes(FlowStatusInterface $flowStatus): self
     {
         foreach ($this->nodes as $node) {
             if ($node instanceof LoaderInterface) {

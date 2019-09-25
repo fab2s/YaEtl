@@ -27,14 +27,14 @@
         "MIT"
     ],
     "require": {
-        "php": ">=5.6.0",
-        "fab2s/nodalflow": "~1.1.2",
-        "fab2s/opinhelpers": "~0.0.1"
+        "php": ">=7.1",
+        "fab2s/nodalflow": "2.x-dev",
+        "fab2s/opinhelpers": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~5.0",
-        "phpunit/dbunit": "^2.0",
-        "symfony/console": "^4.0|^3.4|^2.8"
+        "phpunit/phpunit": "^8.0|^7.5",
+        "symfony/console": "^4.0|^3.4|^2.8",
+        "symfony/event-dispatcher": "^4.0|^3.4|^2.8"
     },
     "suggest": {
         "symfony/console": "To use ProgressBarSubscriber",
@@ -43,9 +43,14 @@
     "autoload": {
         "classmap": [
             "src"
+        ]
+    },
+    "scripts": {
+        "post-update-cmd": [
+            "rm -f .*.cache"
         ],
-        "files": [
-            "src/support/deprecated.php"
+        "post-install-cmd": [
+            "rm -f .*.cache"
         ]
     }
 }

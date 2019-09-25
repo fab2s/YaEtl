@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -32,9 +32,9 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implem
      * makes sure that offset + batchSize does not exceed limit
      * by setting $this->batchSize to 0 when going beyond $this->limit
      *
-     * @return $this
+     * @return static
      */
-    public function enforceBatchSize()
+    public function enforceBatchSize(): ExtractorBatchLimitInterface
     {
         if ($this->limit && ($this->numRecords + $this->batchSize > $this->limit)) {
             $this->batchSize = max(0, $this->limit - $this->numRecords);
@@ -48,9 +48,9 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implem
      *
      * @param int $offset
      *
-     * @return $this
+     * @return static
      */
-    public function setOffset($offset)
+    public function setOffset(int $offset): ExtractorBatchLimitInterface
     {
         $this->offset = max(0, (int) $offset);
 
@@ -62,7 +62,7 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implem
      *
      * @return int
      */
-    public function getOffset()
+    public function getOffset(): int
     {
         return (int) $this->offset;
     }
@@ -72,9 +72,9 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implem
      *
      * @param int $batchSize
      *
-     * @return $this
+     * @return static
      */
-    public function setBatchSize($batchSize)
+    public function setBatchSize(int $batchSize): ExtractorBatchLimitInterface
     {
         $this->batchSize = max(1, (int) $batchSize);
 
@@ -86,7 +86,7 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implem
      *
      * @return int
      */
-    public function getBatchSize()
+    public function getBatchSize(): int
     {
         return $this->batchSize;
     }
@@ -95,9 +95,9 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implem
      * Adds limit to offset, to be invoked
      * each time extract() is executed
      *
-     * @return $this
+     * @return static
      */
-    public function incrementOffset()
+    public function incrementOffset(): self
     {
         $this->offset += $this->batchSize;
 

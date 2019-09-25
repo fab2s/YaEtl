@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -31,5 +31,5 @@ interface ExtractorInterface extends TraversableNodeInterface
      *
      * @return bool false in case no more records can be fetched
      */
-    public function extract($param = null);
+    public function extract($param = null): bool;
 }

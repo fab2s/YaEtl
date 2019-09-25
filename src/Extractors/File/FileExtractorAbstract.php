@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -9,9 +9,9 @@
 
 namespace fab2s\YaEtl\Extractors\File;
 
+use fab2s\Bom\Bom;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\YaEtlException;
-use fab2s\OpinHelpers\Bom;
 use fab2s\YaEtl\Extractors\ExtractorAbstract;
 use fab2s\YaEtl\Traits\FileHandlerTrait;
 
@@ -40,7 +40,7 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
      *
      * @return bool
      */
-    public function extract($param = null)
+    public function extract($param = null): bool
     {
         $this->getCarrier()->getFlowMap()->incrementNode($this->getId(), 'num_extract');
 
@@ -50,7 +50,7 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
     /**
      * @return bool
      */
-    protected function readBom()
+    protected function readBom(): bool
     {
         if (false === ($bomCandidate = fread($this->handle, 4))) {
             return false;
@@ -67,9 +67,9 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
     }
 
     /**
-     * @return string|false
+     * @return string|null
      */
-    protected function getNextNonEmptyLine()
+    protected function getNextNonEmptyLine(): ?string
     {
         while (false !== ($line = fgets($this->handle))) {
             if ('' === ($line = trim($line))) {
@@ -79,13 +79,13 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
             return $line;
         }
 
-        return false;
+        return null;
     }
 
     /**
-     * @return string|false
+     * @return string|null
      */
-    protected function getNextNonEmptyChars()
+    protected function getNextNonEmptyChars(): ? string
     {
         do {
             if (false === ($char = fread($this->handle, 1))) {
@@ -93,6 +93,6 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
             }
         } while (trim($char) === '');
 
-        return $char;
+        return $char ?? null;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -14,17 +14,26 @@ use fab2s\YaEtl\Loaders\NoOpLoader;
 
 // we need these two for phpunit to properly mock NoOpLoader
 // doing this allows us to use phpunit awesome spies
+
+/**
+ * Interface TestLoaderInterface
+ */
 interface TestLoaderInterface extends NodeInterface, ExecNodeInterface, LoaderInterface
 {
 }
+
+/**
+ * Class TestLoader
+ */
 class TestLoader extends NoOpLoader implements TestLoaderInterface
 {
 }
 
+/**
+ * Class TestCase
+ */
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
-    use PHPUnit_Extensions_Database_TestCase_Trait;
-
     const FROM_TABLE             = 'fromTable';
     const JOIN_TABLE             = 'joinTable';
     const JOIN_RESULT_TABLE      = 'joinResultTable';
@@ -106,6 +115,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      * their way up there and return it to have the whole
      * Flow to return it and allow input / output comparison
      * The $spy will allow us to inspect invocations and arguments
+     *
+     * @throws ReflectionException
      *
      * @return array
      */

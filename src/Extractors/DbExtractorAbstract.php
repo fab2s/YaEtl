@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of YaEtl.
+ * This file is part of YaEtl
  *     (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl
  * This source file is licensed under the MIT license which you will
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
@@ -53,7 +53,7 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
      *
      * @return bool
      */
-    public function extract($param = null)
+    public function extract($param = null): bool
     {
         if ($this->isLimitReached()) {
             return false;
@@ -74,9 +74,9 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
      *
      * @param mixed $extractQuery
      *
-     * @return $this
+     * @return static
      */
-    public function setExtractQuery($extractQuery)
+    public function setExtractQuery($extractQuery): self
     {
         $this->extractQuery = $extractQuery;
 
@@ -139,7 +139,7 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
      *
      * @return string
      */
-    protected function getLimitOffsetBit()
+    protected function getLimitOffsetBit(): string
     {
         return ' ' . \implode('', [
             ' LIMIT ' . (int) $this->batchSize,
@@ -152,5 +152,5 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
      *
      * @return bool true if there are records fetched
      */
-    abstract protected function fetchRecords();
+    abstract protected function fetchRecords(): bool;
 }
