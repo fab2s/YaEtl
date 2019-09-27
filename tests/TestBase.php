@@ -30,9 +30,9 @@ class TestLoader extends NoOpLoader implements TestLoaderInterface
 }
 
 /**
- * Class TestCase
+ * Class TestBase
  */
-abstract class TestCase extends \PHPUnit\Framework\TestCase
+abstract class TestBase extends \PHPUnit\Framework\TestCase
 {
     const FROM_TABLE             = 'fromTable';
     const JOIN_TABLE             = 'joinTable';
@@ -55,7 +55,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * @var \PDO
      */
-    private static $pdo;
+    protected static $pdo;
 
     /**
      * @var PHPUnit_Extensions_Database_DB_IDatabaseConnection
@@ -79,35 +79,45 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      */
     public function getPdo()
     {
-        if (self::$pdo == null) {
-            self::$pdo = new PDO('sqlite::memory:');
-            self::$pdo->query('CREATE DATABASE test; use test;');
-            self::$pdo->query('CREATE TABLE ' . self::FROM_TABLE . '(
-                id INTEGER PRIMARY KEY,
-                join_id DEFAULT NULL
-            );');
-            self::$pdo->query('CREATE TABLE ' . self::JOIN_TABLE . '(
-                id INTEGER,
-                join_id INTEGER PRIMARY KEY,
-                FOREIGN KEY (id) REFERENCES ' . self::FROM_TABLE . ' (id)
-            );');
-            self::$pdo->query('CREATE TABLE ' . self::JOIN_RESULT_TABLE . '(
-                id INTEGER,
-                join_id INTEGER PRIMARY KEY,
-                FOREIGN KEY (id) REFERENCES ' . self::FROM_TABLE . ' (id)
-            );');
-            self::$pdo->query('CREATE TABLE ' . self::LEFT_JOIN_RESULT_TABLE . '(
-                id INTEGER,
-                join_id INTEGER,
-                FOREIGN KEY (id) REFERENCES ' . self::FROM_TABLE . ' (id)
-            );');
-            self::$pdo->query('CREATE TABLE ' . self::TO_TABLE . '(
-                id INTEGER,
-                join_id INTEGER
-            );');
+        if (static::$pdo === null) {
+            static::$pdo = new \PDO('sqlite::memory:');
+            static::$pdo->query('CREATE DATABASE test; use test;');
+
+            static::$pdo->query('CREATE TABLE ' . self::FROM_TABLE . '(
+                    id INTEGER PRIMARY KEY,
+                    join_id DEFAULT NULL
+                );'
+            );
+
+            static::$pdo->query('CREATE TABLE ' . self::JOIN_TABLE . '(
+                    id INTEGER,
+                    join_id INTEGER PRIMARY KEY,
+                    FOREIGN KEY (id) REFERENCES ' . self::FROM_TABLE . ' (id)
+                );'
+            );
+
+            static::$pdo->query('CREATE TABLE ' . self::JOIN_RESULT_TABLE . '(
+                    id INTEGER,
+                    join_id INTEGER PRIMARY KEY,
+                    FOREIGN KEY (id) REFERENCES ' . self::FROM_TABLE . ' (id)
+                );'
+            );
+
+            static::$pdo->query('CREATE TABLE ' . self::LEFT_JOIN_RESULT_TABLE . '(
+                    id INTEGER,
+                    join_id INTEGER,
+                    FOREIGN KEY (id) REFERENCES ' . self::FROM_TABLE . ' (id)
+                );'
+            );
+
+            static::$pdo->query('CREATE TABLE ' . self::TO_TABLE . '(
+                    id INTEGER,
+                    join_id INTEGER
+                );'
+            );
         }
 
-        return self::$pdo;
+        return static::$pdo;
     }
 
     /**
@@ -116,7 +126,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      * Flow to return it and allow input / output comparison
      * The $spy will allow us to inspect invocations and arguments
      *
-     * @throws ReflectionException
      *
      * @return array
      */
@@ -126,21 +135,47 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                 ->setMethods(['exec'])
                 ->getMock();
 
-        $stubPdo = $this->getPdo();
         $stub->expects($spy = $this->any())
             ->method('exec')
             ->will($this->returnCallback(
-                function ($param = null) use ($stubPdo) {
+                function ($param = null) {
                     $insert = [
                         'id'      => $param['id'],
                         'join_id' => isset($param['join_id']) ? $param['join_id'] : 'null',
                     ];
 
-                    $stubPdo->query('INSERT INTO ' . self::TO_TABLE . ' (' . implode(',', array_keys($insert)) . ') VALUES (' . implode(',', $insert) . ')');
+                    $this->getPdo()->query('INSERT INTO ' . self::TO_TABLE . ' (' . implode(',', array_keys($insert)) . ') VALUES (' . implode(',', $insert) . ')');
                 }
             ));
 
-        return $this->registerMock($stub, $spy);
+        return [
+            'mock' => $stub,
+            'spy'  => $spy,
+        ];
+    }
+
+    /**
+     * @return static
+     */
+    protected function populateFrom(): self
+    {
+        for ($i = 1; $i <= $this->numRecords; ++$i) {
+            $insert = [
+                'id'      => $i,
+                'join_id' => 'null',
+            ];
+
+            $this->getPdo()->query('INSERT INTO ' . self::FROM_TABLE . ' (' . implode(',', array_keys($insert)) . ') VALUES (' . implode(',', $insert) . ')');
+        }
+
+        return $this;
+    }
+
+    protected function resetTo()
+    {
+        $this->getPdo()->query('DELETE FROM ' . self::TO_TABLE);
+
+        return $this;
     }
 
     protected function getDataSet()
@@ -195,7 +230,27 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             }
         }
 
-        return new DbUnitArrayDataSet($result);
+        return $result;
+    }
+
+    /**
+     * @param string $table
+     *
+     * @return int
+     */
+    protected function getTableCount(string $table): int
+    {
+        return (int) $this->getPdo()->query("SELECT COUNT(*) FROM $table")->fetchColumn();
+    }
+
+    /**
+     * @param string $table
+     *
+     * @return array
+     */
+    protected function getTableAll(string $table): array
+    {
+        return $this->getPdo()->query("SELECT * FROM $table ORDER BY id ASC")->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**

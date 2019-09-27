@@ -10,7 +10,7 @@
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Transformers\Arrays\ArrayReplaceRecursiveTransformer;
 
-class ArrayReplaceRecursiveTransformerTest extends \TestCase
+class ArrayReplaceRecursiveTransformerTest extends \TestBase
 {
     public function arrayReplaceRecursiveProvider()
     {

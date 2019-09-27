@@ -31,13 +31,13 @@ abstract class ExtractorLimitAbstract extends ExtractorAbstract implements Extra
     /**
      * Set extract limit
      *
-     * @param int $limit
+     * @param int|null $limit
      *
      * @return static
      */
-    public function setLimit(int $limit): ExtractorLimitInterface
+    public function setLimit(?int $limit): ExtractorLimitInterface
     {
-        $this->limit = max(0, (int) $limit);
+        $this->limit = $limit;
 
         return $this;
     }
@@ -45,9 +45,9 @@ abstract class ExtractorLimitAbstract extends ExtractorAbstract implements Extra
     /**
      * Get current limit
      *
-     * @return int
+     * @return int|null
      */
-    public function getLimit(): int
+    public function getLimit(): ? int
     {
         return $this->limit;
     }
