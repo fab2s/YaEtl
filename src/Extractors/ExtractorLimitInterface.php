@@ -17,18 +17,18 @@ interface ExtractorLimitInterface extends ExtractorInterface
     /**
      * Set extract limit
      *
-     * @param int $limit
+     * @param int|null $limit
      *
      * @return static
      */
-    public function setLimit(int $limit): self;
+    public function setLimit(?int $limit): self;
 
     /**
      * Get current limit
      *
      * @return int
      */
-    public function getLimit(): int;
+    public function getLimit(): ?int;
 
     /**
      * Get number of records (at the end of the Flow's execution)

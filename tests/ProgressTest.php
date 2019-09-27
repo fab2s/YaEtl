@@ -18,7 +18,7 @@ use Symfony\Component\Console\Output\StreamOutput;
 /**
  * Class ProgressTest
  */
-class ProgressTest extends \TestCase
+class ProgressTest extends \TestBase
 {
     /**
      * @dataProvider progressProvider

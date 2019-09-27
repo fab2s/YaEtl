@@ -20,7 +20,7 @@ use fab2s\YaEtl\YaEtl;
 /**
  * Class FileTest
  */
-class FileTest extends \TestCase
+class FileTest extends \TestBase
 {
     /**
      * @var array

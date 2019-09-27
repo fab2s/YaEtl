@@ -10,7 +10,7 @@
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Transformers\Arrays\ArrayReplaceTransformer;
 
-class ArrayReplaceTransformerTest extends \TestCase
+class ArrayReplaceTransformerTest extends \TestBase
 {
     public function arrayReplaceProvider()
     {
