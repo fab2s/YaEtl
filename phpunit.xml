@@ -11,7 +11,6 @@
     <testsuites>
         <testsuite name="Application Test Suite">
             <directory suffix="Test.php">./tests</directory>
-            <exclude>./tests/YaEtlTest.php</exclude>
         </testsuite>
     </testsuites>
     <filter>
