@@ -12,8 +12,7 @@ use fab2s\NodalFlow\Nodes\NodeInterface;
 use fab2s\YaEtl\Loaders\LoaderInterface;
 use fab2s\YaEtl\Loaders\NoOpLoader;
 
-// we need these two for phpunit to properly mock NoOpLoader
-// doing this allows us to use phpunit awesome spies
+// we need these two for phpunit to mock NoOpLoader
 
 /**
  * Interface TestLoaderInterface
@@ -34,45 +33,26 @@ class TestLoader extends NoOpLoader implements TestLoaderInterface
  */
 abstract class TestBase extends \PHPUnit\Framework\TestCase
 {
-    const FROM_TABLE             = 'fromTable';
-    const JOIN_TABLE             = 'joinTable';
-    const JOIN_RESULT_TABLE      = 'joinResultTable';
-    const LEFT_JOIN_RESULT_TABLE = 'leftJoinResultTable';
-    const TO_TABLE               = 'toTable';
-
-    /**
-     * @var array
-     */
-    protected $mocked = [];
+    const FROM_TABLE = 'fromTable';
+    const JOIN_TABLE = 'joinTable';
+    const TO_TABLE   = 'toTable';
 
     /**
      * should be even as it is divided by two in some providers
      *
      * @var int
      */
-    protected $numRecords = 20;
+    protected $numRecords = 42;
+
+    /**
+     * @var array
+     */
+    protected $expectedJoinRecords = [];
 
     /**
      * @var \PDO
      */
     protected static $pdo;
-
-    /**
-     * @var PHPUnit_Extensions_Database_DB_IDatabaseConnection
-     */
-    private $conn;
-
-    /**
-     * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
-     */
-    final public function getConnection()
-    {
-        if ($this->conn === null) {
-            $this->conn = $this->createDefaultDBConnection($this->getPdo(), ':memory:');
-        }
-
-        return $this->conn;
-    }
 
     /**
      * @return \PDO
@@ -96,20 +76,6 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
                 );'
             );
 
-            static::$pdo->query('CREATE TABLE ' . self::JOIN_RESULT_TABLE . '(
-                    id INTEGER,
-                    join_id INTEGER PRIMARY KEY,
-                    FOREIGN KEY (id) REFERENCES ' . self::FROM_TABLE . ' (id)
-                );'
-            );
-
-            static::$pdo->query('CREATE TABLE ' . self::LEFT_JOIN_RESULT_TABLE . '(
-                    id INTEGER,
-                    join_id INTEGER,
-                    FOREIGN KEY (id) REFERENCES ' . self::FROM_TABLE . ' (id)
-                );'
-            );
-
             static::$pdo->query('CREATE TABLE ' . self::TO_TABLE . '(
                     id INTEGER,
                     join_id INTEGER
@@ -127,7 +93,7 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
      * The $spy will allow us to inspect invocations and arguments
      *
      *
-     * @return array
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     public function getLoaderMock()
     {
@@ -138,99 +104,65 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
         $stub->expects($spy = $this->any())
             ->method('exec')
             ->will($this->returnCallback(
-                function ($param = null) {
+                function (array $param) {
                     $insert = [
                         'id'      => $param['id'],
-                        'join_id' => isset($param['join_id']) ? $param['join_id'] : 'null',
+                        'join_id' => $param['join_id'] ?? 'null',
                     ];
 
                     $this->getPdo()->query('INSERT INTO ' . self::TO_TABLE . ' (' . implode(',', array_keys($insert)) . ') VALUES (' . implode(',', $insert) . ')');
                 }
             ));
 
-        return [
-            'mock' => $stub,
-            'spy'  => $spy,
-        ];
+        return $stub;
     }
 
     /**
+     * @param string $table
+     *
      * @return static
      */
-    protected function populateFrom(): self
+    protected function populateTable(string $table): self
     {
+        $keep = true;
+        $j    = 0;
         for ($i = 1; $i <= $this->numRecords; ++$i) {
-            $insert = [
-                'id'      => $i,
-                'join_id' => 'null',
-            ];
+            switch ($table) {
+                case self::FROM_TABLE:
+                    $insert = [
+                        'id'      => "$i",
+                        'join_id' => 'null',
+                    ];
+                    break;
+                case self::JOIN_TABLE:
+                    if (!$keep) {
+                        $keep = true;
+                        break;
+                    }
 
-            $this->getPdo()->query('INSERT INTO ' . self::FROM_TABLE . ' (' . implode(',', array_keys($insert)) . ') VALUES (' . implode(',', $insert) . ')');
+                    ++$j;
+                    $insert = [
+                        'id'      => "$i",
+                        'join_id' => "$j",
+                    ];
+
+                    $this->expectedJoinRecords[$i] = $insert;
+
+                    $keep = false;
+                    break;
+            }
+
+            $this->getPdo()->query('INSERT INTO ' . $table . ' (' . implode(',', array_keys($insert)) . ') VALUES (' . implode(',', $insert) . ')');
         }
 
         return $this;
     }
 
-    protected function resetTo()
+    protected function resetResultTable()
     {
         $this->getPdo()->query('DELETE FROM ' . self::TO_TABLE);
 
         return $this;
-    }
-
-    protected function getDataSet()
-    {
-        $max    = $this->numRecords;
-        $result = [
-            self::FROM_TABLE             => [],
-            self::JOIN_TABLE             => [],
-            self::JOIN_RESULT_TABLE      => [],
-            self::LEFT_JOIN_RESULT_TABLE => [],
-            self::TO_TABLE               => [],
-        ];
-
-        $from           = &$result[self::FROM_TABLE];
-        $join           = &$result[self::JOIN_TABLE];
-        $joinResult     = &$result[self::JOIN_RESULT_TABLE];
-        $leftJoinResult = &$result[self::LEFT_JOIN_RESULT_TABLE];
-
-        $keep = false;
-        $j    = 1;
-        for ($i = 1; $i <= $max; ++$i) {
-            $from[] = [
-                'id'      => $i,
-                'join_id' => null,
-            ];
-
-            if ($keep) {
-                $join[] = [
-                    'id'      => $i,
-                    'join_id' => $j,
-                ];
-
-                $leftJoinResult[] = [
-                    'id'      => $i,
-                    'join_id' => $j,
-                ];
-
-                $joinResult[] = [
-                    'id'      => $i,
-                    'join_id' => $j,
-                ];
-
-                ++$j;
-
-                $keep = false;
-            } else {
-                $keep             = true;
-                $leftJoinResult[] = [
-                    'id'      => $i,
-                    'join_id' => null,
-                ];
-            }
-        }
-
-        return $result;
     }
 
     /**
@@ -251,33 +183,5 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
     protected function getTableAll(string $table): array
     {
         return $this->getPdo()->query("SELECT * FROM $table ORDER BY id ASC")->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * @param \PHPUnit_Framework_MockObject_MockObject              $mock
-     * @param \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount $spy
-     *
-     * @return array
-     */
-    protected function registerMock(\PHPUnit_Framework_MockObject_MockObject $mock, \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount $spy)
-    {
-        $hash                = $this->getObjectHash($mock);
-        $this->mocked[$hash] = [
-            'mock' => $mock,
-            'spy'  => $spy,
-            'hash' => $hash,
-        ];
-
-        return $this->mocked[$hash];
-    }
-
-    /**
-     * @param object $object
-     *
-     * @return string
-     */
-    protected function getObjectHash($object)
-    {
-        return \sha1(\spl_object_hash($object));
     }
 }

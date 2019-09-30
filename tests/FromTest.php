@@ -24,7 +24,7 @@ class FromTest extends \TestBase
     {
         parent::setUp();
 
-        $this->populateFrom();
+        $this->populateTable(self::FROM_TABLE);
     }
 
     /**
@@ -36,7 +36,7 @@ class FromTest extends \TestBase
      */
     public function testFrom(YaEtl $flow)
     {
-        $this->resetTo();
+        $this->resetResultTable();
         $this->assertSame($this->numRecords, $this->getTableCount(self::FROM_TABLE), 'From table not initialized');
         $this->assertSame(0, $this->getTableCount(self::TO_TABLE), 'To table not initialized');
 
@@ -78,7 +78,7 @@ class FromTest extends \TestBase
             [
                 'flow' => (new YaEtl)
                     ->from($fullFrom)
-                    ->to($this->getLoaderMock()['mock']),
+                    ->to($this->getLoaderMock()),
             ],
             [
                 'flow' => (new YaEtl)
@@ -87,32 +87,32 @@ class FromTest extends \TestBase
                     ->transform(new CallableTransformer(function ($record) {
                         return $record;
                     }))
-                    ->to($this->getLoaderMock()['mock']),
+                    ->to($this->getLoaderMock()),
             ],
             [
                 'flow' => (new YaEtl)
                     ->from($FirstHalfFrom)
                     ->from($SecondHalfFrom, $FirstHalfFrom)
                     ->transform(new NoOpTransformer)
-                    ->to($this->getLoaderMock()['mock']),
+                    ->to($this->getLoaderMock()),
             ],
             [
                 'flow' => (new YaEtl)
                     ->from($FirstTenFrom)
                     ->from($AfterTenFrom, $FirstTenFrom)
                     ->transform(new NoOpTransformer)
-                    ->to($this->getLoaderMock()['mock']),
+                    ->to($this->getLoaderMock()),
             ],
             [
                 'flow' => (new YaEtl)
                     ->from(new PdoUniqueKeyExtractor($this->getPdo(), $fromQuery, 'id'))
-                    ->to($this->getLoaderMock()['mock']),
+                    ->to($this->getLoaderMock()),
             ],
             [
                 'flow' => (new YaEtl)
                     ->from(clone $fullFrom)
                     ->transform(new NoOpTransformer)
-                    ->to($this->getLoaderMock()['mock'])
+                    ->to($this->getLoaderMock())
                     ->transform(new NoOpTransformer),
             ],
         ];
