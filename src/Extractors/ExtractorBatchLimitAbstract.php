@@ -36,7 +36,7 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implem
      */
     public function enforceBatchSize(): ExtractorBatchLimitInterface
     {
-        if ($this->limit && ($this->numRecords + $this->batchSize > $this->limit)) {
+        if ($this->limit && ($this->numRecords + (int) $this->batchSize > $this->limit)) {
             $this->batchSize = max(0, $this->limit - $this->numRecords);
         }
 
@@ -99,7 +99,7 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implem
      */
     public function incrementOffset(): self
     {
-        $this->offset += $this->batchSize;
+        $this->offset += (int) $this->batchSize;
 
         return $this;
     }
