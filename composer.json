@@ -34,8 +34,8 @@
     "require-dev": {
         "ext-pdo": "*",
         "phpunit/phpunit": "^8.0|^7.5",
-        "symfony/console": "^4.0|^3.4|^2.8",
-        "symfony/event-dispatcher": "^4.0|^3.4|^2.8"
+        "symfony/console": "^5.0|^4.0|^3.4|^2.8",
+        "symfony/event-dispatcher": "^5.0|^4.0|^3.4|^2.8"
     },
     "suggest": {
         "symfony/console": "To use ProgressBarSubscriber",

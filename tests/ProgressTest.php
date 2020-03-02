@@ -7,7 +7,6 @@
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
  */
 
-use fab2s\NodalFlow\NodalFlow;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Extractors\CallableExtractor;
 use fab2s\YaEtl\Laravel\Callbacks\ProgressBarSubscriber;
@@ -23,20 +22,20 @@ class ProgressTest extends \TestBase
     /**
      * @dataProvider progressProvider
      *
-     * @param NodalFlow $flow
-     * @param int|null  $limit
-     * @param int       $progressMod
-     * @param array     $expected
+     * @param YaEtl    $flow
+     * @param int|null $numRecords
+     * @param int      $progressMod
+     * @param array    $expected
      *
      * @throws NodalFlowException
      * @throws ReflectionException
      */
-    public function testProgress(NodalFlow $flow, ?int $limit, int $progressMod, array $expected)
+    public function testProgress(YaEtl $flow, ?int $numRecords, int $progressMod, array $expected)
     {
         $flow->setProgressMod($progressMod);
         $progressSubscriber = new ProgressBarSubscriber($flow);
         $progressSubscriber->setOutput(new StreamOutput(fopen('php://memory', 'r+', false)))
-            ->setNumRecords($limit);
+            ->setNumRecords($numRecords);
         $flow->exec();
 
         /** @var StreamOutput $output */
@@ -47,9 +46,6 @@ class ProgressTest extends \TestBase
         foreach ($expected['contains'] as $contain) {
             $this->assertStringContainsString($contain, $display);
         }
-
-        $limit = $limit ?: 100;
-        $this->assertSame((int) ($limit / $progressMod) + 1, preg_match_all('`^\s*[0-9]+(?:/[0-9]+)? \[.*?\].*$`m', $display));
     }
 
     /**
@@ -63,52 +59,56 @@ class ProgressTest extends \TestBase
             [
                 'flow'     => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(100)))
                     ->transform(new NoOpTransformer),
-                'limit'        => 100,
+                'num_records'  => 100,
                 'progress_mod' => 10,
                 'expected'     => [
                     'num_progress' => 11,
                     'contains'     => [
                         '[YaEtl] Start',
                         '[YaEtl] Clean Success',
+                        '[YaEtl](clean) 1 Extractor - 1 Extract - 100 Record (100 Iterations)',
                     ],
                 ],
             ],
             [
                 'flow'     => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(100)))
                     ->transform(new NoOpTransformer),
-                'limit'        => null,
+                'num_records'  => null,
                 'progress_mod' => 10,
                 'expected'     => [
                     'num_progress' => 11,
                     'contains'     => [
                         '[YaEtl] Start',
                         '[YaEtl] Clean Success',
+                        '[YaEtl](clean) 1 Extractor - 1 Extract - 100 Record (100 Iterations)',
                     ],
                 ],
             ],
             [
                 'flow'     => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(100)))
                     ->transform(new NoOpTransformer),
-                'limit'        => null,
+                'num_records'  => 1337,
                 'progress_mod' => 1024,
                 'expected'     => [
                     'num_progress' => 1,
                     'contains'     => [
                         '[YaEtl] Start',
                         '[YaEtl] Clean Success',
+                        '[YaEtl](clean) 1 Extractor - 1 Extract - 100 Record (100 Iterations)',
                     ],
                 ],
             ],
             [
                 'flow'     => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(10)))
                     ->transform(new NoOpTransformer),
-                'limit'        => 10,
+                'num_records'  => 15,
                 'progress_mod' => 10,
                 'expected'     => [
                     'num_progress' => 2,
                     'contains'     => [
                         '[YaEtl] Start',
                         '[YaEtl] Clean Success',
+                        '[YaEtl](clean) 1 Extractor - 1 Extract - 10 Record (10 Iterations)',
                     ],
                 ],
             ],

@@ -44,7 +44,7 @@ class CsvExtractor extends FileExtractorAbstract
      *
      * @return \Generator
      */
-    public function getTraversable($param = null)
+    public function getTraversable($param = null): iterable
     {
         while ($this->extract($param)) {
             if (!$this->readBom() || !$this->readSep() || false === ($firstRecord = $this->readHeader())) {
