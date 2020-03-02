@@ -90,7 +90,7 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
      *
      * @return \Generator
      */
-    public function getTraversable($param = null)
+    public function getTraversable($param = null): iterable
     {
         /*
          * unfortunately, we can't do something a simple as
