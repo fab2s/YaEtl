@@ -52,7 +52,7 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implem
      */
     public function setOffset(int $offset): ExtractorBatchLimitInterface
     {
-        $this->offset = max(0, (int) $offset);
+        $this->offset = max(0, $offset);
 
         return $this;
     }

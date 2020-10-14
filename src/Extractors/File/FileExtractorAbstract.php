@@ -42,8 +42,6 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
      */
     public function extract($param = null): bool
     {
-        $this->getCarrier()->getFlowMap()->incrementNode($this->getId(), 'num_extract');
-
         return !feof($this->handle);
     }
 

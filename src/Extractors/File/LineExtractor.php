@@ -15,22 +15,16 @@ namespace fab2s\YaEtl\Extractors\File;
 class LineExtractor extends FileExtractorAbstract
 {
     /**
-     * @param mixed $param
-     *
-     * @return \Generator
+     * @return iterable
      */
-    public function getTraversable($param = null): iterable
+    protected function getExtracted(): iterable
     {
-        while ($this->extract($param)) {
-            if (!$this->readBom()) {
-                return;
-            }
-
-            while (null !== ($line = $this->getNextNonEmptyLine())) {
-                yield $line;
-            }
+        if (!$this->readBom()) {
+            return;
         }
 
-        $this->releaseHandle();
+        while (null !== ($line = $this->getNextNonEmptyLine())) {
+            yield $line;
+        }
     }
 }

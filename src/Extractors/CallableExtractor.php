@@ -25,13 +25,6 @@ class CallableExtractor extends PayloadNodeAbstract implements ExtractorInterfac
     protected $payload;
 
     /**
-     * The record collection
-     *
-     * @var \Traversable
-     */
-    protected $extracted;
-
-    /**
      * @var array
      */
     protected $nodeIncrements = [

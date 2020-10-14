@@ -31,13 +31,6 @@ interface ExtractorLimitInterface extends ExtractorInterface
     public function getLimit(): ?int;
 
     /**
-     * Get number of records (at the end of the Flow's execution)
-     *
-     * @return int
-     */
-    public function getNumRecords(): int;
-
-    /**
      * Tells if limit is reached already
      *
      * @return bool true if limit is reached

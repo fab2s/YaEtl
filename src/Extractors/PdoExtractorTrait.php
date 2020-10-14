@@ -93,4 +93,34 @@ trait PdoExtractorTrait
             }
         }
     }
+
+    /**
+     * Fetch records
+     *
+     * @return bool
+     */
+    public function fetchRecords(): bool
+    {
+        $extractQuery = $this->getPaginatedQuery();
+        $statement    = $this->pdo->prepare($extractQuery);
+        if (!$statement->execute(!empty($this->queryBindings) ? $this->queryBindings : null)) {
+            return false;
+        }
+
+        // It is most likely better to proxy all records
+        // as it also makes sure that we read from db as
+        // fast as possible and release pressure asap
+        $collection = new \SplDoublyLinkedList;
+        while ($record = $statement->fetch(\PDO::FETCH_ASSOC)) {
+            $collection->push($record);
+        }
+
+        $statement->closeCursor();
+        unset($statement);
+
+        /* @var $this DbExtractorAbstract */
+        $this->setExtracted($collection);
+
+        return !$collection->isEmpty();
+    }
 }
