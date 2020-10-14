@@ -17,7 +17,9 @@ use fab2s\NodalFlow\YaEtlException;
  */
 class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
 {
-    use PdoExtractorTrait;
+    use PdoExtractorTrait {
+        fetchRecords as pdoFetchRecords;
+    }
 
     /**
      * Generic extraction from tables with unique (composite) key
@@ -73,30 +75,36 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
      */
     public function fetchRecords(): bool
     {
-        $extractQuery = $this->getPaginatedQuery();
-
-        $query = $this->pdo->prepare($extractQuery);
-        if (!$query->execute(!empty($this->queryBindings) ? $this->queryBindings : null)) {
+        if (!$this->pdoFetchRecords()) {
             return false;
         }
 
-        $this->extracted = isset($this->joinFrom) ? [] : new \SplDoublyLinkedList;
-        $hasRecord       = false;
-        while ($record = $query->fetch(\PDO::FETCH_ASSOC)) {
-            if (isset($this->joinFrom)) {
-                $this->extracted[$record[$this->uniqueKeyName]] = $record;
-                $hasRecord                                      = true;
-                continue;
-            }
+        return true;
+    }
 
-            $this->extracted->push($record);
-            $hasRecord = true;
+    /**
+     * @return bool
+     */
+    protected function fetchJoinedRecords(): bool
+    {
+        $extractQuery = $this->getPaginatedQuery();
+        $statement    = $this->pdo->prepare($extractQuery);
+        if (!$statement->execute(!empty($this->queryBindings) ? $this->queryBindings : null)) {
+            return false;
         }
 
-        $query->closeCursor();
-        unset($query);
+        $this->joinedRecords = [];
+        while ($record = $statement->fetch(\PDO::FETCH_ASSOC)) {
+            $this->joinedRecords[$record[$this->uniqueKeyName]] = $record;
+        }
 
-        return $hasRecord;
+        $statement->closeCursor();
+        unset($statement);
+        // still set this as extracted as we build
+        // record map in both from and join context
+        $this->setExtracted($this->joinedRecords);
+
+        return !empty($this->joinedRecords);
     }
 
     /**

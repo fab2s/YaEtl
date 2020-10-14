@@ -48,34 +48,6 @@ class PdoExtractor extends DbExtractorAbstract
     }
 
     /**
-     * Fetch records
-     *
-     * @return bool
-     */
-    public function fetchRecords(): bool
-    {
-        $extractQuery = $this->getPaginatedQuery();
-
-        $query = $this->pdo->prepare($extractQuery);
-        if (!$query->execute(!empty($this->queryBindings) ? $this->queryBindings : null)) {
-            return false;
-        }
-
-        $this->extracted = new \SplDoublyLinkedList;
-        $hasRecord       = false;
-        while ($record = $query->fetch(\PDO::FETCH_ASSOC)) {
-            $this->extracted->push($record);
-            $hasRecord = true;
-        }
-
-        $query->closeCursor();
-        unset($query);
-        $this->extracted->rewind();
-
-        return $hasRecord;
-    }
-
-    /**
      * This method sets offset and limit in the query
      * WARNING : if you set an offset without limit,
      * the limit will be set to  $this->maxdefaultLimit

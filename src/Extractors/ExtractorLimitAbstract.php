@@ -22,13 +22,6 @@ abstract class ExtractorLimitAbstract extends ExtractorAbstract implements Extra
     protected $limit;
 
     /**
-     * Number of records
-     *
-     * @var int
-     */
-    protected $numRecords = 0;
-
-    /**
      * Set extract limit
      *
      * @param int|null $limit
