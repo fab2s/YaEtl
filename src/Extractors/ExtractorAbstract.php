@@ -44,4 +44,81 @@ abstract class ExtractorAbstract extends NodeAbstract implements ExtractorInterf
         'num_records' => 'num_iterate',
         'num_extract' => 0,
     ];
+
+    /**
+     * @var int
+     */
+    protected $numExtracts = 0;
+
+    /**
+     * @var int
+     */
+    protected $numRecords = 0;
+
+    /**
+     * get the traversable to traverse within the Flow
+     *
+     * @param mixed $param
+     *
+     * @return iterable
+     */
+    public function getTraversable($param = null): iterable
+    {
+        $this->bootNumExtracts();
+        while ($this->extract($param)) {
+            ++$this->numExtracts;
+            foreach ($this->getExtracted() as $record) {
+                ++$this->numRecords;
+                yield $record;
+            }
+        }
+    }
+
+    /**
+     * Get number of records (at the end of the Flow's execution)
+     *
+     * @return int
+     */
+    public function getNumRecords(): int
+    {
+        return $this->numRecords;
+    }
+
+    /**
+     * Get number of records (at the end of the Flow's execution)
+     *
+     * @return int
+     */
+    public function getNumExtracts(): int
+    {
+        return $this->numExtracts;
+    }
+
+    /**
+     * @return $this
+     */
+    public function bootNumExtracts(): self
+    {
+        $this->numExtracts = 0;
+        $this->numRecords  = 0;
+        /** @var ExtractorInterface $this */
+        if ($carrier = $this->getCarrier()) {
+            $nodeMap                = &$carrier->getFlowMap()->getNodeStat($this->getId());
+            $nodeMap['num_extract'] = &$this->numExtracts;
+        }
+
+        return $this;
+    }
+
+    /**
+     * return what was extracted during last call to extract
+     * As single record must be a collection of one record
+     * it can be more elegant to:
+     * `    yield $record;`
+     * rather than to:
+     * `    return [$record];`
+     *
+     * @return iterable
+     */
+    abstract protected function getExtracted(): iterable;
 }

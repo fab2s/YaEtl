@@ -17,18 +17,16 @@ use fab2s\NodalFlow\NodalFlowException;
 abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
 {
     /**
-     * The record collection structure
-     *
-     * @var \SplDoublyLinkedList|array
-     */
-    protected $extracted;
-
-    /**
      * The SQL query
      *
      * @var mixed
      */
     protected $extractQuery;
+
+    /**
+     * @var iterable
+     */
+    protected $extracted;
 
     /**
      * Instantiate a DB extractor
@@ -84,57 +82,6 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
     }
 
     /**
-     * Get the records as a Generator to iterate upon
-     *
-     * @param mixed $param
-     *
-     * @return \Generator
-     */
-    public function getTraversable($param = null): iterable
-    {
-        /*
-         * unfortunately, we can't do something a simple as
-         * while ($this->extracted->valid()) {
-         *     yield $this->extracted->shift();
-         * }
-         *
-         * @SEE https://php.net/spldoublylinkedlist.shift#120715
-         *
-         * Now since using shift() will result in an empty
-         * SplDoublyLinkedList at the end of the extraction cycle,
-         * the ETL will end up using less RAM when using multiple from.
-         * Otherwise, each extractor would keep its entire last
-         * extracted collection in RAM until the end of the whole ETL.
-         *
-         * Besides, while the bellow code may "look" slower than :
-         * foreach ($this->extracted as $record) {
-         *     yield $record;
-         * }
-         *
-         * but we can't really say it is:
-         * => do/while vs foreach 1M records from two extractors (500K each, 50K records per extract)
-         * ==> php 7.1.2
-         *      - foreach : 2sec 125ms - Memory: 74.00MiB
-         *      - do / while : 1sec 922ms - Memory: 42.00MiB
-         * ==> php 5.6.30
-         *      - foreach : 2sec 686ms - Memory: 147.75MiB
-         *      - do / while : 2sec 988ms - Memory: 80.00MiB
-         *
-         * still win-win ^^
-         *
-         */
-        while ($this->extract($param)) {
-            $this->getCarrier()->getFlowMap()->incrementNode($this->getId(), 'num_extract');
-            do {
-                $record = $this->extracted->shift();
-                $this->extracted->rewind();
-                ++$this->numRecords;
-                yield $record;
-            } while ($this->extracted->valid());
-        }
-    }
-
-    /**
      * Build the LIMIT...OFFSET bit of the query
      *
      * @return string
@@ -148,9 +95,29 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
     }
 
     /**
-     * Execute query and store results in $this->extracted
+     * Execute query and store results calling this->setExtracted
      *
      * @return bool true if there are records fetched
      */
     abstract protected function fetchRecords(): bool;
+
+    /**
+     * @param iterable $extracted
+     *
+     * @return $this
+     */
+    protected function setExtracted(iterable $extracted): self
+    {
+        $this->extracted = $extracted;
+
+        return $this;
+    }
+
+    /**
+     * @return iterable
+     */
+    protected function getExtracted(): iterable
+    {
+        return $this->extracted;
+    }
 }

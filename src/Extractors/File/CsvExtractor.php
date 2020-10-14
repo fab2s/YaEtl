@@ -40,26 +40,20 @@ class CsvExtractor extends FileExtractorAbstract
     }
 
     /**
-     * @param mixed $param
-     *
-     * @return \Generator
+     * @return iterable
      */
-    public function getTraversable($param = null): iterable
+    protected function getExtracted(): iterable
     {
-        while ($this->extract($param)) {
-            if (!$this->readBom() || !$this->readSep() || false === ($firstRecord = $this->readHeader())) {
-                return;
-            }
-
-            /* @var array $firstRecord */
-            yield $this->bakeRecord($firstRecord);
-            while (null !== ($record = $this->getNextNonEmptyRecord())) {
-                /* @var array $record */
-                yield $this->bakeRecord($record);
-            }
+        if (!$this->readBom() || !$this->readSep() || false === ($firstRecord = $this->readHeader())) {
+            return;
         }
 
-        $this->releaseHandle();
+        /* @var array $firstRecord */
+        yield $this->bakeRecord($firstRecord);
+        while (null !== ($record = $this->getNextNonEmptyRecord())) {
+            /* @var array $record */
+            yield $this->bakeRecord($record);
+        }
     }
 
     /**

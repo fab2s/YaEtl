@@ -18,6 +18,13 @@ use fab2s\NodalFlow\YaEtlException;
 abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements JoinableInterface
 {
     /**
+     * The joined record collection
+     *
+     * @var array
+     */
+    protected $joinedRecords;
+
+    /**
      * The composite key representation
      *
      * @var array|string
@@ -268,22 +275,20 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     {
         $uniqueKeyValue = $record[$this->uniqueKeyAlias];
 
-        if (isset($this->extracted[$uniqueKeyValue])) {
-            $joinRecord = $this->extracted[$uniqueKeyValue];
-            unset($this->extracted[$uniqueKeyValue]);
+        if (isset($this->joinedRecords[$uniqueKeyValue])) {
+            $joinRecord = $this->joinedRecords[$uniqueKeyValue];
+            unset($this->joinedRecords[$uniqueKeyValue]);
             if ($joinRecord === false) {
                 // skip record
-                $this->carrier->continueFlow();
+                $this->getCarrier()->continueFlow();
 
                 return $record;
             }
 
-            ++$this->numRecords;
-
             return $this->onClose-> /* @scrutinizer ignore-call */ merge($record, $joinRecord);
         }
 
-        if ($this->extract()) {
+        if ($this->joinExtract()) {
             return $this->exec($record);
         }
 
@@ -310,11 +315,11 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
             return false;
         }
 
-        if ($this->fetchRecords()) {
+        if ($this->fetchJoinedRecords()) {
+            $this->getCarrier()->getFlowMap()->incrementNode($this->getId(), 'num_join');
             // gen record map before we set defaults
             $this->genRecordMap()
                 ->setDefaultExtracted();
-            $this->getCarrier()->getFlowMap()->incrementNode($this->getId(), 'num_join');
 
             return true;
         }
@@ -395,12 +400,10 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      */
     protected function setDefaultExtracted(): self
     {
-        if ($this->joinFrom !== null) {
-            $defaultRecord    = $this->onClose-> /* @scrutinizer ignore-call */ isLeftJoin() ? $this->onClose-> /* @scrutinizer ignore-call */ getDefaultRecord() : false;
-            $defaultExtracted = \array_fill_keys($this->uniqueKeyValues, $defaultRecord);
+        $defaultRecord    = $this->onClose-> /* @scrutinizer ignore-call */ isLeftJoin() ? $this->onClose-> /* @scrutinizer ignore-call */ getDefaultRecord() : false;
+        $defaultExtracted = \array_fill_keys($this->uniqueKeyValues, $defaultRecord);
 
-            $this->extracted = \array_replace($defaultExtracted, /* @scrutinizer ignore-type */ $this->extracted);
-        }
+        $this->joinedRecords = \array_replace($defaultExtracted, /* @scrutinizer ignore-type */ $this->joinedRecords);
 
         return $this;
     }
@@ -430,8 +433,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
             // we do not want to map defaults here as we do not want joiners
             // to this to join on null
             // we could optimize a little bit for cases where
-            // $this->extracted is an indexed array on the proper key but ...
-            foreach ($this->extracted as $record) {
+            // $this->joinedRecords is an indexed array on the proper key but ...
+            foreach ($this->getExtracted() as $record) {
                 if (!isset($record[$fromKeyAlias])) {
                     // Since we do not enforce key alias existence during init
                     // we have to do it here
