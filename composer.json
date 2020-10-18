@@ -28,7 +28,7 @@
     ],
     "require": {
         "php": ">=7.1",
-        "fab2s/nodalflow": "2.x-dev",
+        "fab2s/nodalflow": "^2.0",
         "fab2s/opinhelpers": "^1.0"
     },
     "require-dev": {
