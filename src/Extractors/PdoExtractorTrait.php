@@ -119,8 +119,13 @@ trait PdoExtractorTrait
         unset($statement);
 
         /* @var $this DbExtractorAbstract */
-        $this->setExtracted($collection);
+        $this->setExtractedCollection($collection);
 
         return !$collection->isEmpty();
     }
+
+    /**
+     * @return string the paginated query with current offset and limit
+     */
+    abstract protected function getPaginatedQuery(): string;
 }

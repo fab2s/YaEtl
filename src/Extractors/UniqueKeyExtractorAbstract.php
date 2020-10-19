@@ -448,4 +448,15 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
 
         return $this;
     }
+
+    /**
+     * fetch records when joining against another extractor
+     * They should still be send to setExtracted to be made
+     * available in map generation for eventual joiners to
+     * this joiner and also fill up joinedRecords as an
+     * associative array indexed by the proper join key
+     *
+     * @return bool
+     */
+    abstract protected function fetchJoinedRecords(): bool;
 }
