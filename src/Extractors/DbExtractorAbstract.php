@@ -100,24 +100,4 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
      * @return bool true if there are records fetched
      */
     abstract protected function fetchRecords(): bool;
-
-    /**
-     * @param iterable $extracted
-     *
-     * @return $this
-     */
-    protected function setExtracted(iterable $extracted): self
-    {
-        $this->extracted = $extracted;
-
-        return $this;
-    }
-
-    /**
-     * @return iterable
-     */
-    protected function getExtracted(): iterable
-    {
-        return $this->extracted;
-    }
 }

@@ -102,7 +102,7 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
         unset($statement);
         // still set this as extracted as we build
         // record map in both from and join context
-        $this->setExtracted($this->joinedRecords);
+        $this->setExtractedCollection($this->joinedRecords);
 
         return !empty($this->joinedRecords);
     }

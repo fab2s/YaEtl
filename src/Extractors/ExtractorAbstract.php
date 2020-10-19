@@ -46,6 +46,11 @@ abstract class ExtractorAbstract extends NodeAbstract implements ExtractorInterf
     ];
 
     /**
+     * @var iterable
+     */
+    protected $extracted;
+
+    /**
      * @var int
      */
     protected $numExtracts = 0;
@@ -120,5 +125,34 @@ abstract class ExtractorAbstract extends NodeAbstract implements ExtractorInterf
      *
      * @return iterable
      */
-    abstract protected function getExtracted(): iterable;
+    protected function getExtracted(): iterable
+    {
+        return $this->extracted ?: [];
+    }
+
+    /**
+     * set current extraction result
+     *
+     * @param iterable|null $extracted
+     *
+     * @return static
+     */
+    protected function setExtractedCollection(?iterable $extracted = null): self
+    {
+        $this->extracted = $extracted;
+
+        return $this;
+    }
+
+    /**
+     * @param mixed|null $extracted
+     *
+     * @return static
+     */
+    protected function setExtractedRecord($extracted = null): self
+    {
+        $this->extracted = $extracted !== null ? [$extracted] : null;
+
+        return $this;
+    }
 }
