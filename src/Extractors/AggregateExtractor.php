@@ -39,7 +39,7 @@ class AggregateExtractor extends AggregateNode
     public function __construct(bool $isAReturningVal)
     {
         // bypass parent, go to grand pa'. DRY won over KISS
-        PayloadNodeAbstract:: /* @scrutinizer ignore-call */ __construct(new YaEtl, $isAReturningVal);
+        PayloadNodeAbstract::/* @scrutinizer ignore-call */__construct(new YaEtl, $isAReturningVal);
         $this->isATraversable = true;
     }
 

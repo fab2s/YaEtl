@@ -33,6 +33,11 @@ class CallableExtractor extends PayloadNodeAbstract implements ExtractorInterfac
     ];
 
     /**
+     * @var iterable
+     */
+    protected $extracted;
+
+    /**
      * CallableExtractorAbstract constructor.
      *
      * @param callable $payload
@@ -46,27 +51,19 @@ class CallableExtractor extends PayloadNodeAbstract implements ExtractorInterfac
     }
 
     /**
-     * This method is vaguely similar to a valid() meta iterator
-     * It will triggers the record collection extraction when called
-     * and return true when records where fetched.
-     *
-     * This is useful when batch extracting. If your extractor
-     * does not perform batch extract (for example if you are
-     * just reading a file line by line), just make so this method
-     * triggers file open and return true in case of success and false
-     * when called again.
-     *
      * @param mixed|null $param
      *
      * @return bool false in case no more records can be fetched
      */
     public function extract($param = null): bool
     {
-        $this->extracted = \call_user_func($this->payload, $param);
+        $extracted = \call_user_func($this->payload, $param);
 
-        if (!is_array($this->extracted) && !($this->extracted instanceof \Traversable)) {
+        if (!is_iterable($extracted)) {
             return false;
         }
+
+        $this->extracted = $extracted;
 
         return true;
     }
@@ -81,10 +78,14 @@ class CallableExtractor extends PayloadNodeAbstract implements ExtractorInterfac
     public function getTraversable($param = null): iterable
     {
         if (!$this->extract($param)) {
+            // we still return an empty generator here
             return;
         }
 
-        $this->getCarrier()->getFlowMap()->incrementNode($this->getId(), 'num_extract');
+        if ($this->getCarrier()) {
+            $this->getCarrier()->getFlowMap()->incrementNode($this->getId(), 'num_extract');
+        }
+
         foreach ($this->extracted as $record) {
             yield $record;
         }
