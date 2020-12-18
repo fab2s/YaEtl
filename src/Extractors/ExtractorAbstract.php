@@ -104,8 +104,8 @@ abstract class ExtractorAbstract extends NodeAbstract implements ExtractorInterf
      */
     public function bootNumExtracts(): self
     {
-        $this->numExtracts = 0;
-        $this->numRecords  = 0;
+        $this->numExtracts = $this->numExtracts ?: 0;
+        $this->numRecords  = $this->numRecords ?: 0;
         /** @var ExtractorInterface $this */
         if ($carrier = $this->getCarrier()) {
             $nodeMap                = &$carrier->getFlowMap()->getNodeStat($this->getId());
