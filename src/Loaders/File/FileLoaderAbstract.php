@@ -29,14 +29,8 @@ abstract class FileLoaderAbstract extends LoaderAbstract
      */
     public function __construct($input)
     {
-        if (is_resource($input)) {
-            $metaData = stream_get_meta_data($input);
-            if (!is_writable($metaData['uri'])) {
-                throw new YaEtlException('CsvLoader : destination cannot be opened in write mode');
-            }
-        }
-
-        $this->initHandle($input, 'wb');
+        $this->checkHandle($input)
+            ->initHandle($input, 'wb');
         parent::__construct();
     }
 
@@ -47,6 +41,37 @@ abstract class FileLoaderAbstract extends LoaderAbstract
     {
         if ($this->useBom && ($bom = $this->prependBom(''))) {
             fwrite($this->handle, $bom);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param resource|string $input
+     *
+     * @throws YaEtlException
+     *
+     * @return static
+     */
+    protected function checkHandle($input): self
+    {
+        if (is_resource($input)) {
+            $metaData = stream_get_meta_data($input);
+            if (!is_writable($metaData['uri'])) {
+                throw new YaEtlException((new \ReflectionClass($this))->getShortName() . ' : destination cannot be opened in write mode');
+            }
+
+            return $this;
+        }
+
+        if (
+            !is_string($input) ||
+            (
+                !is_file($input) &&
+                !touch($input)
+            )
+        ) {
+            throw new YaEtlException((new \ReflectionClass($this))->getShortName() . ' : destination cannot be created');
         }
 
         return $this;

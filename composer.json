@@ -5,6 +5,10 @@
     "authors": [{
         "name": "Fabrice de Stefanis"
     }],
+    "support": {
+        "issues": "https://github.com/fab2s/YaEtl/issues",
+        "source": "https://github.com/fab2s/YaEtl"
+    },
     "keywords": [
         "Extract-Transform-Load",
         "ETL",
@@ -45,6 +49,12 @@
         "classmap": [
             "src"
         ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.x-dev",
+            "dev-1.x": "1.x-dev"
+        }
     },
     "scripts": {
         "post-update-cmd": [

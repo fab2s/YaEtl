@@ -15,11 +15,18 @@ namespace fab2s\YaEtl\Extractors;
 abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implements ExtractorBatchLimitInterface
 {
     /**
-     * The query offset
+     * The current offset
      *
      * @var int
      */
     protected $offset = 0;
+
+    /**
+     * The start offset
+     *
+     * @var int
+     */
+    protected $startOffset = 0;
 
     /**
      * Number of records to fetch at once
@@ -52,7 +59,7 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implem
      */
     public function setOffset(int $offset): ExtractorBatchLimitInterface
     {
-        $this->offset = max(0, $offset);
+        $this->startOffset = max(0, $offset);
 
         return $this;
     }
@@ -102,5 +109,17 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implem
         $this->offset += (int) $this->batchSize;
 
         return $this;
+    }
+
+    /**
+     * @return ExtractorAbstract
+     */
+    public function bootNumExtracts(): ExtractorAbstract
+    {
+        // reset pagination each time we trigger
+        // an extract (one or more time per flow)
+        $this->offset = $this->startOffset ?: 0;
+
+        return parent::bootNumExtracts();
     }
 }
