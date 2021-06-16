@@ -152,9 +152,7 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
             }
 
             $this->getPdo()->query('INSERT OR IGNORE INTO ' . $table . ' (' . implode(',', array_keys($insert)) . ') VALUES (' . implode(',', $insert) . ')');
-
         }
-
 
         return $this;
     }

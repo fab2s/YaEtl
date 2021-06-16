@@ -27,6 +27,14 @@ matrix:
       env: SYMFONY_CONSOLE_VERSION=5.0.*
     - php: 7.1
       env: SYMFONY_CONSOLE_VERSION=5.1.*
+    - php: 8.0
+      env: SYMFONY_CONSOLE_VERSION=4.0.*
+    - php: 8.0
+      env: SYMFONY_CONSOLE_VERSION=4.1.*
+    - php: 8.0
+      env: SYMFONY_CONSOLE_VERSION=4.2.*
+    - php: 8.0
+      env: SYMFONY_CONSOLE_VERSION=4.3.*
 
 before_script:
     - composer self-update
