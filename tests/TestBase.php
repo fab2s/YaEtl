@@ -61,7 +61,6 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
     {
         if (static::$pdo === null) {
             static::$pdo = new \PDO('sqlite::memory:');
-            static::$pdo->query('CREATE DATABASE test; use test;');
 
             static::$pdo->query('CREATE TABLE ' . self::FROM_TABLE . '(
                     id INTEGER PRIMARY KEY,
@@ -152,8 +151,10 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
                     break;
             }
 
-            $this->getPdo()->query('INSERT INTO ' . $table . ' (' . implode(',', array_keys($insert)) . ') VALUES (' . implode(',', $insert) . ')');
+            $this->getPdo()->query('INSERT OR IGNORE INTO ' . $table . ' (' . implode(',', array_keys($insert)) . ') VALUES (' . implode(',', $insert) . ')');
+
         }
+
 
         return $this;
     }
