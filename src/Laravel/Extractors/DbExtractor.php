@@ -23,7 +23,7 @@ class DbExtractor extends PdoExtractor
     /**
      * The record collection structure
      *
-     * @var \SplDoublyLinkedList
+     * @var iterable
      */
     protected $extracted;
 
@@ -37,16 +37,19 @@ class DbExtractor extends PdoExtractor
     /**
      * Instantiate the DbExtractor
      *
-     * @param Builder $extractQuery
+     * @param Builder|null $extractQuery
      *
-     * @throws YaEtlException
      * @throws NodalFlowException
+     * @throws YaEtlException
      */
-    public function __construct(Builder $extractQuery)
+    public function __construct(?Builder $extractQuery = null)
     {
-        $this->setExtractQuery($extractQuery);
+        if ($extractQuery !== null) {
+            $this->setExtractQuery($extractQuery);
+        }
 
-        parent::__construct($extractQuery->getConnection()->getPdo());
+        // delay configuring pdo to flow start
+        DbExtractorAbstract::__construct();
     }
 
     /**
@@ -62,6 +65,10 @@ class DbExtractor extends PdoExtractor
     {
         if (!($extractQuery instanceof Builder)) {
             throw new YaEtlException('Argument 1 passed to ' . __METHOD__ . ' must be an instance of ' . Builder::class . ', ' . \gettype($extractQuery) . ' given');
+        }
+
+        if (!isset($this->pdo)) {
+            $this->configurePdo($extractQuery->getConnection()->getPdo());
         }
 
         parent::setExtractQuery($extractQuery);
