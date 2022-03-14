@@ -58,7 +58,7 @@ class JoinTest extends \TestBase
             $expectedRecords = array_values($this->expectedJoinRecords);
         }
 
-        $this->assertSame($expectedRecords, $this->getTableAll(self::TO_TABLE), 'Result table did not match ' . ($isLeft ? 'Left' : '') . 'Join constraint');
+        $this->assertEquals($expectedRecords, $this->getTableAll(self::TO_TABLE), 'Result table did not match ' . ($isLeft ? 'Left' : '') . 'Join constraint');
     }
 
     /**
