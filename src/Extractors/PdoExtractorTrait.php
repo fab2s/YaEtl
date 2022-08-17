@@ -78,8 +78,8 @@ trait PdoExtractorTrait
         $this->pdo          = $pdo;
         $this->dbDriverName = $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
 
-        if (!isset($this->supportedDrivers[$this->dbDriverName])) {
-            throw new YaEtlException('Pdo driver not supported, must be one of: ' . \implode(', ', \array_keys($this->supportedDrivers)));
+        if (!($this instanceof PaginatedQueryInterface) && !isset($this->supportedDrivers[$this->dbDriverName])) {
+            throw new YaEtlException(\get_class($this) . ' does not implement PaginatedQueryInterface and does not uses a supported Pdo driver, supported drivers are: ' . \implode(', ', \array_keys($this->supportedDrivers)));
         }
 
         if ($this->dbDriverName === 'mysql') {
@@ -127,5 +127,5 @@ trait PdoExtractorTrait
     /**
      * @return string the paginated query with current offset and limit
      */
-    abstract protected function getPaginatedQuery(): string;
+    abstract public function getPaginatedQuery(): string;
 }

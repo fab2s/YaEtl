@@ -83,6 +83,26 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
     }
 
     /**
+     * This method sets offset and limit in the query
+     * WARNING : if you set an offset without limit,
+     * the limit will be set to  $this->maxdefaultLimit
+     *
+     * @return string the paginated query with current offset and limit
+     */
+    public function getPaginatedQuery(): string
+    {
+        if ($this->joinFrom) {
+            $this->queryBindings = array_values($this->uniqueKeyValues);
+
+            $whereOrAndStr = stripos($this->extractQuery, 'WHERE') !== false ? 'AND' : 'WHERE';
+
+            return $this->extractQuery . " $whereOrAndStr $this->uniqueKeyName IN (" . implode(',', array_fill(0, count($this->uniqueKeyValues), '?')) . ')';
+        }
+
+        return $this->extractQuery . $this->getLimitOffsetBit();
+    }
+
+    /**
      * @return bool
      */
     protected function fetchJoinedRecords(): bool
@@ -105,25 +125,5 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
         $this->setExtractedCollection($this->joinedRecords);
 
         return !empty($this->joinedRecords);
-    }
-
-    /**
-     * This method sets offset and limit in the query
-     * WARNING : if you set an offset without limit,
-     * the limit will be set to  $this->maxdefaultLimit
-     *
-     * @return string the paginated query with current offset and limit
-     */
-    protected function getPaginatedQuery(): string
-    {
-        if ($this->joinFrom) {
-            $this->queryBindings = array_values($this->uniqueKeyValues);
-
-            $whereOrAndStr = stripos($this->extractQuery, 'WHERE') !== false ? 'AND' : 'WHERE';
-
-            return $this->extractQuery . " $whereOrAndStr $this->uniqueKeyName IN (" . implode(',', array_fill(0, count($this->uniqueKeyValues), '?')) . ')';
-        }
-
-        return $this->extractQuery . $this->getLimitOffsetBit();
     }
 }
