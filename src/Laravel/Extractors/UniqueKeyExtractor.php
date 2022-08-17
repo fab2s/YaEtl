@@ -11,15 +11,18 @@ namespace fab2s\YaEtl\Laravel\Extractors;
 
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\YaEtlException;
-use fab2s\YaEtl\Extractors\DbExtractorAbstract;
+use fab2s\YaEtl\Extractors\PaginatedQueryInterface;
 use fab2s\YaEtl\Extractors\PdoUniqueKeyExtractor;
+use fab2s\YaEtl\Extractors\UniqueKeyExtractorAbstract;
 use Illuminate\Database\Query\Builder;
 
 /**
  * Class UniqueKeyExtractor
  */
-class UniqueKeyExtractor extends PdoUniqueKeyExtractor
+class UniqueKeyExtractor extends PdoUniqueKeyExtractor implements PaginatedQueryInterface
 {
+    use DelayedExtractQueryTrait;
+
     /**
      * Generic extraction from tables with unique (composite) key
      *
@@ -39,29 +42,14 @@ class UniqueKeyExtractor extends PdoUniqueKeyExtractor
      * @throws YaEtlException
      * @throws NodalFlowException
      */
-    public function __construct(Builder $extractQuery, $uniqueKey = 'id')
+    public function __construct(?Builder $extractQuery = null, $uniqueKey = 'id')
     {
-        parent::__construct($extractQuery->getConnection()->getPdo(), $extractQuery, $uniqueKey);
-    }
-
-    /**
-     * Set the extract query
-     *
-     * @param Builder $extractQuery
-     *
-     * @throws YaEtlException
-     *
-     * @return static
-     */
-    public function setExtractQuery($extractQuery): DbExtractorAbstract
-    {
-        if (!($extractQuery instanceof Builder)) {
-            throw new YaEtlException('Argument 1 passed to ' . __METHOD__ . ' must be an instance of ' . Builder::class . ', ' . \gettype($extractQuery) . ' given');
+        if ($extractQuery !== null) {
+            $this->setExtractQuery($extractQuery);
         }
 
-        parent::setExtractQuery($extractQuery);
-
-        return $this;
+        // delay configuring pdo to flow start
+        UniqueKeyExtractorAbstract::__construct(null, $uniqueKey);
     }
 
     /**
@@ -69,7 +57,7 @@ class UniqueKeyExtractor extends PdoUniqueKeyExtractor
      *
      * @return string the paginated query with current offset and limit
      */
-    protected function getPaginatedQuery(): string
+    public function getPaginatedQuery(): string
     {
         if ($this->joinFrom) {
             $extractQuery = $this->extractQuery

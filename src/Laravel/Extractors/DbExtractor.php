@@ -12,14 +12,17 @@ namespace fab2s\YaEtl\Laravel\Extractors;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Extractors\DbExtractorAbstract;
+use fab2s\YaEtl\Extractors\PaginatedQueryInterface;
 use fab2s\YaEtl\Extractors\PdoExtractor;
 use Illuminate\Database\Query\Builder;
 
 /**
  * Class DbExtractor
  */
-class DbExtractor extends PdoExtractor
+class DbExtractor extends PdoExtractor implements PaginatedQueryInterface
 {
+    use DelayedExtractQueryTrait;
+
     /**
      * The record collection structure
      *
@@ -53,35 +56,11 @@ class DbExtractor extends PdoExtractor
     }
 
     /**
-     * Set the extract query
-     *
-     * @param Builder $extractQuery
-     *
-     * @throws YaEtlException
-     *
-     * @return static
-     */
-    public function setExtractQuery($extractQuery): DbExtractorAbstract
-    {
-        if (!($extractQuery instanceof Builder)) {
-            throw new YaEtlException('Argument 1 passed to ' . __METHOD__ . ' must be an instance of ' . Builder::class . ', ' . \gettype($extractQuery) . ' given');
-        }
-
-        if (!isset($this->pdo)) {
-            $this->configurePdo($extractQuery->getConnection()->getPdo());
-        }
-
-        parent::setExtractQuery($extractQuery);
-
-        return $this;
-    }
-
-    /**
      * This method sets offset and limit in the query
      *
      * @return string the paginated query with current offset and limit
      */
-    protected function getPaginatedQuery(): string
+    public function getPaginatedQuery(): string
     {
         $extractQuery = $this->extractQuery
             ->offset($this->offset)

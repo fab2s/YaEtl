@@ -54,7 +54,7 @@ class PdoExtractor extends DbExtractorAbstract
      *
      * @return string the paginated query with current offset and limit
      */
-    protected function getPaginatedQuery(): string
+    public function getPaginatedQuery(): string
     {
         return $this->extractQuery . $this->getLimitOffsetBit();
     }
