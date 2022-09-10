@@ -10,7 +10,7 @@
 namespace fab2s\YaEtl\Traits;
 
 use fab2s\Bom\Bom;
-use fab2s\NodalFlow\YaEtlException;
+use fab2s\YaEtl\YaEtlException;
 
 /**
  * Trait FileHandlerTrait

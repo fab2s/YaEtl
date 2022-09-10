@@ -14,8 +14,8 @@ use fab2s\NodalFlow\Nodes\AggregateNode;
 use fab2s\NodalFlow\Nodes\AggregateNodeInterface;
 use fab2s\NodalFlow\Nodes\PayloadNodeAbstract;
 use fab2s\NodalFlow\Nodes\TraversableNodeInterface;
-use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\YaEtl;
+use fab2s\YaEtl\YaEtlException;
 
 /**
  * class AggregateExtractor

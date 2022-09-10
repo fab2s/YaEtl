@@ -19,7 +19,6 @@ use fab2s\NodalFlow\Nodes\BranchNode;
 use fab2s\NodalFlow\Nodes\BranchNodeInterface;
 use fab2s\NodalFlow\Nodes\NodeInterface;
 use fab2s\NodalFlow\Nodes\TraversableNodeInterface;
-use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Events\YaEtlEvent;
 use fab2s\YaEtl\Extractors\AggregateExtractor;
 use fab2s\YaEtl\Extractors\ExtractorInterface;

@@ -8,12 +8,12 @@
  */
 
 use fab2s\NodalFlow\NodalFlowException;
-use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Extractors\PdoExtractor;
 use fab2s\YaEtl\Extractors\PdoUniqueKeyExtractor;
 use fab2s\YaEtl\Transformers\CallableTransformer;
 use fab2s\YaEtl\Transformers\NoOpTransformer;
 use fab2s\YaEtl\YaEtl;
+use fab2s\YaEtl\YaEtlException;
 
 /**
  * Class FromTest

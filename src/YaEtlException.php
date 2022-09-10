@@ -7,7 +7,9 @@
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
  */
 
-namespace fab2s\NodalFlow;
+namespace fab2s\YaEtl;
+
+use fab2s\NodalFlow\NodalFlowException;
 
 /**
  * Class YaEtlException

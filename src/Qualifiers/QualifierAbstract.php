@@ -11,7 +11,7 @@ namespace fab2s\YaEtl\Qualifiers;
 
 use fab2s\NodalFlow\Flows\InterrupterInterface;
 use fab2s\NodalFlow\Nodes\NodeAbstract;
-use fab2s\NodalFlow\YaEtlException;
+use fab2s\YaEtl\YaEtlException;
 
 /**
  * Abstract Class QualifierAbstract
