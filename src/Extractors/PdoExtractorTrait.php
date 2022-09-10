@@ -9,7 +9,7 @@
 
 namespace fab2s\YaEtl\Extractors;
 
-use fab2s\NodalFlow\YaEtlException;
+use fab2s\YaEtl\YaEtlException;
 
 /**
  * trait PdoExtractorTrait

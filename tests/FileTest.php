@@ -8,7 +8,6 @@
  */
 
 use fab2s\NodalFlow\NodalFlowException;
-use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Extractors\CallableExtractor;
 use fab2s\YaEtl\Extractors\File\CsvExtractor;
 use fab2s\YaEtl\Extractors\File\FileExtractorAbstract;
@@ -16,6 +15,7 @@ use fab2s\YaEtl\Extractors\File\LineExtractor;
 use fab2s\YaEtl\Loaders\File\CsvLoader;
 use fab2s\YaEtl\Transformers\CallableTransformer;
 use fab2s\YaEtl\YaEtl;
+use fab2s\YaEtl\YaEtlException;
 
 /**
  * Class FileTest

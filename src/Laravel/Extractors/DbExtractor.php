@@ -10,10 +10,10 @@
 namespace fab2s\YaEtl\Laravel\Extractors;
 
 use fab2s\NodalFlow\NodalFlowException;
-use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Extractors\DbExtractorAbstract;
 use fab2s\YaEtl\Extractors\PaginatedQueryInterface;
 use fab2s\YaEtl\Extractors\PdoExtractor;
+use fab2s\YaEtl\YaEtlException;
 use Illuminate\Database\Query\Builder;
 
 /**

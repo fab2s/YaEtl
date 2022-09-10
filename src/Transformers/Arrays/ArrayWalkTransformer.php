@@ -10,8 +10,8 @@
 namespace fab2s\YaEtl\Transformers\Arrays;
 
 use fab2s\NodalFlow\NodalFlowException;
-use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Transformers\TransformerAbstract;
+use fab2s\YaEtl\YaEtlException;
 
 /**
  * Class ArrayWalkTransformer

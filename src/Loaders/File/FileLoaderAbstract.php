@@ -10,9 +10,9 @@
 namespace fab2s\YaEtl\Loaders\File;
 
 use fab2s\NodalFlow\NodalFlowException;
-use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Loaders\LoaderAbstract;
 use fab2s\YaEtl\Traits\FileHandlerTrait;
+use fab2s\YaEtl\YaEtlException;
 
 /**
  * Class FileLoaderAbstract

@@ -11,9 +11,9 @@ namespace fab2s\YaEtl\Extractors\File;
 
 use fab2s\Bom\Bom;
 use fab2s\NodalFlow\NodalFlowException;
-use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Extractors\ExtractorAbstract;
 use fab2s\YaEtl\Traits\FileHandlerTrait;
+use fab2s\YaEtl\YaEtlException;
 
 /**
  * Class FileExtractorAbstract

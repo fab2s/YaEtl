@@ -8,10 +8,10 @@
  */
 
 use fab2s\NodalFlow\NodalFlowException;
-use fab2s\NodalFlow\YaEtlException;
 use fab2s\YaEtl\Extractors\OnClause;
 use fab2s\YaEtl\Extractors\PdoUniqueKeyExtractor;
 use fab2s\YaEtl\YaEtl;
+use fab2s\YaEtl\YaEtlException;
 
 /**
  * Class JoinTest
