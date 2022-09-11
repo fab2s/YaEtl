@@ -18,7 +18,7 @@ use fab2s\YaEtl\YaEtlException;
 /**
  * Class FromTest
  */
-class FromTest extends \TestBase
+class FromTest extends TestBase
 {
     public function setUp(): void
     {

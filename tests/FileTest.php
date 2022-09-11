@@ -20,7 +20,7 @@ use fab2s\YaEtl\YaEtlException;
 /**
  * Class FileTest
  */
-class FileTest extends \TestBase
+class FileTest extends TestBase
 {
     /**
      * @var array

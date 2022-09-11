@@ -16,7 +16,7 @@ use fab2s\YaEtl\YaEtlException;
 /**
  * Class JoinTest
  */
-class JoinTest extends \TestBase
+class JoinTest extends TestBase
 {
     public function setUp(): void
     {

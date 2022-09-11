@@ -46,9 +46,9 @@
         "laravel/laravel": "To use Laravel (The awesome) implementations"
     },
     "autoload": {
-        "classmap": [
-            "src"
-        ],
+        "psr-4": {
+            "fab2s\\YaEtl\\": "src"
+        },
         "files": [
             "src/support/deprecated.php"
         ]

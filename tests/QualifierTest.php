@@ -19,7 +19,7 @@ use fab2s\YaEtl\YaEtl;
 /**
  * Class QualifierTest
  */
-class QualifierTest extends \TestBase
+class QualifierTest extends TestBase
 {
     /**
      * @dataProvider interruptProvider

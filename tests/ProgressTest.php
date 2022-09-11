@@ -8,8 +8,8 @@
  */
 
 use fab2s\NodalFlow\NodalFlowException;
+use fab2s\YaEtl\Events\ProgressBarSubscriber;
 use fab2s\YaEtl\Extractors\CallableExtractor;
-use fab2s\YaEtl\Laravel\Callbacks\ProgressBarSubscriber;
 use fab2s\YaEtl\Transformers\NoOpTransformer;
 use fab2s\YaEtl\YaEtl;
 use Symfony\Component\Console\Output\StreamOutput;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\StreamOutput;
 /**
  * Class ProgressTest
  */
-class ProgressTest extends \TestBase
+class ProgressTest extends TestBase
 {
     /**
      * @dataProvider progressProvider
@@ -137,7 +137,7 @@ class ProgressTest extends \TestBase
     /**
      * @return Closure
      */
-    protected function getNoOpClosure(): \Closure
+    protected function getNoOpClosure(): Closure
     {
         return function ($record) {
             return $record;
@@ -149,7 +149,7 @@ class ProgressTest extends \TestBase
      *
      * @return Closure
      */
-    protected function getTraversableClosure($limit = 10): \Closure
+    protected function getTraversableClosure(int $limit = 10): Closure
     {
         return function () use ($limit) {
             for ($i = 1; $i <= $limit; ++$i) {

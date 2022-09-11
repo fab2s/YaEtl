@@ -9,12 +9,22 @@
 
 namespace {
     class_alias(\fab2s\YaEtl\YaEtlException::class, \fab2s\NodalFlow\YaEtlException::class);
+    class_alias(\fab2s\YaEtl\Events\ProgressBarSubscriber::class, \fab2s\YaEtl\Laravel\Callbacks\ProgressBarSubscriber::class);
 }
 
 namespace fab2s\NodalFlow {
     if (!class_exists(YaEtlException::class)) {
-        /** @deprecated YaEtlException this is intended to help IDEs */
+        /** @deprecated YaEtlException use fab2s\NodalFlow\YaEtlException instead (NS update) */
         class YaEtlException
+        {
+        }
+    }
+}
+
+namespace fab2s\YaEtl\Laravel\Callbacks {
+    if (!class_exists(ProgressBarSubscriber::class)) {
+        /** @deprecated ProgressBarSubscriber use fab2s\YaEtl\Events\ProgressBarSubscriber instead (NS update) */
+        class ProgressBarSubscriber
         {
         }
     }
