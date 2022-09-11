@@ -7,12 +7,13 @@
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
  */
 
-namespace fab2s\YaEtl\Laravel\Callbacks;
+namespace fab2s\YaEtl\Events;
 
 use fab2s\NodalFlow\Events\FlowEvent;
 use fab2s\NodalFlow\Events\FlowEventInterface;
 use fab2s\NodalFlow\Flows\FlowInterface;
 use fab2s\YaEtl\YaEtl;
+use ReflectionException;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -54,7 +55,7 @@ class ProgressBarSubscriber implements EventSubscriberInterface
      *
      * @param YaEtl|null $flow
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __construct(YaEtl $flow = null)
     {
@@ -67,7 +68,7 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     /**
      * @param YaEtl $flow
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      *
      * @return static
      */
@@ -111,7 +112,7 @@ class ProgressBarSubscriber implements EventSubscriberInterface
      */
     public function setProgressMod(int $progressMod): self
     {
-        $this->progressMod = max(1, (int) $progressMod);
+        $this->progressMod = max(1, $progressMod);
 
         return $this;
     }
@@ -148,7 +149,7 @@ class ProgressBarSubscriber implements EventSubscriberInterface
 
     /**
      * Triggered when a Flow progresses,
-     * eg exec once or generates once
+     * e.g. exec once or generates once
      */
     public function progress()
     {
@@ -163,11 +164,11 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     public function success(FlowEventInterface $event)
     {
         $this->progressBar->finish();
-        $this->output->writeln(PHP_EOL);
+        $this->output->writeln('');
         $flow       = $event->getFlow();
         $flowStatus = $flow->getFlowStatus();
         if ($flowStatus->isDirty()) {
-            $this->output->writeln('<warn>[YaEtl] Dirty Success</warn>');
+            $this->output->writeln('<comment>[YaEtl] Dirty Success</comment>');
         } else {
             $this->output->writeln('<info>[YaEtl] Clean Success</info>');
         }
@@ -183,7 +184,7 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     public function fail(FlowEventInterface $event)
     {
         $this->progressBar->finish();
-        $this->output->writeln(PHP_EOL);
+        $this->output->writeln('');
         $this->output->writeln('<error>[YaEtl] Failed</error>');
         $this->displayReport($event->getFlow());
     }
