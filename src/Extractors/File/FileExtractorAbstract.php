@@ -87,7 +87,7 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
     {
         do {
             if (false === ($char = fread($this->handle, 1))) {
-                return false;
+                return null;
             }
         } while (trim($char) === '');
 

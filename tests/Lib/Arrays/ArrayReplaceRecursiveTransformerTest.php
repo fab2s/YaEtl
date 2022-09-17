@@ -7,10 +7,13 @@
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
  */
 
+namespace fab2s\Tests\Lib\Arrays;
+
 use fab2s\NodalFlow\NodalFlowException;
+use fab2s\Tests\Lib\TestBase;
 use fab2s\YaEtl\Transformers\Arrays\ArrayReplaceRecursiveTransformer;
 
-class ArrayReplaceRecursiveTransformerTest extends \TestBase
+class ArrayReplaceRecursiveTransformerTest extends TestBase
 {
     public function arrayReplaceRecursiveProvider()
     {

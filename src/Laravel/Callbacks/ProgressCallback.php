@@ -38,9 +38,9 @@ class ProgressCallback extends CallbackAbstract
     /**
      * The number of records
      *
-     * @var int|null
+     * @var int
      */
-    protected $numRecords;
+    protected $numRecords = 0;
 
     /**
      * Progress modulo, should align with YaEtl's one
@@ -72,7 +72,7 @@ class ProgressCallback extends CallbackAbstract
      */
     public function setNumRecords(int $numRecords): self
     {
-        $this->numRecords = $numRecords;
+        $this->numRecords = max(0, $numRecords);
 
         return $this;
     }

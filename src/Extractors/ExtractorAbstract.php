@@ -100,7 +100,7 @@ abstract class ExtractorAbstract extends NodeAbstract implements ExtractorInterf
     }
 
     /**
-     * @return $this
+     * @return static
      */
     public function bootNumExtracts(): self
     {

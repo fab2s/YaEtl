@@ -72,8 +72,10 @@ trait PdoExtractorTrait
      * @param \PDO $pdo
      *
      * @throws YaEtlException
+     *
+     * @return static
      */
-    public function configurePdo(\PDO $pdo)
+    public function configurePdo(\PDO $pdo): self
     {
         $this->pdo          = $pdo;
         $this->dbDriverName = $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
@@ -92,6 +94,8 @@ trait PdoExtractorTrait
                 $this->pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
             }
         }
+
+        return $this;
     }
 
     /**

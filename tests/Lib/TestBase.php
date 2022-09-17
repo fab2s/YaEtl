@@ -7,6 +7,8 @@
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
  */
 
+namespace fab2s\Tests\Lib;
+
 use fab2s\NodalFlow\Nodes\ExecNodeInterface;
 use fab2s\NodalFlow\Nodes\NodeInterface;
 use fab2s\YaEtl\Loaders\LoaderInterface;
@@ -62,20 +64,23 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
         if (static::$pdo === null) {
             static::$pdo = new \PDO('sqlite::memory:');
 
-            static::$pdo->query('CREATE TABLE ' . self::FROM_TABLE . '(
+            static::$pdo->query(
+                'CREATE TABLE ' . self::FROM_TABLE . '(
                     id INTEGER PRIMARY KEY,
                     join_id DEFAULT NULL
                 );'
             );
 
-            static::$pdo->query('CREATE TABLE ' . self::JOIN_TABLE . '(
+            static::$pdo->query(
+                'CREATE TABLE ' . self::JOIN_TABLE . '(
                     id INTEGER,
                     join_id INTEGER PRIMARY KEY,
                     FOREIGN KEY (id) REFERENCES ' . self::FROM_TABLE . ' (id)
                 );'
             );
 
-            static::$pdo->query('CREATE TABLE ' . self::TO_TABLE . '(
+            static::$pdo->query(
+                'CREATE TABLE ' . self::TO_TABLE . '(
                     id INTEGER,
                     join_id INTEGER
                 );'
@@ -96,7 +101,7 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
      */
     public function getLoaderMock()
     {
-        $stub = $this->getMockBuilder('TestLoader')
+        $stub = $this->getMockBuilder(TestLoader::class)
                 ->setMethods(['exec'])
                 ->getMock();
 
