@@ -7,6 +7,8 @@
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
  */
 
+namespace fab2s\Tests\Lib;
+
 use fab2s\NodalFlow\Flows\FlowInterface;
 use fab2s\NodalFlow\Flows\InterrupterInterface;
 use fab2s\NodalFlow\Interrupter;
@@ -15,12 +17,21 @@ use fab2s\YaEtl\Extractors\CallableExtractor;
 use fab2s\YaEtl\Qualifiers\CallableQualifier;
 use fab2s\YaEtl\Transformers\NoOpTransformer;
 use fab2s\YaEtl\YaEtl;
+use fab2s\YaEtl\YaEtlException;
 
 /**
  * Class QualifierTest
  */
 class QualifierTest extends TestBase
 {
+    public function testQualifierException()
+    {
+        $this->expectException(YaEtlException::class);
+        (new CallableQualifier(function () {
+            return 'NotATrue';
+        }))->exec();
+    }
+
     /**
      * @dataProvider interruptProvider
      *

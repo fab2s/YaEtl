@@ -1,48 +1,48 @@
-name: YaEtl Test Suite
-on: [push, pull_request]
+name: CI
+on: [pull_request]
 jobs:
   tests:
-    name: YaEtl (PHP ${{ matrix.php-versions }})
+    name: YaEtl CI (PHP ${{ matrix.php-versions }} / console ${{ matrix.console-versions }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
-        console-versions: ['3.4.*', '4.0.*', '4.1.*', '4.2.*', '4.3.*', '4.4.*', '5.0.*', '5.1.*', '5.2.*', '5.3.*', '5.4.*', '6.0.*', '6.1.*']
+        php-versions: [ '8.1', '8.0', '7.4', '7.3', '7.2' ]
+        console-versions: ['6.1', '6.0', '5.4', '5.3', '5.2', '5.1', '5.0', '4.4', '4.3', '4.2', '4.1', '4.0', '3.4']
         exclude:
-          - php-versions: 7.2
-            console-versions: 6.0.*
-          - php-versions: 7.2
-            console-versions: 6.1.*
-          - php-versions: 7.3
-            console-versions: 6.0.*
-          - php-versions: 7.3
-            console-versions: 6.1.*
+          - php-versions: 8.1
+            console-versions: 4.3
+          - php-versions: 8.1
+            console-versions: 4.2
+          - php-versions: 8.1
+            console-versions: 4.1
+          - php-versions: 8.1
+            console-versions: 4.0
+          - php-versions: 8.1
+            console-versions: 3.4
+          - php-versions: 8.0
+            console-versions: 6.1
+          - php-versions: 8.0
+            console-versions: 4.3
+          - php-versions: 8.0
+            console-versions: 4.2
+          - php-versions: 8.0
+            console-versions: 4.1
+          - php-versions: 8.0
+            console-versions: 4.0
+          - php-versions: 8.0
+            console-versions: 3.4
           - php-versions: 7.4
-            console-versions: 6.0.*
+            console-versions: 6.1
           - php-versions: 7.4
-            console-versions: 6.1.*
-          - php-versions: 8.0
-            console-versions: 3.4.*
-          - php-versions: 8.0
-            console-versions: 4.0.*
-          - php-versions: 8.0
-            console-versions: 4.1.*
-          - php-versions: 8.0
-            console-versions: 4.2.*
-          - php-versions: 8.0
-            console-versions: 4.3.*
-          - php-versions: 8.0
-            console-versions: 6.1.*
-          - php-versions: 8.1
-            console-versions: 3.4.*
-          - php-versions: 8.1
-            console-versions: 4.0.*
-          - php-versions: 8.1
-            console-versions: 4.1.*
-          - php-versions: 8.1
-            console-versions: 4.2.*
-          - php-versions: 8.1
-            console-versions: 4.3.*
+            console-versions: 6.0
+          - php-versions: 7.3
+            console-versions: 6.1
+          - php-versions: 7.3
+            console-versions: 6.0
+          - php-versions: 7.2
+            console-versions: 6.1
+          - php-versions: 7.2
+            console-versions: 6.0
 
     steps:
       - name: Checkout
@@ -56,7 +56,7 @@ jobs:
 
       - name: Get composer cache directory
         id: composer-cache
-        run: echo "::set-output name=dir::${{ matrix.php-versions }}"
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: Cache composer dependencies
         uses: actions/cache@v3
@@ -68,11 +68,39 @@ jobs:
       - name: Remove composer.lock
         run: rm -f composer.lock
 
+      - name: Detect Orchestra compatibility with console ${{ matrix.console-versions }}
+        id: orchestra-compat
+        run: |
+          if [[ " 3.4 4.0 4.1 4.2 " =~ " ${{ matrix.console-versions }} " ]]; then
+            echo '::set-output name=compat::0'
+            exit 0
+          fi
+          if [[ " 8.0 8.1 " =~ " ${{ matrix.php-versions }} " ]]; then
+            if [[ " 4.4 " =~ " ${{ matrix.console-versions }} " ]]; then
+              echo '::set-output name=compat::0'
+              exit 0
+            fi
+          fi
+          echo '::set-output name=compat::1'
+        shell: bash
+
+      - name: Remove Orchestra if incompatible with console ${{ matrix.console-versions }}
+        run: composer remove "orchestra/testbench" --dev --no-update
+        if: ${{ steps.orchestra-compat.outputs.compat == 0 }}
+
+      - name: Remove php-cs-fixer dependency
+        run: composer remove "friendsofphp/php-cs-fixer" --dev --no-update
+
       - name: Install Symfony console ${{ matrix.console-versions }}
-        run: composer require "symfony/console:${{ matrix.console-versions }}" --dev --no-update
+        run: composer require "symfony/console:^${{ matrix.console-versions }}" --dev --no-update
 
       - name: Install Composer dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
-      - name: Test with phpunit
-        run: vendor/bin/phpunit
+      - name: Lib test with phpunit
+        run: vendor/bin/phpunit --testsuite Lib
+
+      - name: Laravel test with phpunit
+        run: vendor/bin/phpunit --testsuite Laravel
+        if: ${{ steps.orchestra-compat.outputs.compat == 1 }}
+

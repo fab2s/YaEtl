@@ -26,7 +26,7 @@ class UniqueKeyExtractor extends PdoUniqueKeyExtractor implements PaginatedQuery
     /**
      * Generic extraction from tables with unique (composite) key
      *
-     * @param Builder      $extractQuery
+     * @param ?Builder     $extractQuery
      * @param array|string $uniqueKey    can be either a unique key name as
      *                                   string ('id' by default, will be ordered asc) or an associative array :
      *                                   [

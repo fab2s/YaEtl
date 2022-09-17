@@ -7,6 +7,8 @@
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
  */
 
+namespace fab2s\Tests\Lib;
+
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Extractors\PdoExtractor;
 use fab2s\YaEtl\Extractors\PdoUniqueKeyExtractor;

@@ -9,10 +9,10 @@
 
 namespace fab2s\YaEtl\Laravel\Loaders;
 
-use DB;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Loaders\LoaderAbstract;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class DbLoader
@@ -40,7 +40,7 @@ class DbLoader extends LoaderAbstract
      *
      * @throws NodalFlowException
      */
-    public function __construct(Builder $loadQuery = null)
+    public function __construct(?Builder $loadQuery = null)
     {
         if ($loadQuery !== null) {
             $this->setLoadQuery($loadQuery);

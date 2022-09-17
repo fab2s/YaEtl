@@ -7,11 +7,15 @@
  * find in the LICENSE file or at https://opensource.org/licenses/MIT
  */
 
+namespace fab2s\Tests\Lib;
+
+use Closure;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Events\ProgressBarSubscriber;
 use fab2s\YaEtl\Extractors\CallableExtractor;
 use fab2s\YaEtl\Transformers\NoOpTransformer;
 use fab2s\YaEtl\YaEtl;
+use ReflectionException;
 use Symfony\Component\Console\Output\StreamOutput;
 
 /**
