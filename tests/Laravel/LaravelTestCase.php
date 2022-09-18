@@ -18,12 +18,17 @@ abstract class LaravelTestCase extends TestCase
     /**
      * @var int
      */
-    protected $seedNum = 50;
+    protected $seedNum = 3;
 
     /**
      * @var array
      */
     protected $testModelSeedData = [];
+
+    /**
+     * @var array
+     */
+    protected $testModelJoinSeedData = [];
 
     /**
      * Setup the test environment.
@@ -58,7 +63,18 @@ abstract class LaravelTestCase extends TestCase
         Schema::create(TestModel::TABLE, function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->timestamps();
+        });
+
+        return $this;
+    }
+
+    protected function createTestJoinModelTable()
+    {
+        Schema::dropIfExists(TestJoinModel::TABLE);
+        Schema::create(TestJoinModel::TABLE, function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('model_id')->unique();
+            $table->string('join');
         });
 
         return $this;
@@ -66,9 +82,14 @@ abstract class LaravelTestCase extends TestCase
 
     protected function seedTestModelTable()
     {
-        TestModel::insert(
-            $this->getTestModelSeedData()
-        );
+        TestModel::insert($this->getTestModelSeedData());
+
+        return $this;
+    }
+
+    protected function seedTestJoinModelTable(bool $every = true)
+    {
+        TestJoinModel::insert($this->getTestJoinModelSeedData($every));
 
         return $this;
     }
@@ -89,6 +110,29 @@ abstract class LaravelTestCase extends TestCase
         return $this->testModelSeedData[$this->seedNum] = $result;
     }
 
+    protected function getTestJoinModelSeedData(bool $every = true): array
+    {
+        if (isset($this->testModelJoinSeedData[$this->seedNum][$every])) {
+            return $this->testModelJoinSeedData[$this->seedNum][$every];
+        }
+
+        $result  = [];
+        $counter = 0;
+        foreach ($this->getTestModelSeedData() as $testModel) {
+            ++$counter;
+            if (!$every && $counter % 2) {
+                continue;
+            }
+
+            $result[] = [
+                'model_id' => $counter,
+                'join'     => "join_$counter",
+            ];
+        }
+
+        return $this->testModelJoinSeedData[$this->seedNum][$every] = $result;
+    }
+
     protected function getExpectedTestModelData(): array
     {
         $counter = 0;
@@ -98,11 +142,31 @@ abstract class LaravelTestCase extends TestCase
                 return [
                     'id'         => ++$counter,
                     'name'       => $value['name'],
-                    'created_at' => null,
-                    'updated_at' => null,
                 ];
             },
             $this->getTestModelSeedData()
         );
+    }
+
+    protected function getExpectedTestJoinModelData(bool $every = true): array
+    {
+        $counter = 0;
+        $modelId = 0;
+        $result  = [];
+        foreach ($this->getTestJoinModelSeedData() as $testModel) {
+            ++$modelId;
+            if (!$every && $modelId % 2) {
+                continue;
+            }
+
+            ++$counter;
+            $result[] = [
+                'id'       => $counter,
+                'model_id' => $modelId,
+                'join'     => "join_$modelId",
+            ];
+        }
+
+        return $result;
     }
 }

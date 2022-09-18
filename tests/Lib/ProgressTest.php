@@ -13,6 +13,7 @@ use Closure;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Events\ProgressBarSubscriber;
 use fab2s\YaEtl\Extractors\CallableExtractor;
+use fab2s\YaEtl\Qualifiers\LimitQualifier;
 use fab2s\YaEtl\Transformers\NoOpTransformer;
 use fab2s\YaEtl\YaEtl;
 use ReflectionException;
@@ -60,6 +61,21 @@ class ProgressTest extends TestBase
     public function progressProvider(): array
     {
         return [
+            [
+                'flow'     => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(10)))
+                    ->qualify(new LimitQualifier(5))
+                    ->transform(new NoOpTransformer),
+                'num_records'  => 15,
+                'progress_mod' => 10,
+                'expected'     => [
+                    'num_progress' => 1,
+                    'contains'     => [
+                        '[YaEtl] Start',
+                        '[YaEtl] Dirty Success',
+                        '[YaEtl](dirty) 1 Extractor - 1 Extract - 6 Record (6 Iterations)',
+                    ],
+                ],
+            ],
             [
                 'flow'     => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(100)))
                     ->transform(new NoOpTransformer),

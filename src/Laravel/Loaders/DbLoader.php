@@ -92,14 +92,14 @@ class DbLoader extends LoaderAbstract
     {
         // clone query object in order to prevent where clause stacking
         $loadQuery   = clone $this->loadQuery;
-        $whereClause = \array_intersect_key($param, \array_flip($this->whereFields));
+        $whereClause = \array_intersect_key($param, \array_flip((array) $this->whereFields));
 
         // let's be atomic while we're at it (and where applicable ...)
         // btw, multi insert are not necessarily that faster in real world
         // situation where there is a lot of updates and you need ot keep
         // atomicity using transactions
         DB::transaction(function () use ($loadQuery, $whereClause, $param) {
-            if ($loadQuery->where($whereClause)->sharedLock()->exists()) {
+            if (!empty($whereClause) && $loadQuery->where($whereClause)->sharedLock()->exists()) {
                 $update = \array_diff_key($param, $whereClause);
                 $loadQuery->update($update);
             } else {

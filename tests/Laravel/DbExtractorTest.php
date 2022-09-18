@@ -26,7 +26,7 @@ class DbExtractorTest extends LaravelTestCase
     public function testDbExtractorExceptionType()
     {
         $this->expectException(YaEtlException::class);
-        (new DbExtractor())->setExtractQuery(TestModel::query());
+        (new DbExtractor)->setExtractQuery(TestModel::query());
     }
 
     protected function getTestQuery()

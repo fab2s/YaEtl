@@ -114,8 +114,9 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
         }
 
         $this->joinedRecords = [];
+        $joinKey             = $this->onClose->getJoinKeyAlias();
         while ($record = $statement->fetch(\PDO::FETCH_ASSOC)) {
-            $this->joinedRecords[$record[$this->uniqueKeyName]] = $record;
+            $this->joinedRecords[$record[$joinKey]] = $record;
         }
 
         $statement->closeCursor();
