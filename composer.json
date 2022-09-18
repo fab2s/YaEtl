@@ -32,7 +32,7 @@
     ],
     "require": {
         "php": "^7.2|^8.0",
-        "fab2s/nodalflow": "dev-add_tests",
+        "fab2s/nodalflow": "^2.0.4",
         "fab2s/opinhelpers": "^1.0"
     },
     "require-dev": {
