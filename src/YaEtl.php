@@ -318,30 +318,26 @@ class YaEtl extends NodalFlow
             throw new YaEtlException('Cannot aggregate with orphaned Node:' . \get_class($aggregateWith));
         }
 
-        /** @var TraversableNodeInterface $aggregateWithNode */
-        $aggregateWithNode = $this->nodes[$aggregateWithIdx];
-        if ($aggregateWithNode instanceof AggregateNodeInterface) {
+        /* @var TraversableNodeInterface $aggregateWithNode */
+        if (isset($this->reverseAggregateTable[$aggregateWithNodeId])) {
+            /** @var AggregateNodeInterface $aggregateWithNode */
+            $aggregateWithNode = $this->reverseAggregateTable[$aggregateWithNodeId];
             $aggregateWithNode->addTraversable($extractor);
-            $this->reverseAggregateTable[$extractor->getId()] = $aggregateWithIdx;
 
             return $this;
         }
 
         $aggregateNode = new AggregateExtractor(true);
         // keep track of this extractor before we bury it in the aggregate
-        $this->reverseAggregateTable[$aggregateWithNode->getId()] = $aggregateWithIdx;
+        $this->reverseAggregateTable[$aggregateWith->getId()] = $aggregateNode;
         // now replace its slot in the main tree
         $this->replace($aggregateWithIdx, $aggregateNode);
-        $aggregateNode->addTraversable($aggregateWithNode)
+        $aggregateNode->addTraversable($aggregateWith)
             ->addTraversable($extractor);
 
         // adjust counters as we did remove the $aggregateWith Extractor from this flow
         $reg = &$this->registry->get($this->getId());
         --$reg['flowStats']['num_extractor'];
-
-        // aggregate node did take care of setting carrier
-        $this->reverseAggregateTable[$aggregateNode->getId()] = $aggregateWithIdx;
-        $this->reverseAggregateTable[$extractor->getId()]     = $aggregateWithIdx;
 
         return $this;
     }

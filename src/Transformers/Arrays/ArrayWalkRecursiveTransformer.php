@@ -11,7 +11,6 @@ namespace fab2s\YaEtl\Transformers\Arrays;
 
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Transformers\TransformerAbstract;
-use fab2s\YaEtl\YaEtlException;
 
 /**
  * Class ArrayWalkRecursiveTransformer
@@ -49,17 +48,11 @@ class ArrayWalkRecursiveTransformer extends TransformerAbstract
      *
      * @param array $record
      *
-     * @throws YaEtlException
-     *
      * @return array
      */
     public function exec($record = null)
     {
-        if (!\array_walk_recursive($record, $this->callable, $this->userData)) {
-            throw new YaEtlException('array_walk_recursive call failed', 1, null, [
-                'record' => $record,
-            ]);
-        }
+        \array_walk_recursive($record, $this->callable, $this->userData);
 
         return $record;
     }

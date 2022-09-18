@@ -11,10 +11,23 @@ namespace fab2s\Tests\Laravel;
 
 use fab2s\YaEtl\Extractors\ExtractorAbstract;
 use fab2s\YaEtl\Laravel\Extractors\ModelQueryExtractor;
+use fab2s\YaEtl\YaEtlException;
 
 class ModelExtractorTest extends LaravelTestCase
 {
     use ExtractionTestTrait;
+
+    public function testModelExtractorException()
+    {
+        $this->expectException(YaEtlException::class);
+        (new ModelQueryExtractor)->setExtractQuery(null);
+    }
+
+    public function testModelExtractorExceptionType()
+    {
+        $this->expectException(YaEtlException::class);
+        (new ModelQueryExtractor)->setExtractQuery(TestModel::getQuery());
+    }
 
     protected function getTestQuery()
     {

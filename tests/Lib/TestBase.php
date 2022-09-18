@@ -9,6 +9,7 @@
 
 namespace fab2s\Tests\Lib;
 
+use Closure;
 use fab2s\NodalFlow\Nodes\ExecNodeInterface;
 use fab2s\NodalFlow\Nodes\NodeInterface;
 use fab2s\YaEtl\Loaders\LoaderInterface;
@@ -187,5 +188,23 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
     protected function getTableAll(string $table): array
     {
         return $this->getPdo()->query("SELECT * FROM $table ORDER BY id ASC")->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param int $count
+     * @param int $start
+     *
+     * @return Closure
+     */
+    protected function getTraversableClosure(int $count, int $start = 1): Closure
+    {
+        $start = max(1, $start);
+        $count = $start === 1 ? $count : $count + $start - 1;
+
+        return function () use ($count, $start) {
+            for ($i = $start; $i <= $count; ++$i) {
+                yield $i;
+            }
+        };
     }
 }
