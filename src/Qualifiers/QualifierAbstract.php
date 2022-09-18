@@ -77,6 +77,6 @@ abstract class QualifierAbstract extends NodeAbstract implements QualifierInterf
             return;
         }
 
-        throw new YaEtlException('Qualifier returned wrong type, only Boolean and InterrupterInterface are allowed');
+        throw new YaEtlException('Qualifier returned wrong type, only Boolean, nullish and InterrupterInterface are allowed');
     }
 }

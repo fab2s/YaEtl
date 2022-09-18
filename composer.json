@@ -32,7 +32,7 @@
     ],
     "require": {
         "php": "^7.2|^8.0",
-        "fab2s/nodalflow": "^2.0",
+        "fab2s/nodalflow": "dev-add_tests",
         "fab2s/opinhelpers": "^1.0"
     },
     "require-dev": {
@@ -72,6 +72,7 @@
         ],
         "post-install-cmd": [
             "rm -f .*.cache"
-        ]
+        ],
+        "fix": "php-cs-fixer fix --config=./.php-cs-fixer.dist.php -vvv"
     }
 }

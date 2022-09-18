@@ -12,7 +12,6 @@ namespace fab2s\Tests\Lib;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Extractors\CallableExtractor;
 use fab2s\YaEtl\Extractors\File\CsvExtractor;
-use fab2s\YaEtl\Extractors\File\FileExtractorAbstract;
 use fab2s\YaEtl\Extractors\File\LineExtractor;
 use fab2s\YaEtl\Loaders\File\CsvLoader;
 use fab2s\YaEtl\Transformers\CallableTransformer;
@@ -95,6 +94,13 @@ class FileTest extends TestBase
      */
     public function testCsvLoader($srcPath, $useHeader, array $expected)
     {
+        if (empty($expected['values'])) {
+            // nothing to load in that case
+            $this->assertTrue(true);
+
+            return;
+        }
+
         $srcPath   = $this->getTmpFile();
         $sep       = $expected['sep'] ?: ',';
         $csvLoader = new CsvLoader($srcPath, $sep);
@@ -143,7 +149,37 @@ class FileTest extends TestBase
                 ],
             ],
             [
+                'src'       => __DIR__ . '/data/empty',
+                'useHeader' => false,
+                'expected'  => [
+                    'values'   => null,
+                    'header'   => null,
+                    'encoding' => null,
+                    'sep'      => null,
+                ],
+            ],
+            [
+                'src'       => __DIR__ . '/data/empty_bom_utf8',
+                'useHeader' => false,
+                'expected'  => [
+                    'values'   => null,
+                    'header'   => null,
+                    'encoding' => 'UTF-8',
+                    'sep'      => null,
+                ],
+            ],
+            [
                 'src'       => __DIR__ . '/data/data.csv',
+                'useHeader' => false,
+                'expected'  => [
+                    'values'   => $this->expectedCsv,
+                    'header'   => null,
+                    'encoding' => null,
+                    'sep'      => null,
+                ],
+            ],
+            [
+                'src'       => __DIR__ . '/data/data_one_empty.csv',
                 'useHeader' => false,
                 'expected'  => [
                     'values'   => $this->expectedCsv,
@@ -189,7 +225,28 @@ class FileTest extends TestBase
                 ],
             ],
             [
+                'src'      => __DIR__ . '/data/empty',
+                'expected' => [
+                    'values'   => null,
+                    'encoding' => null,
+                ],
+            ],
+            [
+                'src'      => __DIR__ . '/data/empty_bom_utf8',
+                'expected' => [
+                    'values'   => null,
+                    'encoding' => 'UTF-8',
+                ],
+            ],
+            [
                 'src'      => __DIR__ . '/data/lines',
+                'expected' => [
+                    'values'   => range(1, 10),
+                    'encoding' => null,
+                ],
+            ],
+            [
+                'src'      => __DIR__ . '/data/lines_one_empty',
                 'expected' => [
                     'values'   => range(1, 10),
                     'encoding' => null,
@@ -206,16 +263,15 @@ class FileTest extends TestBase
     }
 
     /**
-     * @param FileExtractorAbstract $csvExtractor
-     * @param                       $useHeader
-     * @param array                 $expected
+     * @param CsvExtractor $csvExtractor
+     * @param              $useHeader
+     * @param array        $expected
      *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    protected function csvExtractorAssertions(FileExtractorAbstract $csvExtractor, $useHeader, array $expected)
+    protected function csvExtractorAssertions(CsvExtractor $csvExtractor, $useHeader, array $expected)
     {
-        /* @var  CsvExtractor $csvExtractor */
         $csvExtractor->setUseHeader($useHeader);
 
         (new YaEtl)->from($csvExtractor)

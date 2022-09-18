@@ -69,13 +69,17 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
      */
     protected function getNextNonEmptyLine(): ?string
     {
-        while (false !== ($line = fgets($this->handle))) {
+        do {
+            if (false === ($line = fgets($this->handle))) {
+                return null;
+            }
+
             if ('' === ($line = trim($line))) {
                 continue;
             }
 
             return $line;
-        }
+        } while (!feof($this->handle));
 
         return null;
     }
@@ -89,8 +93,14 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
             if (false === ($char = fread($this->handle, 1))) {
                 return null;
             }
-        } while (trim($char) === '');
 
-        return $char ?? null;
+            if ('' === ($char = trim($char))) {
+                continue;
+            }
+
+            return $char;
+        } while (!feof($this->handle));
+
+        return null;
     }
 }

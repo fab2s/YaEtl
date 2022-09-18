@@ -147,18 +147,4 @@ class ProgressTest extends TestBase
             return $record;
         };
     }
-
-    /**
-     * @param int $limit
-     *
-     * @return Closure
-     */
-    protected function getTraversableClosure(int $limit = 10): Closure
-    {
-        return function () use ($limit) {
-            for ($i = 1; $i <= $limit; ++$i) {
-                yield $i;
-            }
-        };
-    }
 }

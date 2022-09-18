@@ -9,6 +9,7 @@
 
 namespace fab2s\Tests\Lib;
 
+use Closure;
 use fab2s\NodalFlow\Flows\FlowInterface;
 use fab2s\NodalFlow\Flows\InterrupterInterface;
 use fab2s\NodalFlow\Interrupter;
@@ -1292,7 +1293,7 @@ class QualifierTest extends TestBase
     /**
      * @return Closure
      */
-    protected function getNoOpClosure(): \Closure
+    protected function getNoOpClosure(): Closure
     {
         return function ($record) {
             return $record;
@@ -1302,13 +1303,9 @@ class QualifierTest extends TestBase
     /**
      * @return Closure
      */
-    protected function getTraversable10Closure(): \Closure
+    protected function getTraversable10Closure(): Closure
     {
-        return function () {
-            for ($i = 1; $i <= 10; ++$i) {
-                yield $i;
-            }
-        };
+        return $this->getTraversableClosure(10);
     }
 
     /**
@@ -1316,7 +1313,7 @@ class QualifierTest extends TestBase
      *
      * @return Closure
      */
-    protected function getBreakAt5Closure($return = null): \Closure
+    protected function getBreakAt5Closure($return = null): Closure
     {
         return function () use ($return) {
             static $cnt = 1;
@@ -1341,7 +1338,7 @@ class QualifierTest extends TestBase
      *
      * @return Closure
      */
-    protected function getContinueAt5Closure($return = null): \Closure
+    protected function getContinueAt5Closure($return = null): Closure
     {
         return function () use ($return) {
             static $cnt = 1;
