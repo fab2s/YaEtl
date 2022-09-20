@@ -74,5 +74,8 @@
             "rm -f .*.cache"
         ],
         "fix": "php-cs-fixer fix --config=./.php-cs-fixer.dist.php -vvv"
+    },
+    "scripts": {
+        "fix": "php-cs-fixer fix --config=./.php-cs-fixer.dist.php -vvv"
     }
 }

@@ -17,9 +17,7 @@ use fab2s\YaEtl\YaEtlException;
  */
 class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
 {
-    use PdoExtractorTrait {
-        fetchRecords as pdoFetchRecords;
-    }
+    use PdoExtractorTrait;
 
     /**
      * Generic extraction from tables with unique (composite) key
@@ -66,20 +64,6 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
             // set driver state back to where we met
             $this->pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
         }
-    }
-
-    /**
-     * Fetch records
-     *
-     * @return bool
-     */
-    public function fetchRecords(): bool
-    {
-        if (!$this->pdoFetchRecords()) {
-            return false;
-        }
-
-        return true;
     }
 
     /**

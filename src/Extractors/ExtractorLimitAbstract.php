@@ -46,16 +46,6 @@ abstract class ExtractorLimitAbstract extends ExtractorAbstract implements Extra
     }
 
     /**
-     * Get number of records (at the end of the Flow's execution)
-     *
-     * @return int
-     */
-    public function getNumRecords(): int
-    {
-        return $this->numRecords;
-    }
-
-    /**
      * Tells if limit is reached already
      *
      * @return bool true if limit is reached
