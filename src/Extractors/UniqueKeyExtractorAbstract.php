@@ -179,10 +179,6 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
             throw new YaEtlException('The extractor joined against is not compatible, expected implementation of: ' . self::class . "\ngot: " . \get_class($joinFrom));
         }
 
-        /*if (preg_match('`^.+?order\s+by.*?$`is', $this->extractQuery)) {
-            throw new YaEtlException("A Joiner must not order its query got: $this->extractQuery");
-        }*/
-
         // since we are joining, we are not a traversable anymore
         $this->isATraversable = false;
         // and we return a value

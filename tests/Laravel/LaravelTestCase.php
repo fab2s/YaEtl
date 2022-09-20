@@ -18,7 +18,7 @@ abstract class LaravelTestCase extends TestCase
     /**
      * @var int
      */
-    protected $seedNum = 3;
+    protected $seedNum = 15;
 
     /**
      * @var array

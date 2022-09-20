@@ -18,7 +18,7 @@ trait ExtractionTestTrait
     public function testExtraction()
     {
         $loader = new ArrayLoader;
-        (new YaEtl)->from($this->getExtractor())
+        (new YaEtl)->from($this->getExtractor()->setBatchSize(5))
             ->to($loader)
             ->exec();
         // we must assertEquals as Laravel will output string type for int up to some version

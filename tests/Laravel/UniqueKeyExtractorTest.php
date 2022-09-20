@@ -53,11 +53,13 @@ class UniqueKeyExtractorTest extends LaravelTestCase
         $arrayLoader   = new ArrayLoader;
         $fromExtractor = new UniqueKeyExtractor($this->getTestQuery(), 'id');
         $joinExtractor = new UniqueKeyExtractor(TestJoinModel::getQuery(), 'id');
-        (new YaEtl)
+        $yaEtl         = new YaEtl;
+        $yaEtl
             ->from($fromExtractor)
             ->join($joinExtractor, $fromExtractor, $joinOnClause)
             ->to($arrayLoader)
             ->exec();
+
         $this->assertEquals($this->getExpectedJoinedData($every), $arrayLoader->getLoadedData());
     }
 
