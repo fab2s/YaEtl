@@ -75,8 +75,8 @@ class CsvExtractor extends FileExtractorAbstract
             return null;
         }
 
-        if ($this->useHeader && !isset($this->header)) {
-            $this->header = array_map('trim', $firstRecord);
+        if ($this->useHeader) {
+            $this->header = $this->header ?? array_map('trim', $firstRecord);
 
             return $this->getNextNonEmptyRecord();
         }
