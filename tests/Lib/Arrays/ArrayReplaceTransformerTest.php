@@ -19,16 +19,16 @@ class ArrayReplaceTransformerTest extends TestBase
     {
         return [
           [
-              'default' => [
+              'default'  => [
                   'one' => 'onedefault',
                   42    => 1337,
               ],
               'override' => [
                   '?' => 'no',
               ],
-              'cases' => [
+              'cases'    => [
                   [
-                      'input' => [
+                      'input'    => [
                           '?'  => 'yes',
                           'oh' => 'my',
                       ],
@@ -40,7 +40,7 @@ class ArrayReplaceTransformerTest extends TestBase
                       ],
                   ],
                   [
-                      'input' => [
+                      'input'    => [
                           '?'  => ['a', 'b', 'c'],
                           42   => null,
                       ],

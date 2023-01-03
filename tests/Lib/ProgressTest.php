@@ -62,7 +62,7 @@ class ProgressTest extends TestBase
     {
         return [
             [
-                'flow'     => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(10)))
+                'flow'         => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(10)))
                     ->qualify(new LimitQualifier(5))
                     ->transform(new NoOpTransformer),
                 'num_records'  => 15,
@@ -77,7 +77,7 @@ class ProgressTest extends TestBase
                 ],
             ],
             [
-                'flow'     => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(100)))
+                'flow'         => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(100)))
                     ->transform(new NoOpTransformer),
                 'num_records'  => 100,
                 'progress_mod' => 10,
@@ -91,7 +91,7 @@ class ProgressTest extends TestBase
                 ],
             ],
             [
-                'flow'     => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(100)))
+                'flow'         => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(100)))
                     ->transform(new NoOpTransformer),
                 'num_records'  => null,
                 'progress_mod' => 10,
@@ -105,7 +105,7 @@ class ProgressTest extends TestBase
                 ],
             ],
             [
-                'flow'     => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(100)))
+                'flow'         => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(100)))
                     ->transform(new NoOpTransformer),
                 'num_records'  => 1337,
                 'progress_mod' => 1024,
@@ -119,7 +119,7 @@ class ProgressTest extends TestBase
                 ],
             ],
             [
-                'flow'     => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(10)))
+                'flow'         => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(10)))
                     ->transform(new NoOpTransformer),
                 'num_records'  => 15,
                 'progress_mod' => 10,
