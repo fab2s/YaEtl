@@ -45,7 +45,7 @@ class LimitQualifierTest extends TestBase
         $expected = range(1, 5);
 
         return [
-            InterrupterInterface::TARGET_TOP => [
+            InterrupterInterface::TARGET_TOP  => [
                 $expected,
                 InterrupterInterface::TARGET_TOP,
             ],
@@ -86,7 +86,7 @@ class LimitQualifierTest extends TestBase
         $expected       = range(1, 10);
 
         return [
-            InterrupterInterface::TARGET_TOP => [
+            InterrupterInterface::TARGET_TOP  => [
                 $expectedBranch,
                 $expectedBranch,
                 InterrupterInterface::TARGET_TOP,

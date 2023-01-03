@@ -6,8 +6,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: [ '8.1', '8.0', '7.4', '7.3', '7.2' ]
-        console-versions: ['6.1', '6.0', '5.4', '5.3', '5.2', '5.1', '5.0', '4.4', '4.3', '4.2', '4.1', '4.0', '3.4']
+        php-versions: [ '8.2', '8.1', '8.0', '7.4', '7.3', '7.2' ]
+        console-versions: ['6.2', '6.0', '5.4', '5.3', '5.2', '5.1', '5.0', '4.4', '4.3', '4.2', '4.1', '4.0', '3.4']
         exclude:
           - php-versions: 8.1
             console-versions: 4.3
@@ -20,6 +20,8 @@ jobs:
           - php-versions: 8.1
             console-versions: 3.4
           - php-versions: 8.0
+            console-versions: 6.2
+          - php-versions: 8.0
             console-versions: 6.1
           - php-versions: 8.0
             console-versions: 4.3
@@ -32,13 +34,19 @@ jobs:
           - php-versions: 8.0
             console-versions: 3.4
           - php-versions: 7.4
+            console-versions: 6.2
+          - php-versions: 7.4
             console-versions: 6.1
           - php-versions: 7.4
             console-versions: 6.0
           - php-versions: 7.3
+            console-versions: 6.2
+          - php-versions: 7.3
             console-versions: 6.1
           - php-versions: 7.3
             console-versions: 6.0
+          - php-versions: 7.2
+            console-versions: 6.2
           - php-versions: 7.2
             console-versions: 6.1
           - php-versions: 7.2
@@ -75,8 +83,8 @@ jobs:
             echo '::set-output name=compat::0'
             exit 0
           fi
-          if [[ " 8.0 8.1 " =~ " ${{ matrix.php-versions }} " ]]; then
-            if [[ " 4.4 " =~ " ${{ matrix.console-versions }} " ]]; then
+          if [[ " 8.0 8.1 8.2 " =~ " ${{ matrix.php-versions }} " ]]; then
+            if [[ " 4.4 4.3 " =~ " ${{ matrix.console-versions }} " ]]; then
               echo '::set-output name=compat::0'
               exit 0
             fi

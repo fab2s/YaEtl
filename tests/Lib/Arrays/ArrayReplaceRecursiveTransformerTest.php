@@ -19,16 +19,16 @@ class ArrayReplaceRecursiveTransformerTest extends TestBase
     {
         return [
           [
-              'default' => [
+              'default'  => [
                   'one' => 'onedefault',
                   42    => [1, 3, 3, 7],
               ],
               'override' => [
                   '?' => ['no', 'maybe'],
               ],
-              'cases' => [
+              'cases'    => [
                   [
-                      'input' => [
+                      'input'    => [
                           '?'  => 'yes',
                           42   => [7, 3, 3, 1],
                       ],
@@ -39,7 +39,7 @@ class ArrayReplaceRecursiveTransformerTest extends TestBase
                       ],
                   ],
                   [
-                      'input' => [
+                      'input'    => [
                           '?'  => ['a', 'b', 'never'],
                           42   => null,
                       ],

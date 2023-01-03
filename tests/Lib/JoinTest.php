@@ -106,7 +106,7 @@ class JoinTest extends TestBase
                     ->from($fullFrom1)
                     ->join(new PdoUniqueKeyExtractor($this->getPdo(), $joinQuery, 'id'), $fullFrom1, $joinOnClause)
                     ->to($this->getLoaderMock()),
-                'isLeft' => false,
+                'isLeft'        => false,
             ],
             [
                 // test a left join : success means that the to table ends up
@@ -116,7 +116,7 @@ class JoinTest extends TestBase
                     ->from($fullFrom2)
                     ->join(new PdoUniqueKeyExtractor($this->getPdo(), $joinQuery, 'id'), $fullFrom2, $leftJoinOnClause)
                     ->to($this->getLoaderMock()),
-                'isLeft' => true,
+                'isLeft'        => true,
             ],
             [
                 // test left joined join = join
@@ -125,7 +125,7 @@ class JoinTest extends TestBase
                     ->join($joiner1, $fullFrom3, $joinOnClause)
                     ->join(new PdoUniqueKeyExtractor($this->getPdo(), $joinQuery, 'id'), $joiner1, $leftJoinOnClause)
                     ->to($this->getLoaderMock()),
-                'isLeft' => false,
+                'isLeft'        => false,
             ],
             [
                 // same as left join test with unbalanced batchSizes
@@ -133,7 +133,7 @@ class JoinTest extends TestBase
                     ->from($fullFrom4)
                     ->join($joiner2, $fullFrom4, $leftJoinOnClause)
                     ->to($this->getLoaderMock()),
-                'isLeft' => true,
+                'isLeft'        => true,
             ],
         ];
     }
