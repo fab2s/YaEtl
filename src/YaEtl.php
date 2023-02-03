@@ -22,6 +22,7 @@ use fab2s\NodalFlow\Nodes\TraversableNodeInterface;
 use fab2s\YaEtl\Events\YaEtlEvent;
 use fab2s\YaEtl\Extractors\AggregateExtractor;
 use fab2s\YaEtl\Extractors\ExtractorInterface;
+use fab2s\YaEtl\Extractors\ExtractorLimitInterface;
 use fab2s\YaEtl\Extractors\JoinableInterface;
 use fab2s\YaEtl\Extractors\OnClauseInterface;
 use fab2s\YaEtl\Loaders\LoaderInterface;
@@ -221,20 +222,6 @@ class YaEtl extends NodalFlow
     }
 
     /**
-     * Triggered right after the flow stops
-     *
-     * @return static
-     */
-    public function flowEnd(): NodalFlow
-    {
-        $this->flush();
-
-        parent::flowEnd();
-
-        return $this;
-    }
-
-    /**
      * KISS method to expose basic stats
      *
      * @return array<string,integer|string>
@@ -243,10 +230,10 @@ class YaEtl extends NodalFlow
     {
         $stats = parent::getstats();
 
-        $tpl = '[YaEtl]({FLOW_STATUS}) {NUM_EXTRACTOR_TOTAL} Extractor - {NUM_EXTRACT_TOTAL} Extract - {NUM_RECORDS_TOTAL} Record ({NUM_ITERATE_TOTAL} Iterations)
-[YaEtl] {NUM_JOINER_TOTAL} Joiner - {NUM_JOIN_TOTAL} Join - {NUM_CONTINUE_TOTAL} Continue - {NUM_BREAK_TOTAL} Break - {NUM_QUALIFIER_TOTAL} Qualifier - {NUM_QUALIFY_TOTAL} Qualify
-[YaEtl] {NUM_TRANSFORMER_TOTAL} Transformer - {NUM_TRANSFORM_TOTAL} Transform - {NUM_LOADER_TOTAL} Loader - {NUM_LOAD_TOTAL} Load
-[YaEtl] {NUM_BRANCH_TOTAL} Branch - {NUM_CONTINUE_TOTAL} Continue - {NUM_BREAK_TOTAL} Break - {NUM_FLUSH_TOTAL} Flush
+        $tpl = '[YaEtl]({FLOW_STATUS}) {NUM_EXTRACTOR_TOTAL} Extractor - {NUM_EXTRACT_TOTAL} Extract - {NUM_QUALIFIER_TOTAL} Qualifier - {NUM_QUALIFY_TOTAL} Qualify
+[YaEtl] {NUM_TRANSFORMER_TOTAL} Transformer - {NUM_TRANSFORM_TOTAL} Transform - {NUM_LOADER_TOTAL} Loader - {NUM_LOAD_TOTAL} Load - {NUM_FLUSH_TOTAL} Flush
+[YaEtl] {NUM_RECORDS_TOTAL} Record - {NUM_ITERATE_TOTAL} Iterations - {NUM_CONTINUE_TOTAL} Continue - {NUM_BREAK_TOTAL} Break
+[YaEtl] {NUM_BRANCH_TOTAL} Branch - {NUM_JOINER_TOTAL} Joiner - {NUM_JOIN_TOTAL} Join
 [YaEtl] Time : {DURATION} - Memory: {MIB} MiB';
 
         $vars = [];
@@ -281,6 +268,40 @@ class YaEtl extends NodalFlow
     public function isForceFlush(): bool
     {
         return !empty($this->forceFlush);
+    }
+
+    public function limit(?int $limit, bool $recursive = false): self
+    {
+        foreach ($this->nodes as $node) {
+            if ($node instanceof ExtractorLimitInterface) {
+                $node->setLimit($limit);
+                continue;
+            }
+
+            if ($recursive && $node instanceof BranchNodeInterface) {
+                $flow = $node->getPayload();
+                if (is_a($flow, static::class)) {
+                    /* @var static $flow */
+                    $flow->limit($limit, $recursive);
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Triggered right after the flow stops
+     *
+     * @return static
+     */
+    protected function flowEnd(): NodalFlow
+    {
+        $this->flush();
+
+        parent::flowEnd();
+
+        return $this;
     }
 
     /**

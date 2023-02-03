@@ -73,6 +73,6 @@
         "post-install-cmd": [
             "rm -f .*.cache"
         ],
-        "fix": "php-cs-fixer fix --config=./.php-cs-fixer.dist.php -vvv"
+        "fix": "@php php-cs-fixer fix --config=./.php-cs-fixer.dist.php -vvv"
     }
 }

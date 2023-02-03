@@ -72,7 +72,8 @@ class ProgressTest extends TestBase
                     'contains'     => [
                         '[YaEtl] Start',
                         '[YaEtl] Dirty Success',
-                        '[YaEtl](dirty) 1 Extractor - 1 Extract - 6 Record (6 Iterations)',
+                        '[YaEtl](dirty) 1 Extractor - 1 Extract - 1 Qualifier - 6 Qualify',
+                        '[YaEtl] 6 Record - 6 Iterations - 0 Continue - 2 Break',
                     ],
                 ],
             ],
@@ -86,7 +87,8 @@ class ProgressTest extends TestBase
                     'contains'     => [
                         '[YaEtl] Start',
                         '[YaEtl] Clean Success',
-                        '[YaEtl](clean) 1 Extractor - 1 Extract - 100 Record (100 Iterations)',
+                        '[YaEtl](clean) 1 Extractor - 1 Extract - 0 Qualifier - 0 Qualify',
+                        '[YaEtl] 100 Record - 100 Iterations - 0 Continue - 0 Break',
                     ],
                 ],
             ],
@@ -100,7 +102,8 @@ class ProgressTest extends TestBase
                     'contains'     => [
                         '[YaEtl] Start',
                         '[YaEtl] Clean Success',
-                        '[YaEtl](clean) 1 Extractor - 1 Extract - 100 Record (100 Iterations)',
+                        '[YaEtl](clean) 1 Extractor - 1 Extract - 0 Qualifier - 0 Qualify',
+                        '[YaEtl] 100 Record - 100 Iterations - 0 Continue - 0 Break',
                     ],
                 ],
             ],
@@ -114,7 +117,8 @@ class ProgressTest extends TestBase
                     'contains'     => [
                         '[YaEtl] Start',
                         '[YaEtl] Clean Success',
-                        '[YaEtl](clean) 1 Extractor - 1 Extract - 100 Record (100 Iterations)',
+                        '[YaEtl](clean) 1 Extractor - 1 Extract - 0 Qualifier - 0 Qualify',
+                        '[YaEtl] 100 Record - 100 Iterations - 0 Continue - 0 Break',
                     ],
                 ],
             ],
@@ -128,7 +132,9 @@ class ProgressTest extends TestBase
                     'contains'     => [
                         '[YaEtl] Start',
                         '[YaEtl] Clean Success',
-                        '[YaEtl](clean) 1 Extractor - 1 Extract - 10 Record (10 Iterations)',
+                        '[YaEtl](clean) 1 Extractor - 1 Extract - 0 Qualifier - 0 Qualify',
+                        '[YaEtl] 1 Transformer - 10 Transform - 0 Loader - 0 Load - 0 Flush',
+                        '[YaEtl] 10 Record - 10 Iterations - 0 Continue - 0 Break',
                     ],
                 ],
             ],
