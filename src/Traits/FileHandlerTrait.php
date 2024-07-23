@@ -40,17 +40,12 @@ trait FileHandlerTrait
         $this->releaseHandle();
     }
 
-    /**
-     * @return string|null
-     */
     public function getEncoding(): ?string
     {
         return $this->encoding;
     }
 
     /**
-     * @param string $encoding
-     *
      * @return static
      */
     public function setEncoding(string $encoding): self
@@ -61,8 +56,6 @@ trait FileHandlerTrait
     }
 
     /**
-     * @param bool $useBom
-     *
      * @return static
      */
     public function setUseBom(bool $useBom): self
@@ -72,11 +65,6 @@ trait FileHandlerTrait
         return $this;
     }
 
-    /**
-     * @param string $string
-     *
-     * @return string
-     */
     public function prependBom(string $string): string
     {
         if ($this->encoding && ($bom = Bom::getEncodingBom($this->encoding))) {
@@ -104,7 +92,6 @@ trait FileHandlerTrait
 
     /**
      * @param resource|string $input
-     * @param string          $mode
      *
      * @throws YaEtlException
      *

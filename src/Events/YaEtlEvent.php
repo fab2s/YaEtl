@@ -21,9 +21,6 @@ class YaEtlEvent extends FlowEvent
      */
     const FLOW_FLUSH = 'flow.flush';
 
-    /**
-     * @return array
-     */
     public static function getEventList(): array
     {
         if (!isset(static::$eventList)) {

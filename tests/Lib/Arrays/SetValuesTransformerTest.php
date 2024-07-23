@@ -18,13 +18,9 @@ class SetValuesTransformerTest extends TestBase
     /**
      * @dataProvider setValuesProvider
      *
-     * @param array $setup
-     * @param array $data
-     * @param array $expected
-     *
      * @throws NodalFlowException
      */
-    public function testSetValuesTransformer(array $setup, array $data, array $expected)
+    public function test_set_values_transformer(array $setup, array $data, array $expected)
     {
         $transformer = new SetValuesTransformer($setup);
 

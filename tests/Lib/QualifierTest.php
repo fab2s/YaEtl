@@ -25,7 +25,7 @@ use fab2s\YaEtl\YaEtlException;
  */
 class QualifierTest extends TestBase
 {
-    public function testQualifierException()
+    public function test_qualifier_exception()
     {
         $this->expectException(YaEtlException::class);
         (new CallableQualifier(function () {
@@ -35,11 +35,8 @@ class QualifierTest extends TestBase
 
     /**
      * @dataProvider interruptProvider
-     *
-     * @param FlowInterface $flow
-     * @param array         $expected
      */
-    public function testInterrupt(FlowInterface $flow, array $expected)
+    public function test_interrupt(FlowInterface $flow, array $expected)
     {
         $flow->exec();
         $this->interruptAssertions($flow->getNodeMap(), $expected);
@@ -47,8 +44,6 @@ class QualifierTest extends TestBase
 
     /**
      * @throws NodalFlowException
-     *
-     * @return array
      */
     public function interruptProvider(): array
     {
@@ -59,12 +54,12 @@ class QualifierTest extends TestBase
 
         $testCases          = [];
         $testCases['flow1'] = [
-            'flow'     => (new YaEtl)->from($extractor1)
+            'flow' => (new YaEtl)->from($extractor1)
                 ->transform($noOpTransformer1)
                 ->qualify($breakAt5Node1)
                 ->transform($noOpTransformer2),
             'expected' => [
-                $extractor1->getId()       => [
+                $extractor1->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 5,
                     'num_break'    => 1,
@@ -76,7 +71,7 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $breakAt5Node1->getId()    => [
+                $breakAt5Node1->getId() => [
                     'num_exec'     => 5,
                     'num_iterate'  => 0,
                     'num_break'    => 1,
@@ -96,12 +91,12 @@ class QualifierTest extends TestBase
         $noOpTransformer1   = new NoOpTransformer;
         $noOpTransformer2   = new NoOpTransformer;
         $testCases['flow2'] = [
-            'flow'     => (new YaEtl)->from($extractor1)
+            'flow' => (new YaEtl)->from($extractor1)
                 ->transform($noOpTransformer1)
                 ->qualify($continueAt5Node1)
                 ->transform($noOpTransformer2),
             'expected' => [
-                $extractor1->getId()       => [
+                $extractor1->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 10,
                     'num_break'    => 0,
@@ -141,7 +136,7 @@ class QualifierTest extends TestBase
         $noOpTransformer4 = new NoOpTransformer;
 
         $testCases['flow3'] = [
-            'flow'     => (new YaEtl)->transform($noOpTransformer3)
+            'flow' => (new YaEtl)->transform($noOpTransformer3)
                 ->branch($branch1)
                 ->transform($noOpTransformer4),
             'expected' => [
@@ -151,13 +146,13 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $branch1->getId()          => [
+                $branch1->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 0,
                     'num_break'    => 0,
                     'num_continue' => 0,
                     'nodes'        => [
-                        $extractor1->getId()       => [
+                        $extractor1->getId() => [
                             'num_exec'     => 1,
                             'num_iterate'  => 5,
                             'num_break'    => 1,
@@ -169,7 +164,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $breakAt5Node1->getId()    => [
+                        $breakAt5Node1->getId() => [
                             'num_exec'     => 5,
                             'num_iterate'  => 0,
                             'num_break'    => 1,
@@ -196,7 +191,7 @@ class QualifierTest extends TestBase
         $continueAt5Node1 = new CallableQualifier($this->getContinueAt5Closure());
         $noOpTransformer1 = new NoOpTransformer;
         $noOpTransformer2 = new NoOpTransformer;
-        $branch1          = (new YaEtl())->from($extractor1)
+        $branch1          = (new YaEtl)->from($extractor1)
             ->transform($noOpTransformer1)
             ->qualify($continueAt5Node1)
             ->transform($noOpTransformer2);
@@ -205,7 +200,7 @@ class QualifierTest extends TestBase
         $noOpTransformer4 = new NoOpTransformer;
 
         $testCases['flow4'] = [
-            'flow'     => (new YaEtl)->transform($noOpTransformer3)
+            'flow' => (new YaEtl)->transform($noOpTransformer3)
                 ->branch($branch1)
                 ->transform($noOpTransformer4),
             'expected' => [
@@ -215,13 +210,13 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $branch1->getId()          => [
+                $branch1->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 0,
                     'num_break'    => 0,
                     'num_continue' => 0,
                     'nodes'        => [
-                        $extractor1->getId()       => [
+                        $extractor1->getId() => [
                             'num_exec'     => 1,
                             'num_iterate'  => 10,
                             'num_break'    => 0,
@@ -273,7 +268,7 @@ class QualifierTest extends TestBase
         $noOpTransformer5 = new NoOpTransformer;
 
         $testCases['flow5'] = [
-            'flow'     => (new YaEtl)->transform($noOpTransformer4)
+            'flow' => (new YaEtl)->transform($noOpTransformer4)
                 ->branch($branch1)
                 ->transform($noOpTransformer5),
             'expected' => [
@@ -283,13 +278,13 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $branch1->getId()          => [
+                $branch1->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 0,
                     'num_break'    => 0,
                     'num_continue' => 0,
                     'nodes'        => [
-                        $extractor1->getId()       => [
+                        $extractor1->getId() => [
                             'num_exec'     => 1,
                             'num_iterate'  => 10,
                             'num_break'    => 0,
@@ -301,7 +296,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $extractor2->getId()       => [
+                        $extractor2->getId() => [
                             'num_exec'     => 10,
                             'num_iterate'  => 95,
                             'num_break'    => 1,
@@ -313,7 +308,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $breakAt5Node1->getId()    => [
+                        $breakAt5Node1->getId() => [
                             'num_exec'     => 95,
                             'num_iterate'  => 0,
                             'num_break'    => 1,
@@ -353,7 +348,7 @@ class QualifierTest extends TestBase
         $noOpTransformer5 = new NoOpTransformer;
 
         $testCases['flow6'] = [
-            'flow'     => (new YaEtl)->transform($noOpTransformer4)
+            'flow' => (new YaEtl)->transform($noOpTransformer4)
                 ->branch($branch1)
                 ->transform($noOpTransformer5),
             'expected' => [
@@ -363,13 +358,13 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $branch1->getId()          => [
+                $branch1->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 0,
                     'num_break'    => 0,
                     'num_continue' => 0,
                     'nodes'        => [
-                        $extractor1->getId()       => [
+                        $extractor1->getId() => [
                             'num_exec'     => 1,
                             'num_iterate'  => 10,
                             'num_break'    => 0,
@@ -381,7 +376,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $extractor2->getId()       => [
+                        $extractor2->getId() => [
                             'num_exec'     => 10,
                             'num_iterate'  => 100,
                             'num_break'    => 0,
@@ -433,7 +428,7 @@ class QualifierTest extends TestBase
         $noOpTransformer5 = new NoOpTransformer;
 
         $testCases['flow7'] = [
-            'flow'     => (new YaEtl)->transform($noOpTransformer4)
+            'flow' => (new YaEtl)->transform($noOpTransformer4)
                 ->branch($branch1)
                 ->transform($noOpTransformer5),
             'expected' => [
@@ -443,13 +438,13 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $branch1->getId()          => [
+                $branch1->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 0,
                     'num_break'    => 0,
                     'num_continue' => 0,
                     'nodes'        => [
-                        $extractor1->getId()       => [
+                        $extractor1->getId() => [
                             'num_exec'     => 1,
                             'num_iterate'  => 1,
                             'num_break'    => 1,
@@ -461,7 +456,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $extractor2->getId()       => [
+                        $extractor2->getId() => [
                             'num_exec'     => 1,
                             'num_iterate'  => 5,
                             'num_break'    => 1,
@@ -473,7 +468,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $breakAt5Node1->getId()    => [
+                        $breakAt5Node1->getId() => [
                             'num_exec'     => 5,
                             'num_iterate'  => 0,
                             'num_break'    => 1,
@@ -513,7 +508,7 @@ class QualifierTest extends TestBase
         $noOpTransformer5 = new NoOpTransformer;
 
         $testCases['flow8'] = [
-            'flow'     => (new YaEtl)->transform($noOpTransformer4)
+            'flow' => (new YaEtl)->transform($noOpTransformer4)
                 ->branch($branch1)
                 ->transform($noOpTransformer5),
             'expected' => [
@@ -523,13 +518,13 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $branch1->getId()          => [
+                $branch1->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 0,
                     'num_break'    => 0,
                     'num_continue' => 0,
                     'nodes'        => [
-                        $extractor1->getId()       => [
+                        $extractor1->getId() => [
                             'num_exec'     => 1,
                             'num_iterate'  => 10,
                             'num_break'    => 0,
@@ -541,7 +536,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $extractor2->getId()       => [
+                        $extractor2->getId() => [
                             'num_exec'     => 10,
                             'num_iterate'  => 95,
                             'num_break'    => 1,
@@ -606,13 +601,13 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $branch1->getId()          => [
+                $branch1->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 0,
                     'num_break'    => 1,
                     'num_continue' => 0,
                     'nodes'        => [
-                        $extractor1->getId()       => [
+                        $extractor1->getId() => [
                             'num_exec'     => 1,
                             'num_iterate'  => 1,
                             'num_break'    => 1,
@@ -624,7 +619,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $extractor2->getId()       => [
+                        $extractor2->getId() => [
                             'num_exec'     => 1,
                             'num_iterate'  => 5,
                             'num_break'    => 1,
@@ -636,7 +631,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $breakAt5Node1->getId()    => [
+                        $breakAt5Node1->getId() => [
                             'num_exec'     => 5,
                             'num_iterate'  => 0,
                             'num_break'    => 1,
@@ -689,13 +684,13 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $branch1->getId()          => [
+                $branch1->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 0,
                     'num_break'    => 0,
                     'num_continue' => 1,
                     'nodes'        => [
-                        $extractor1->getId()       => [
+                        $extractor1->getId() => [
                             'num_exec'     => 1,
                             'num_iterate'  => 1,
                             'num_break'    => 1,
@@ -707,7 +702,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $extractor2->getId()       => [
+                        $extractor2->getId() => [
                             'num_exec'     => 1,
                             'num_iterate'  => 5,
                             'num_break'    => 1,
@@ -772,7 +767,7 @@ class QualifierTest extends TestBase
         $testCases['flow11'] = [
             'flow'     => $rootFlow,
             'expected' => [
-                $extractor3->getId()       => [
+                $extractor3->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 10,
                     'num_break'    => 0,
@@ -784,8 +779,8 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $extractor4->getId()       => [
-                    'num_exec'     => 10,
+                $extractor4->getId() => [
+                    'num_exec' => 10,
                     // the break signal is sent at rec n°5
                     // it is detected on the 1st records of
                     // this traversable which breaks there
@@ -801,13 +796,13 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $branch1->getId()          => [
+                $branch1->getId() => [
                     'num_exec'     => 91,
                     'num_iterate'  => 0,
                     'num_break'    => 1,
                     'num_continue' => 0,
                     'nodes'        => [
-                        $extractor1->getId()       => [
+                        $extractor1->getId() => [
                             'num_exec'     => 91,
                             'num_iterate'  => 901,
                             'num_break'    => 1,
@@ -819,7 +814,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $extractor2->getId()       => [
+                        $extractor2->getId() => [
                             'num_exec'     => 901,
                             'num_iterate'  => 9005,
                             'num_break'    => 1,
@@ -831,7 +826,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $breakAt5Node1->getId()    => [
+                        $breakAt5Node1->getId() => [
                             'num_exec'     => 9005,
                             'num_iterate'  => 0,
                             'num_break'    => 1,
@@ -884,7 +879,7 @@ class QualifierTest extends TestBase
         $testCases['flow12'] = [
             'flow'     => $rootFlow,
             'expected' => [
-                $extractor3->getId()       => [
+                $extractor3->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 10,
                     'num_break'    => 0,
@@ -896,8 +891,8 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $extractor4->getId()       => [
-                    'num_exec'     => 10,
+                $extractor4->getId() => [
+                    'num_exec' => 10,
                     // the break signal is sent at rec n°5
                     // it is detected on the 1st records of
                     // this traversable which breaks there
@@ -913,13 +908,13 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $branch1->getId()          => [
+                $branch1->getId() => [
                     'num_exec'     => 100,
                     'num_iterate'  => 0,
                     'num_break'    => 0,
                     'num_continue' => 1,
                     'nodes'        => [
-                        $extractor1->getId()       => [
+                        $extractor1->getId() => [
                             'num_exec'     => 100,
                             'num_iterate'  => 991,
                             'num_break'    => 1,
@@ -931,7 +926,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $extractor2->getId()       => [
+                        $extractor2->getId() => [
                             'num_exec'     => 991,
                             'num_iterate'  => 9905,
                             'num_break'    => 1,
@@ -996,7 +991,7 @@ class QualifierTest extends TestBase
         $testCases['flow13'] = [
             'flow'     => $rootFlow,
             'expected' => [
-                $extractor3->getId()       => [
+                $extractor3->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 1,
                     'num_break'    => 1,
@@ -1008,7 +1003,7 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $extractor4->getId()       => [
+                $extractor4->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 1,
                     'num_break'    => 1,
@@ -1020,13 +1015,13 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $branch1->getId()          => [
+                $branch1->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 0,
                     'num_break'    => 1,
                     'num_continue' => 0,
                     'nodes'        => [
-                        $extractor1->getId()       => [
+                        $extractor1->getId() => [
                             'num_exec'     => 1,
                             'num_iterate'  => 1,
                             'num_break'    => 1,
@@ -1038,7 +1033,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $extractor2->getId()       => [
+                        $extractor2->getId() => [
                             'num_exec'     => 1,
                             'num_iterate'  => 5,
                             'num_break'    => 1,
@@ -1050,7 +1045,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $breakAt5Node1->getId()    => [
+                        $breakAt5Node1->getId() => [
                             'num_exec'     => 5,
                             'num_iterate'  => 0,
                             'num_break'    => 1,
@@ -1103,7 +1098,7 @@ class QualifierTest extends TestBase
         $testCases['flow14'] = [
             'flow'     => $rootFlow,
             'expected' => [
-                $extractor3->getId()       => [
+                $extractor3->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 10,
                     'num_break'    => 0,
@@ -1115,7 +1110,7 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $extractor4->getId()       => [
+                $extractor4->getId() => [
                     'num_exec'     => 10,
                     'num_iterate'  => 91,
                     'num_break'    => 1,
@@ -1127,13 +1122,13 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $branch1->getId()          => [
+                $branch1->getId() => [
                     'num_exec'     => 91,
                     'num_iterate'  => 0,
                     'num_break'    => 0,
                     'num_continue' => 1,
                     'nodes'        => [
-                        $extractor1->getId()       => [
+                        $extractor1->getId() => [
                             'num_exec'     => 91,
                             'num_iterate'  => 901,
                             'num_break'    => 1,
@@ -1145,7 +1140,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $extractor2->getId()       => [
+                        $extractor2->getId() => [
                             'num_exec'     => 901,
                             'num_iterate'  => 9005,
                             'num_break'    => 1,
@@ -1210,7 +1205,7 @@ class QualifierTest extends TestBase
         $testCases['flow15'] = [
             'flow'     => $rootFlow,
             'expected' => [
-                $extractor3->getId()       => [
+                $extractor3->getId() => [
                     'num_exec'     => 1,
                     'num_iterate'  => 10,
                     'num_break'    => 0,
@@ -1222,7 +1217,7 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $extractor4->getId()       => [
+                $extractor4->getId() => [
                     'num_exec'     => 10,
                     'num_iterate'  => 91,
                     'num_break'    => 1,
@@ -1234,13 +1229,13 @@ class QualifierTest extends TestBase
                     'num_break'    => 0,
                     'num_continue' => 0,
                 ],
-                $branch1->getId()          => [
+                $branch1->getId() => [
                     'num_exec'     => 91,
                     'num_iterate'  => 0,
                     'num_break'    => 1,
                     'num_continue' => 0,
                     'nodes'        => [
-                        $extractor1->getId()       => [
+                        $extractor1->getId() => [
                             'num_exec'     => 91,
                             'num_iterate'  => 901,
                             'num_break'    => 1,
@@ -1252,7 +1247,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $extractor2->getId()       => [
+                        $extractor2->getId() => [
                             'num_exec'     => 901,
                             'num_iterate'  => 9005,
                             'num_break'    => 1,
@@ -1264,7 +1259,7 @@ class QualifierTest extends TestBase
                             'num_break'    => 0,
                             'num_continue' => 0,
                         ],
-                        $breakAt5Node1->getId()    => [
+                        $breakAt5Node1->getId() => [
                             'num_exec'     => 9005,
                             'num_iterate'  => 0,
                             'num_break'    => 1,
@@ -1290,9 +1285,6 @@ class QualifierTest extends TestBase
         return $testCases;
     }
 
-    /**
-     * @return Closure
-     */
     protected function getNoOpClosure(): Closure
     {
         return function ($record) {
@@ -1300,9 +1292,6 @@ class QualifierTest extends TestBase
         };
     }
 
-    /**
-     * @return Closure
-     */
     protected function getTraversable10Closure(): Closure
     {
         return $this->getTraversableClosure(10);
@@ -1310,8 +1299,6 @@ class QualifierTest extends TestBase
 
     /**
      * @param bool|InterrupterInterface $return
-     *
-     * @return Closure
      */
     protected function getBreakAt5Closure($return = null): Closure
     {
@@ -1335,8 +1322,6 @@ class QualifierTest extends TestBase
 
     /**
      * @param bool|InterrupterInterface $return
-     *
-     * @return Closure
      */
     protected function getContinueAt5Closure($return = null): Closure
     {
@@ -1358,10 +1343,6 @@ class QualifierTest extends TestBase
         };
     }
 
-    /**
-     * @param array $nodeMap
-     * @param array $expected
-     */
     protected function interruptAssertions(array $nodeMap, array $expected)
     {
         foreach ($nodeMap as $nodeId => $data) {

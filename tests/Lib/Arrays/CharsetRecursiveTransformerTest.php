@@ -19,14 +19,9 @@ class CharsetRecursiveTransformerTest extends TestBase
     /**
      * @dataProvider charsetRecursiveProvider
      *
-     * @param string $from
-     * @param string $to
-     * @param array  $data
-     * @param array  $expected
-     *
      * @throws NodalFlowException
      */
-    public function testCharsetRecursiveTransformer(string $from, string $to, array $data, array $expected)
+    public function test_charset_recursive_transformer(string $from, string $to, array $data, array $expected)
     {
         $transformer = new CharsetRecursiveTransformer($from, $to);
 
@@ -40,20 +35,20 @@ class CharsetRecursiveTransformerTest extends TestBase
                 'ISO-8859-1',
                 'UTF-8',
                 [
-                    'key1'   => Strings::convert('iñtërnâtiônàlizætiøn', 'UTF-8', 'ISO-8859-1'),
-                    'key2'   => 1,
-                    'key3'   => [],
-                    'array'  => [
-                        'key1'   => Strings::convert('iñtërnâtiônàlizætiøn', 'UTF-8', 'ISO-8859-1'),
-                        'key2'   => 1,
-                        'key3'   => [],
+                    'key1'  => Strings::convert('iñtërnâtiônàlizætiøn', 'UTF-8', 'ISO-8859-1'),
+                    'key2'  => 1,
+                    'key3'  => [],
+                    'array' => [
+                        'key1' => Strings::convert('iñtërnâtiônàlizætiøn', 'UTF-8', 'ISO-8859-1'),
+                        'key2' => 1,
+                        'key3' => [],
                     ],
                 ],
                 [
-                    'key1'   => 'iñtërnâtiônàlizætiøn',
-                    'key2'   => 1,
-                    'key3'   => [],
-                    'array'  => [
+                    'key1'  => 'iñtërnâtiônàlizætiøn',
+                    'key2'  => 1,
+                    'key3'  => [],
+                    'array' => [
                         'key1' => 'iñtërnâtiônàlizætiøn',
                         'key2' => 1,
                         'key3' => [],

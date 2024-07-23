@@ -9,11 +9,12 @@
 
 namespace fab2s\YaEtl\Transformers\Arrays;
 
+use Closure;
 use fab2s\Strings\Strings;
 
 trait CharsetTransformerTrait
 {
-    public function getConvertClosure(?string $from = null, string $to = Strings::ENCODING): \Closure
+    public function getConvertClosure(?string $from = null, string $to = Strings::ENCODING): Closure
     {
         return function ($value) use ($from, $to) {
             return is_string($value) ? Strings::convert($value, $from, $to) : $value;

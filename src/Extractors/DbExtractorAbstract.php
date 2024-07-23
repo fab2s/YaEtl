@@ -18,8 +18,6 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
 {
     /**
      * The SQL query
-     *
-     * @var mixed
      */
     protected $extractQuery;
 
@@ -31,7 +29,8 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
     /**
      * Instantiate a DB extractor
      *
-     * @param mixed $extractQuery
+     *
+     * @param null|mixed $extractQuery
      *
      * @throws NodalFlowException
      */
@@ -47,9 +46,7 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
     /**
      * Trigger a batch extract
      *
-     * @param mixed $param
-     *
-     * @return bool
+     * @param null|mixed $param
      */
     public function extract($param = null): bool
     {
@@ -70,6 +67,7 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
     /**
      * Set the Extract SQL query
      *
+     *
      * @param mixed $extractQuery
      *
      * @return static
@@ -83,8 +81,6 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
 
     /**
      * Build the LIMIT...OFFSET bit of the query
-     *
-     * @return string
      */
     protected function getLimitOffsetBit(): string
     {

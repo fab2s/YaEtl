@@ -14,9 +14,6 @@ namespace fab2s\YaEtl\Extractors\File;
  */
 class LineExtractor extends FileExtractorAbstract
 {
-    /**
-     * @return iterable
-     */
     protected function getExtracted(): iterable
     {
         if (!$this->readBom()) {

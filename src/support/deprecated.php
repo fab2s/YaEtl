@@ -8,8 +8,8 @@
  */
 
 namespace {
-    class_alias(\fab2s\YaEtl\YaEtlException::class, \fab2s\NodalFlow\YaEtlException::class);
-    class_alias(\fab2s\YaEtl\Events\ProgressBarSubscriber::class, \fab2s\YaEtl\Laravel\Callbacks\ProgressBarSubscriber::class);
+    class_alias(fab2s\YaEtl\YaEtlException::class, fab2s\NodalFlow\YaEtlException::class);
+    class_alias(fab2s\YaEtl\Events\ProgressBarSubscriber::class, fab2s\YaEtl\Laravel\Callbacks\ProgressBarSubscriber::class);
 }
 
 namespace fab2s\NodalFlow {

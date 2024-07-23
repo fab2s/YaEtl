@@ -90,7 +90,6 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     /**
      * Generic extraction from tables with unique (composite) key
      *
-     * @param string|null  $extractQuery
      * @param array|string $uniqueKeySetup can be either a unique key name as
      *                                     string
      *                                     `'(table.)compositeKeyName' // ('id' by default)`
@@ -126,8 +125,6 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
 
     /**
      * Get this Joiner's ON clause. Only used in Join mode
-     *
-     * @return OnClauseInterface|null
      */
     public function getOnClause(): ?OnClauseInterface
     {
@@ -137,7 +134,6 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     /**
      * Set Joiner's ON clause. Only used in Join mode
      *
-     * @param OnClauseInterface $onClause
      *
      * @return $this
      */
@@ -151,7 +147,6 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     /**
      * Register ON clause field mapping. Used by an eventual joiner to this
      *
-     * @param OnClauseInterface $onClause
      *
      * @return $this
      */
@@ -165,7 +160,6 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     /**
      * Register the extractor we would be joining against
      *
-     * @param JoinableInterface $joinFrom
      *
      * @throws YaEtlException
      *
@@ -204,11 +198,10 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     /**
      * Trigger extract
      *
-     * @param mixed $param
+     *
+     * @param null|mixed $param
      *
      * @throws YaEtlException
-     *
-     * @return bool
      */
     public function extract($param = null): bool
     {
@@ -246,7 +239,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
             // append uniqueKeyValues to uniqueKeyValueBuffer
             $this->uniqueKeyValueBuffer = \array_replace($this->uniqueKeyValueBuffer, $this->uniqueKeyValues);
             // only keep batchSize
-            $this->uniqueKeyValues      = \array_slice($this->uniqueKeyValueBuffer, 0, $this->batchSize, true);
+            $this->uniqueKeyValues = \array_slice($this->uniqueKeyValueBuffer, 0, $this->batchSize, true);
             // drop consumed keys
             $this->uniqueKeyValueBuffer = \array_slice($this->uniqueKeyValueBuffer, $this->batchSize, null, true);
 
@@ -261,7 +254,9 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     /**
      * Execute the Join
      *
-     * @param mixed $record
+     *
+     *
+     * @param null|mixed $record
      *
      * @throws YaEtlException
      *
@@ -298,8 +293,6 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      * Trigger an extract in join mode
      *
      * @throws YaEtlException
-     *
-     * @return bool
      */
     protected function joinExtract(): bool
     {
@@ -350,10 +343,10 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      */
     protected function configureUniqueKey($uniqueKeySetup): self
     {
-        $uniqueKeySetup            = \is_array($uniqueKeySetup) ? $uniqueKeySetup : [$uniqueKeySetup];
-        $this->compositeKey        = [];
-        $this->uniqueKeyName       = null;
-        $this->uniqueKeyAlias      = null;
+        $uniqueKeySetup       = \is_array($uniqueKeySetup) ? $uniqueKeySetup : [$uniqueKeySetup];
+        $this->compositeKey   = [];
+        $this->uniqueKeyName  = null;
+        $this->uniqueKeyAlias = null;
         foreach ($uniqueKeySetup as $key => $value) {
             if (\is_numeric($key)) {
                 $compositeKeyName  = $this->cleanUpKeyName($value);
@@ -379,8 +372,6 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      * Clean up key names
      *
      * @param string $keyName
-     *
-     * @return string
      */
     protected function cleanUpKeyName($keyName): string
     {
@@ -451,8 +442,6 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      * available in map generation for eventual joiners to
      * this joiner and also fill up joinedRecords as an
      * associative array indexed by the proper join key
-     *
-     * @return bool
      */
     abstract protected function fetchJoinedRecords(): bool;
 }

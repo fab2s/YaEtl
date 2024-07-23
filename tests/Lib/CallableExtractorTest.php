@@ -22,12 +22,11 @@ class CallableExtractorTest extends TestBase
     /**
      * @dataProvider callableExtractorProvider
      *
-     * @param callable $callable
-     * @param          $expected
+     * @param mixed $expected
      *
      * @throws NodalFlowException
      */
-    public function testCallableExtractor(callable $callable, $expected)
+    public function test_callable_extractor(callable $callable, $expected)
     {
         $arrayLoader = new ArrayLoader;
         (new YaEtl)

@@ -9,6 +9,8 @@
 
 namespace fab2s\YaEtl\Extractors;
 
+use Generator;
+
 /**
  * Class NullExtractor
  */
@@ -24,9 +26,7 @@ class NullExtractor extends ExtractorBatchLimitAbstract
     /**
      * Triggers an extract
      *
-     * @param mixed $param
-     *
-     * @return bool
+     * @param null|mixed $param
      */
     public function extract($param = null): bool
     {
@@ -40,7 +40,7 @@ class NullExtractor extends ExtractorBatchLimitAbstract
     /**
      * Return the dumbest Generator ever
      *
-     * @return \Generator
+     * @return Generator
      */
     public function getExtracted(): iterable
     {

@@ -17,7 +17,7 @@ use fab2s\YaEtl\YaEtl;
 
 class DbLoaderTest extends LaravelTestCase
 {
-    public function testDbLoader()
+    public function test_db_loader()
     {
         $this->createTestJoinModelTable();
         $loadQuery   = TestJoinModel::getQuery();

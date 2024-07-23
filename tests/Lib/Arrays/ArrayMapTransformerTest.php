@@ -18,12 +18,9 @@ class ArrayMapTransformerTest extends TestBase
     /**
      * @dataProvider arrayMapProvider
      *
-     * @param callable $callable
-     * @param array    $data
-     *
      * @throws NodalFlowException
      */
-    public function testArrayMapTransformer(callable $callable, array $data)
+    public function test_array_map_transformer(callable $callable, array $data)
     {
         $transformer = new ArrayMapTransformer($callable);
 

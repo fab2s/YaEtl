@@ -18,13 +18,9 @@ class ArrayKeyTransformerTest extends TestBase
     /**
      * @dataProvider arrayKeyProvider
      *
-     * @param callable $callable
-     * @param array    $data
-     * @param array    $expected
-     *
      * @throws NodalFlowException
      */
-    public function testArrayKeyTransformer(callable $callable, array $data, array $expected)
+    public function test_array_key_transformer(callable $callable, array $data, array $expected)
     {
         $transformer = new ArrayKeyTransformer($callable);
 

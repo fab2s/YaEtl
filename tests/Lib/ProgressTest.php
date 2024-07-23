@@ -27,15 +27,10 @@ class ProgressTest extends TestBase
     /**
      * @dataProvider progressProvider
      *
-     * @param YaEtl    $flow
-     * @param int|null $numRecords
-     * @param int      $progressMod
-     * @param array    $expected
-     *
      * @throws NodalFlowException
      * @throws ReflectionException
      */
-    public function testProgress(YaEtl $flow, ?int $numRecords, int $progressMod, array $expected)
+    public function test_progress(YaEtl $flow, ?int $numRecords, int $progressMod, array $expected)
     {
         $flow->setProgressMod($progressMod);
         $progressSubscriber = new ProgressBarSubscriber($flow);
@@ -55,14 +50,12 @@ class ProgressTest extends TestBase
 
     /**
      * @throws NodalFlowException
-     *
-     * @return array
      */
     public function progressProvider(): array
     {
         return [
             [
-                'flow'         => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(10)))
+                'flow' => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(10)))
                     ->qualify(new LimitQualifier(5))
                     ->transform(new NoOpTransformer),
                 'num_records'  => 15,
@@ -77,7 +70,7 @@ class ProgressTest extends TestBase
                 ],
             ],
             [
-                'flow'         => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(100)))
+                'flow' => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(100)))
                     ->transform(new NoOpTransformer),
                 'num_records'  => 100,
                 'progress_mod' => 10,
@@ -91,7 +84,7 @@ class ProgressTest extends TestBase
                 ],
             ],
             [
-                'flow'         => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(100)))
+                'flow' => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(100)))
                     ->transform(new NoOpTransformer),
                 'num_records'  => null,
                 'progress_mod' => 10,
@@ -105,7 +98,7 @@ class ProgressTest extends TestBase
                 ],
             ],
             [
-                'flow'         => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(100)))
+                'flow' => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(100)))
                     ->transform(new NoOpTransformer),
                 'num_records'  => 1337,
                 'progress_mod' => 1024,
@@ -119,7 +112,7 @@ class ProgressTest extends TestBase
                 ],
             ],
             [
-                'flow'         => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(10)))
+                'flow' => (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(10)))
                     ->transform(new NoOpTransformer),
                 'num_records'  => 15,
                 'progress_mod' => 10,
@@ -154,9 +147,6 @@ class ProgressTest extends TestBase
         return $display;
     }
 
-    /**
-     * @return Closure
-     */
     protected function getNoOpClosure(): Closure
     {
         return function ($record) {

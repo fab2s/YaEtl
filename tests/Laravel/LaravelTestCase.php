@@ -15,10 +15,12 @@ use Orchestra\Testbench\TestCase;
 
 abstract class LaravelTestCase extends TestCase
 {
+    public static $latestResponse = null;
+
     /**
      * @var int
      */
-    protected $seedNum = 15;
+    protected $seedNum            = 15;
 
     /**
      * @var array
@@ -140,8 +142,8 @@ abstract class LaravelTestCase extends TestCase
         return array_map(
             function (array $value) use (&$counter) {
                 return [
-                    'id'         => ++$counter,
-                    'name'       => $value['name'],
+                    'id'   => ++$counter,
+                    'name' => $value['name'],
                 ];
             },
             $this->getTestModelSeedData()

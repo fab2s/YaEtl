@@ -52,7 +52,9 @@ abstract class QualifierAbstract extends NodeAbstract implements QualifierInterf
      *      - return false|null|void to skip the record
      *      - return InterrupterInterface to leverage complete interruption features
      *
-     * @param mixed $param
+     *
+     *
+     * @param null|mixed $param
      *
      * @throws YaEtlException
      *
@@ -71,7 +73,7 @@ abstract class QualifierAbstract extends NodeAbstract implements QualifierInterf
             return;
         }
 
-        if ($qualifies instanceof  InterrupterInterface) {
+        if ($qualifies instanceof InterrupterInterface) {
             $this->carrier->interruptFlow($qualifies->getType(), $qualifies);
 
             return;

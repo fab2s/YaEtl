@@ -46,29 +46,22 @@ trait CsvHandlerTrait
      */
     protected $useSep = false;
 
-    /**
-     * @return array|null
-     */
     public function getHeader(): ?array
     {
         return $this->header;
     }
 
     /**
-     * @param array $header
-     *
      * @return static
      */
     public function setHeader(array $header): self
     {
         $this->header = $header;
 
-        return  $this;
+        return $this;
     }
 
     /**
-     * @param bool $useHeader
-     *
      * @return static
      */
     public function setUseHeader(bool $useHeader): self
@@ -79,8 +72,6 @@ trait CsvHandlerTrait
     }
 
     /**
-     * @param bool $useSep
-     *
      * @return static
      */
     public function setUseSep(bool $useSep): self

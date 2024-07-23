@@ -267,7 +267,7 @@ Please have a look at [NodalFlow documentation](https://github.com/fab2s/NodalFl
 
 ## Requirements
 
-`YaEtl` is tested against php 7.2, 7.3, 7.4, 8.0, 8.1 and 8.2
+`YaEtl` is tested against php 7.2, 7.3, 7.4, 8.0, 8.1, 8.2 and 8.3
 
 ## Contributing
 

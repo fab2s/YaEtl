@@ -19,15 +19,13 @@ class ArrayWalkTransformerTest extends TestBase
     /**
      * @dataProvider arrayWalkProvider
      *
-     * @param callable $callable
-     * @param array    $data
-     * @param          $expected
-     * @param null     $arg
+     * @param null  $arg
+     * @param mixed $expected
      *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function testArrayWalkTransformer(callable $callable, array $data, $expected, $arg = null)
+    public function test_array_walk_transformer(callable $callable, array $data, $expected, $arg = null)
     {
         $transformer = new ArrayWalkTransformer($callable, $arg);
 

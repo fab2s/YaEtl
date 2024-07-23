@@ -21,6 +21,7 @@ interface QualifierInterface extends ExecNodeInterface
      * Qualifies a record to either keep it, skip it or break the flow at the execution point
      * or at any upstream Node
      *
+     *
      * @param mixed $param
      *
      * @return InterrupterInterface|bool|null|void `true` to accept the record, eg let the Flow proceed untouched

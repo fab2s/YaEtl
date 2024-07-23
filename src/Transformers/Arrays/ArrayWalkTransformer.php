@@ -23,10 +23,6 @@ class ArrayWalkTransformer extends TransformerAbstract
      * @var callable
      */
     protected $callable;
-
-    /**
-     * @var mixed
-     */
     protected $userData;
 
     /**

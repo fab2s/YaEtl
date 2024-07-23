@@ -18,13 +18,9 @@ class KeyUnsetTransformerTest extends TestBase
     /**
      * @dataProvider keyUnsetProvider
      *
-     * @param array $unsetList
-     * @param array $data
-     * @param array $expected
-     *
      * @throws NodalFlowException
      */
-    public function testKeyUnsetTransformer(array $unsetList, array $data, array $expected)
+    public function test_key_unset_transformer(array $unsetList, array $data, array $expected)
     {
         $transformer = new KeyUnsetTransformer($unsetList);
 

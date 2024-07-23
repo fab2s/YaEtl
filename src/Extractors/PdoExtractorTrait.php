@@ -10,6 +10,8 @@
 namespace fab2s\YaEtl\Extractors;
 
 use fab2s\YaEtl\YaEtlException;
+use PDO;
+use SplDoublyLinkedList;
 
 /**
  * trait PdoExtractorTrait
@@ -19,7 +21,7 @@ trait PdoExtractorTrait
     /**
      * The PDO connection
      *
-     * @var \PDO
+     * @var PDO
      */
     protected $pdo;
 
@@ -62,23 +64,22 @@ trait PdoExtractorTrait
     {
         if ($this->dbDriverName === 'mysql' && $this->driverBufferedQuery) {
             // set driver state back to where we met
-            $this->pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+            $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
         }
     }
 
     /**
      * Properly set up PDO connection
      *
-     * @param \PDO $pdo
      *
      * @throws YaEtlException
      *
      * @return static
      */
-    public function configurePdo(\PDO $pdo): self
+    public function configurePdo(PDO $pdo): self
     {
         $this->pdo          = $pdo;
-        $this->dbDriverName = $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
+        $this->dbDriverName = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
 
         if (!($this instanceof PaginatedQueryInterface) && !isset($this->supportedDrivers[$this->dbDriverName])) {
             throw new YaEtlException(\get_class($this) . ' does not implement PaginatedQueryInterface and does not uses a supported Pdo driver, supported drivers are: ' . \implode(', ', \array_keys($this->supportedDrivers)));
@@ -87,11 +88,11 @@ trait PdoExtractorTrait
         if ($this->dbDriverName === 'mysql') {
             // buffered queries can have great performance impact
             // with large data sets
-            $this->driverBufferedQuery = $this->pdo->getAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY);
+            $this->driverBufferedQuery = $this->pdo->getAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY);
 
             if ($this->driverBufferedQuery) {
                 // disable buffered queries as we should be querying by a lot
-                $this->pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
+                $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
             }
         }
 
@@ -100,8 +101,6 @@ trait PdoExtractorTrait
 
     /**
      * Fetch records
-     *
-     * @return bool
      */
     public function fetchRecords(): bool
     {
@@ -114,8 +113,8 @@ trait PdoExtractorTrait
         // It is most likely better to proxy all records
         // as it also makes sure that we read from db as
         // fast as possible and release pressure asap
-        $collection = new \SplDoublyLinkedList;
-        while ($record = $statement->fetch(\PDO::FETCH_ASSOC)) {
+        $collection = new SplDoublyLinkedList;
+        while ($record = $statement->fetch(PDO::FETCH_ASSOC)) {
             $collection->push($record);
         }
 

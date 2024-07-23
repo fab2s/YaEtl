@@ -42,12 +42,9 @@ class DateFormatTransformer extends TransformerAbstract
      *                                                or:
      *                                                'key_name' => ['from' => 'date_format', 'to' => 'date_format'] // to defaults to from
      *
-     * @param DateTimeZone|null $dateTimeZoneFrom
-     * @param DateTimeZone|null $dateTimeZoneTo
-     *
      * @throws NodalFlowException
      */
-    public function __construct(array $setup, DateTimeZone $dateTimeZoneFrom = null, DateTimeZone $dateTimeZoneTo = null)
+    public function __construct(array $setup, ?DateTimeZone $dateTimeZoneFrom = null, ?DateTimeZone $dateTimeZoneTo = null)
     {
         parent::__construct();
 

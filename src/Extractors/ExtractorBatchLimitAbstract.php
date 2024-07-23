@@ -53,7 +53,6 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implem
     /**
      * can be used to set a specific offset prior to start the scan
      *
-     * @param int $offset
      *
      * @return static
      */
@@ -66,8 +65,6 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implem
 
     /**
      * Get query offset
-     *
-     * @return int
      */
     public function getOffset(): int
     {
@@ -77,7 +74,6 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implem
     /**
      * Set batch size
      *
-     * @param int $batchSize
      *
      * @return static
      */
@@ -90,8 +86,6 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implem
 
     /**
      * Get batch size
-     *
-     * @return int
      */
     public function getBatchSize(): int
     {
@@ -111,9 +105,6 @@ abstract class ExtractorBatchLimitAbstract extends ExtractorLimitAbstract implem
         return $this;
     }
 
-    /**
-     * @return ExtractorAbstract
-     */
     public function bootNumExtracts(): ExtractorAbstract
     {
         // reset pagination each time we trigger

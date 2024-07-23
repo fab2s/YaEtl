@@ -31,12 +31,9 @@ class JoinTest extends TestBase
     /**
      * @dataProvider joinCasesProvider
      *
-     * @param YaEtl $flow
-     * @param bool  $isLeft
-     *
      * @throws NodalFlowException
      */
-    public function testJoin(YaEtl $flow, bool $isLeft)
+    public function test_join(YaEtl $flow, bool $isLeft)
     {
         $this->resetResultTable();
         $this->assertSame($this->numRecords, $this->getTableCount(self::FROM_TABLE), 'From table not initialized');
@@ -87,11 +84,11 @@ class JoinTest extends TestBase
         $joiner2 = clone $joiner1;
         $joiner2->setBatchSize(1337);
 
-        $joinOnClause  = new OnClause('id', 'id', function ($upstreamRecord, $record) {
+        $joinOnClause = new OnClause('id', 'id', function ($upstreamRecord, $record) {
             return array_replace($upstreamRecord, $record);
         });
 
-        $leftJoinOnClause  = new OnClause('id', 'id', function ($upstreamRecord, $record) {
+        $leftJoinOnClause = new OnClause('id', 'id', function ($upstreamRecord, $record) {
             return array_replace($upstreamRecord, $record);
         }, [
             'join_id' => null,
@@ -102,38 +99,38 @@ class JoinTest extends TestBase
                 // test a join : success means that the to table ends up
                 // exactly like join table, that is, every join_id are set
                 // and mismatch are skipped
-                'flow'          => (new YaEtl)
+                'flow' => (new YaEtl)
                     ->from($fullFrom1)
                     ->join(new PdoUniqueKeyExtractor($this->getPdo(), $joinQuery, 'id'), $fullFrom1, $joinOnClause)
                     ->to($this->getLoaderMock()),
-                'isLeft'        => false,
+                'isLeft' => false,
             ],
             [
                 // test a left join : success means that the to table ends up
                 // exactly like LEFT_JOIN_RESULT_TABLE where one record out of
                 // two holds a null join_id
-                'flow'          => (new YaEtl)
+                'flow' => (new YaEtl)
                     ->from($fullFrom2)
                     ->join(new PdoUniqueKeyExtractor($this->getPdo(), $joinQuery, 'id'), $fullFrom2, $leftJoinOnClause)
                     ->to($this->getLoaderMock()),
-                'isLeft'        => true,
+                'isLeft' => true,
             ],
             [
                 // test left joined join = join
-                'flow'          => (new YaEtl)
+                'flow' => (new YaEtl)
                     ->from($fullFrom3)
                     ->join($joiner1, $fullFrom3, $joinOnClause)
                     ->join(new PdoUniqueKeyExtractor($this->getPdo(), $joinQuery, 'id'), $joiner1, $leftJoinOnClause)
                     ->to($this->getLoaderMock()),
-                'isLeft'        => false,
+                'isLeft' => false,
             ],
             [
                 // same as left join test with unbalanced batchSizes
-                'flow'          => (new YaEtl)
+                'flow' => (new YaEtl)
                     ->from($fullFrom4)
                     ->join($joiner2, $fullFrom4, $leftJoinOnClause)
                     ->to($this->getLoaderMock()),
-                'isLeft'        => true,
+                'isLeft' => true,
             ],
         ];
     }

@@ -21,13 +21,9 @@ class DateFormatTransformerTest extends TestBase
     /**
      * @dataProvider dateFormatProvider
      *
-     * @param array $setup
-     * @param array $data
-     * @param array $expected
-     *
      * @throws NodalFlowException
      */
-    public function testDateFormatTransformer(array $setup, array $data, array $expected)
+    public function test_date_format_transformer(array $setup, array $data, array $expected)
     {
         $transformer = new DateFormatTransformer($setup);
 

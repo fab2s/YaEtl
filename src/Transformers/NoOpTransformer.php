@@ -17,9 +17,7 @@ class NoOpTransformer extends TransformerAbstract
     /**
      * Execute the dumbest transformer ever
      *
-     * @param mixed $record
-     *
-     * @return mixed
+     * @param null|mixed $record
      */
     public function exec($record = null)
     {

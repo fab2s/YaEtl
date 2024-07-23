@@ -18,13 +18,9 @@ class KeyRenameTransformerTest extends TestBase
     /**
      * @dataProvider keyRenameProvider
      *
-     * @param array $aliases
-     * @param array $data
-     * @param array $expected
-     *
      * @throws NodalFlowException
      */
-    public function testKeyRenameTransformer(array $aliases, array $data, array $expected)
+    public function test_key_rename_transformer(array $aliases, array $data, array $expected)
     {
         $transformer = new KeyRenameTransformer($aliases);
 

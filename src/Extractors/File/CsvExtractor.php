@@ -24,9 +24,6 @@ class CsvExtractor extends FileExtractorAbstract
      * CsvExtractor constructor
      *
      * @param resource|string $input
-     * @param string          $delimiter
-     * @param string          $enclosure
-     * @param string          $escape
      *
      * @throws NodalFlowException
      * @throws YaEtlException
@@ -39,9 +36,6 @@ class CsvExtractor extends FileExtractorAbstract
         $this->escape    = $escape;
     }
 
-    /**
-     * @return iterable
-     */
     protected function getExtracted(): iterable
     {
         if (!$this->readBom() || !$this->readSep() || false === ($firstRecord = $this->readHeader())) {
@@ -56,19 +50,11 @@ class CsvExtractor extends FileExtractorAbstract
         }
     }
 
-    /**
-     * @param array $record
-     *
-     * @return array
-     */
     protected function bakeRecord(array $record): array
     {
         return isset($this->header) ? array_combine($this->header, $record) : $record;
     }
 
-    /**
-     * @return array|null
-     */
     protected function readHeader(): ?array
     {
         if (null === ($firstRecord = $this->getNextNonEmptyRecord())) {
@@ -84,9 +70,6 @@ class CsvExtractor extends FileExtractorAbstract
         return $firstRecord;
     }
 
-    /**
-     * @return bool
-     */
     protected function readSep(): bool
     {
         if (null === ($firstChar = $this->getNextNonEmptyChars())) {
@@ -113,10 +96,7 @@ class CsvExtractor extends FileExtractorAbstract
         return !fseek($this->handle, $firstCharPos - 1);
     }
 
-    /**
-     * @return array|null
-     */
-    protected function getNextNonEmptyRecord(): ? array
+    protected function getNextNonEmptyRecord(): ?array
     {
         do {
             if (false === ($record = fgetcsv($this->handle, 0, $this->delimiter, $this->enclosure, $this->escape))) {

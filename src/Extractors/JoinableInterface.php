@@ -16,7 +16,7 @@ use fab2s\NodalFlow\Nodes\ExecNodeInterface;
  * A joinable is an extractor that can be joined against
  * and / or can join against another joinable
  */
-interface JoinableInterface extends ExtractorInterface, ExecNodeInterface
+interface JoinableInterface extends ExecNodeInterface, ExtractorInterface
 {
     /**
      * Generate record map, used to allow joiner to join
@@ -35,7 +35,6 @@ interface JoinableInterface extends ExtractorInterface, ExecNodeInterface
     /**
      * Set the extractor to get record map from
      *
-     * @param JoinableInterface $joinFrom
      *
      * @return static
      */
@@ -44,7 +43,6 @@ interface JoinableInterface extends ExtractorInterface, ExecNodeInterface
     /**
      * Set Joiner's ON clause. Only used in Join mode
      *
-     * @param OnClauseInterface $onClause
      *
      * @return static
      */
@@ -52,8 +50,6 @@ interface JoinableInterface extends ExtractorInterface, ExecNodeInterface
 
     /**
      * Get Joiner's ON clause. Only used in Join mode
-     *
-     * @return OnClauseInterface|null
      */
     public function getOnClause(): ?OnClauseInterface;
 
@@ -64,7 +60,8 @@ interface JoinableInterface extends ExtractorInterface, ExecNodeInterface
      * action is to skip record in join mode and return the record with default
      * join values in left join mode
      *
-     * @param mixed $record
+     *
+     * @param null|mixed $record
      *
      * @return mixed the result of the join
      */
@@ -74,7 +71,6 @@ interface JoinableInterface extends ExtractorInterface, ExecNodeInterface
      * Register ON clause field mapping. Used by an eventual joiner to this
      * to build relevant recordMap
      *
-     * @param OnClauseInterface $onClause
      *
      * @return static
      */

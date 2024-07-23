@@ -28,7 +28,7 @@ class LimitQualifierTest extends TestBase
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function testLimitQualifier(array $expected, string $target)
+    public function test_limit_qualifier(array $expected, string $target)
     {
         $arrayLoader = new ArrayLoader;
         $yaEtl       = new YaEtl;
@@ -45,7 +45,7 @@ class LimitQualifierTest extends TestBase
         $expected = range(1, 5);
 
         return [
-            InterrupterInterface::TARGET_TOP  => [
+            InterrupterInterface::TARGET_TOP => [
                 $expected,
                 InterrupterInterface::TARGET_TOP,
             ],
@@ -62,7 +62,7 @@ class LimitQualifierTest extends TestBase
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function testBranchLimitQualifier(array $expected, array $expectedBranch, string $target)
+    public function test_branch_limit_qualifier(array $expected, array $expectedBranch, string $target)
     {
         $arrayLoader       = new ArrayLoader;
         $branchArrayLoader = new ArrayLoader;
@@ -86,7 +86,7 @@ class LimitQualifierTest extends TestBase
         $expected       = range(1, 10);
 
         return [
-            InterrupterInterface::TARGET_TOP  => [
+            InterrupterInterface::TARGET_TOP => [
                 $expectedBranch,
                 $expectedBranch,
                 InterrupterInterface::TARGET_TOP,

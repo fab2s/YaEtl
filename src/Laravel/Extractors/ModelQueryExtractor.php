@@ -22,7 +22,6 @@ class ModelQueryExtractor extends DbExtractor
     /**
      * Instantiate the ModelQueryExtractor
      *
-     * @param Builder|null $extractQuery
      *
      * @throws NodalFlowException
      * @throws YaEtlException

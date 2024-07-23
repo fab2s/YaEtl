@@ -19,15 +19,13 @@ class ArrayWalkRecursiveTransformerTest extends TestBase
     /**
      * @dataProvider arrayWalkRecursiveProvider
      *
-     * @param callable $callable
-     * @param array    $data
-     * @param          $expected
-     * @param null     $arg
+     * @param null  $arg
+     * @param mixed $expected
      *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function testArrayWalkRecursiveTransformer(callable $callable, array $data, $expected, $arg = null)
+    public function test_array_walk_recursive_transformer(callable $callable, array $data, $expected, $arg = null)
     {
         $transformer = new ArrayWalkRecursiveTransformer($callable, $arg);
 

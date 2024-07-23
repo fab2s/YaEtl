@@ -48,8 +48,6 @@ class OnClause implements OnClauseInterface
      * The default record to return in left join mode
      * will be set to true in order to break the branch exec
      * in join mode or this value in left join mode
-     *
-     * @var mixed
      */
     protected $defaultRecord;
 
@@ -58,7 +56,6 @@ class OnClause implements OnClauseInterface
      *
      * @param string     $fromKeyAlias  The from unique key name in record
      * @param string     $joinKeyAlias  The join unique key name in record
-     * @param callable   $merger
      * @param null|mixed $defaultRecord null for a regular join,
      *                                  mixed a default record to be
      *                                  used each time there is no match
@@ -106,6 +103,7 @@ class OnClause implements OnClauseInterface
     /**
      * Merge Joined data into the original record
      *
+     *
      * @param mixed $upstreamRecord
      * @param mixed $record
      *
@@ -119,8 +117,6 @@ class OnClause implements OnClauseInterface
 
     /**
      * Indicate if we are left joining
-     *
-     * @return bool
      */
     public function isLeftJoin(): bool
     {

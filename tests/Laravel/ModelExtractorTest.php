@@ -17,13 +17,13 @@ class ModelExtractorTest extends LaravelTestCase
 {
     use ExtractionTestTrait;
 
-    public function testModelExtractorException()
+    public function test_model_extractor_exception()
     {
         $this->expectException(YaEtlException::class);
         (new ModelQueryExtractor)->setExtractQuery(null);
     }
 
-    public function testModelExtractorExceptionType()
+    public function test_model_extractor_exception_type()
     {
         $this->expectException(YaEtlException::class);
         (new ModelQueryExtractor)->setExtractQuery(TestModel::getQuery());

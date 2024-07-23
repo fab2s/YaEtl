@@ -18,13 +18,9 @@ class ArrayMapRecursiveTransformerTest extends TestBase
     /**
      * @dataProvider arrayMapRecursiveProvider
      *
-     * @param callable $callable
-     * @param array    $data
-     * @param array    $expected
-     *
      * @throws NodalFlowException
      */
-    public function testArrayMapRecursiveTransformer(callable $callable, array $data, array $expected)
+    public function test_array_map_recursive_transformer(callable $callable, array $data, array $expected)
     {
         $transformer = new ArrayMapRecursiveTransformer($callable);
 

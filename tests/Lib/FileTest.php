@@ -48,12 +48,11 @@ class FileTest extends TestBase
      * @dataProvider lineExtractorProvider
      *
      * @param string $srcPath
-     * @param array  $expected
      *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function testLineExtractor($srcPath, array $expected)
+    public function test_line_extractor($srcPath, array $expected)
     {
         $lineExtractor = new LineExtractor($srcPath);
         (new YaEtl)->from($lineExtractor)
@@ -72,12 +71,11 @@ class FileTest extends TestBase
      *
      * @param string $srcPath
      * @param bool   $useHeader
-     * @param array  $expected
      *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function testCsvExtractor($srcPath, $useHeader, array $expected)
+    public function test_csv_extractor($srcPath, $useHeader, array $expected)
     {
         $this->csvExtractorAssertions(new CsvExtractor($srcPath), $useHeader, $expected);
     }
@@ -87,12 +85,11 @@ class FileTest extends TestBase
      *
      * @param string $srcPath
      * @param bool   $useHeader
-     * @param array  $expected
      *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function testCsvLoader($srcPath, $useHeader, array $expected)
+    public function test_csv_loader($srcPath, $useHeader, array $expected)
     {
         if (empty($expected['values'])) {
             // nothing to load in that case
@@ -119,7 +116,7 @@ class FileTest extends TestBase
             ->exec();
 
         // check if what we just wrote passes the read test
-        $this->testCsvExtractor($srcPath, $useHeader, $expected);
+        $this->test_csv_extractor($srcPath, $useHeader, $expected);
     }
 
     /**
@@ -263,9 +260,7 @@ class FileTest extends TestBase
     }
 
     /**
-     * @param CsvExtractor $csvExtractor
-     * @param              $useHeader
-     * @param array        $expected
+     * @param mixed $useHeader
      *
      * @throws NodalFlowException
      * @throws YaEtlException

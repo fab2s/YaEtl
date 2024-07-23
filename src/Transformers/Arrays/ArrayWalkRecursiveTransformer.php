@@ -23,10 +23,6 @@ class ArrayWalkRecursiveTransformer extends TransformerAbstract
      * @var callable
      */
     protected $callable;
-
-    /**
-     * @var mixed
-     */
     protected $userData;
 
     /**

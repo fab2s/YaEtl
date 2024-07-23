@@ -17,7 +17,7 @@ use fab2s\YaEtl\YaEtlException;
  */
 class OnCloseTest extends TestBase
 {
-    public function testNewException()
+    public function test_new_exception()
     {
         $this->expectException(YaEtlException::class);
         new OnClause('', 'key', 'trim');

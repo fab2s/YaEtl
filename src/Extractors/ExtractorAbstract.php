@@ -63,9 +63,7 @@ abstract class ExtractorAbstract extends NodeAbstract implements ExtractorInterf
     /**
      * get the traversable to traverse within the Flow
      *
-     * @param mixed $param
-     *
-     * @return iterable
+     * @param null|mixed $param
      */
     public function getTraversable($param = null): iterable
     {
@@ -81,8 +79,6 @@ abstract class ExtractorAbstract extends NodeAbstract implements ExtractorInterf
 
     /**
      * Get number of records (at the end of the Flow's execution)
-     *
-     * @return int
      */
     public function getNumRecords(): int
     {
@@ -91,8 +87,6 @@ abstract class ExtractorAbstract extends NodeAbstract implements ExtractorInterf
 
     /**
      * Get number of records (at the end of the Flow's execution)
-     *
-     * @return int
      */
     public function getNumExtracts(): int
     {
@@ -122,8 +116,6 @@ abstract class ExtractorAbstract extends NodeAbstract implements ExtractorInterf
      * `    yield $record;`
      * rather than to:
      * `    return [$record];`
-     *
-     * @return iterable
      */
     protected function getExtracted(): iterable
     {
@@ -133,7 +125,6 @@ abstract class ExtractorAbstract extends NodeAbstract implements ExtractorInterf
     /**
      * set current extraction result
      *
-     * @param iterable|null $extracted
      *
      * @return static
      */

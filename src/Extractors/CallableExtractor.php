@@ -11,6 +11,7 @@ namespace fab2s\YaEtl\Extractors;
 
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\NodalFlow\Nodes\PayloadNodeAbstract;
+use Generator;
 
 /**
  * Class CallableExtractor
@@ -40,8 +41,6 @@ class CallableExtractor extends PayloadNodeAbstract implements ExtractorInterfac
     /**
      * CallableExtractorAbstract constructor.
      *
-     * @param callable $payload
-     * @param bool     $isAReturningVal
      *
      * @throws NodalFlowException
      */
@@ -71,9 +70,10 @@ class CallableExtractor extends PayloadNodeAbstract implements ExtractorInterfac
     /**
      * get the traversable to traverse within the Flow
      *
-     * @param mixed $param
      *
-     * @return \Generator
+     * @param null|mixed $param
+     *
+     * @return Generator
      */
     public function getTraversable($param = null): iterable
     {

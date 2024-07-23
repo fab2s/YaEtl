@@ -29,9 +29,6 @@ class CsvLoader extends FileLoaderAbstract
      * CsvLoader constructor.
      *
      * @param resource|string $destination
-     * @param string          $delimiter
-     * @param string          $enclosure
-     * @param string          $escape
      *
      * @throws NodalFlowException
      * @throws YaEtlException
@@ -68,8 +65,6 @@ class CsvLoader extends FileLoaderAbstract
     }
 
     /**
-     * @param array $param
-     *
      * @return static
      */
     public function writeHeader(array $param): self
@@ -86,8 +81,6 @@ class CsvLoader extends FileLoaderAbstract
     }
 
     /**
-     * @param array $record
-     *
      * @return bool|int
      */
     public function writeCsvLine(array $record)

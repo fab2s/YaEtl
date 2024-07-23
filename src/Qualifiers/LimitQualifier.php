@@ -40,11 +40,6 @@ class LimitQualifier extends QualifierAbstract
             ->setTarget($target);
     }
 
-    /**
-     * @param int|null $limit
-     *
-     * @return LimitQualifier
-     */
     public function setLimit(?int $limit): LimitQualifier
     {
         $this->limit = $limit;
@@ -52,19 +47,11 @@ class LimitQualifier extends QualifierAbstract
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTarget(): string
     {
         return $this->target;
     }
 
-    /**
-     * @param string $target
-     *
-     * @return LimitQualifier
-     */
     public function setTarget(string $target): LimitQualifier
     {
         $this->target = $target === InterrupterInterface::TARGET_TOP ? InterrupterInterface::TARGET_TOP : InterrupterInterface::TARGET_SELF;

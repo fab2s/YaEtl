@@ -19,14 +19,9 @@ class CharsetTransformerTest extends TestBase
     /**
      * @dataProvider charsetProvider
      *
-     * @param string $from
-     * @param string $to
-     * @param array  $data
-     * @param array  $expected
-     *
      * @throws NodalFlowException
      */
-    public function testCharsetTransformer(string $from, string $to, array $data, array $expected)
+    public function test_charset_transformer(string $from, string $to, array $data, array $expected)
     {
         $transformer = new CharsetTransformer($from, $to);
 

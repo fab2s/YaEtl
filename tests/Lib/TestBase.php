@@ -11,16 +11,16 @@ namespace fab2s\Tests\Lib;
 
 use Closure;
 use fab2s\NodalFlow\Nodes\ExecNodeInterface;
-use fab2s\NodalFlow\Nodes\NodeInterface;
 use fab2s\YaEtl\Loaders\LoaderInterface;
 use fab2s\YaEtl\Loaders\NoOpLoader;
+use PDO;
 
 // we need these two for phpunit to mock NoOpLoader
 
 /**
  * Interface TestLoaderInterface
  */
-interface TestLoaderInterface extends NodeInterface, ExecNodeInterface, LoaderInterface
+interface TestLoaderInterface extends ExecNodeInterface, LoaderInterface
 {
 }
 
@@ -53,17 +53,17 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
     protected $expectedJoinRecords = [];
 
     /**
-     * @var \PDO
+     * @var PDO
      */
     protected static $pdo;
 
     /**
-     * @return \PDO
+     * @return PDO
      */
     public function getPdo()
     {
         if (static::$pdo === null) {
-            static::$pdo = new \PDO('sqlite::memory:');
+            static::$pdo = new PDO('sqlite::memory:');
 
             static::$pdo->query(
                 'CREATE TABLE ' . self::FROM_TABLE . '(
@@ -103,8 +103,8 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
     public function getLoaderMock()
     {
         $stub = $this->getMockBuilder(TestLoader::class)
-                ->setMethods(['exec'])
-                ->getMock();
+            ->setMethods(['exec'])
+            ->getMock();
 
         $stub->expects($spy = $this->any())
             ->method('exec')
@@ -123,8 +123,6 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @param string $table
-     *
      * @return static
      */
     protected function populateTable(string $table): self
@@ -170,32 +168,16 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
         return $this;
     }
 
-    /**
-     * @param string $table
-     *
-     * @return int
-     */
     protected function getTableCount(string $table): int
     {
         return (int) $this->getPdo()->query("SELECT COUNT(*) FROM $table")->fetchColumn();
     }
 
-    /**
-     * @param string $table
-     *
-     * @return array
-     */
     protected function getTableAll(string $table): array
     {
-        return $this->getPdo()->query("SELECT * FROM $table ORDER BY id ASC")->fetchAll(\PDO::FETCH_ASSOC);
+        return $this->getPdo()->query("SELECT * FROM $table ORDER BY id ASC")->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @param int $count
-     * @param int $start
-     *
-     * @return Closure
-     */
     protected function getTraversableClosure(int $count, int $start = 1): Closure
     {
         $start = max(1, $start);

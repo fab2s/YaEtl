@@ -32,11 +32,9 @@ class FromTest extends TestBase
     /**
      * @dataProvider fromCasesProvider
      *
-     * @param YaEtl $flow
-     *
      * @throws NodalFlowException
      */
-    public function testFrom(YaEtl $flow)
+    public function test_from(YaEtl $flow)
     {
         $this->resetResultTable();
         $this->assertSame($this->numRecords, $this->getTableCount(self::FROM_TABLE), 'From table not initialized');
@@ -63,12 +61,12 @@ class FromTest extends TestBase
 
         $FirstHalfFrom = clone $fullFrom;
         $FirstHalfFrom->setLimit(floor($this->numRecords / 2))
-                ->setBatchSize(10);
+            ->setBatchSize(10);
 
         $SecondHalfFrom = clone $FirstHalfFrom;
         $SecondHalfFrom->setLimit(ceil($this->numRecords / 2))
-                ->setOffset(floor($this->numRecords / 2))
-                ->setBatchSize(20);
+            ->setOffset(floor($this->numRecords / 2))
+            ->setBatchSize(20);
 
         $FirstTenFrom = clone $fullFrom;
         $FirstTenFrom->setLimit(10);

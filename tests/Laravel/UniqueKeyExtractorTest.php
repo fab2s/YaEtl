@@ -20,13 +20,13 @@ class UniqueKeyExtractorTest extends LaravelTestCase
 {
     use ExtractionTestTrait;
 
-    public function testDbExtractorException()
+    public function test_db_extractor_exception()
     {
         $this->expectException(YaEtlException::class);
         (new UniqueKeyExtractor)->setExtractQuery(null);
     }
 
-    public function testDbExtractorExceptionType()
+    public function test_db_extractor_exception_type()
     {
         $this->expectException(YaEtlException::class);
         (new UniqueKeyExtractor)->setExtractQuery(TestModel::query());
@@ -35,16 +35,14 @@ class UniqueKeyExtractorTest extends LaravelTestCase
     /**
      * @dataProvider trueFalseProvider
      *
-     * @param bool $every
-     *
      * @throws YaEtlException
      * @throws \fab2s\NodalFlow\NodalFlowException
      */
-    public function testJoin(bool $every)
+    public function test_join(bool $every)
     {
         $this->createTestJoinModelTable()
             ->seedTestJoinModelTable($every);
-        $joinOnClause  = new OnClause('id', 'model_id', function ($upstreamRecord, $record) {
+        $joinOnClause = new OnClause('id', 'model_id', function ($upstreamRecord, $record) {
             unset($record['id']);
 
             return array_replace($upstreamRecord, $record);
@@ -66,17 +64,15 @@ class UniqueKeyExtractorTest extends LaravelTestCase
     /**
      * @dataProvider trueFalseProvider
      *
-     * @param bool $every
-     *
      * @throws YaEtlException
      * @throws \fab2s\NodalFlow\NodalFlowException
      */
-    public function testLeftJoin(bool $every)
+    public function test_left_join(bool $every)
     {
         $this->createTestJoinModelTable()
             ->seedTestJoinModelTable($every);
 
-        $leftJoinOnClause  = new OnClause('id', 'model_id', function ($upstreamRecord, $record) {
+        $leftJoinOnClause = new OnClause('id', 'model_id', function ($upstreamRecord, $record) {
             unset($record['id']);
 
             return array_replace($upstreamRecord, $record);
@@ -122,6 +118,7 @@ class UniqueKeyExtractorTest extends LaravelTestCase
                         'join'     => null,
                     ]);
                 }
+
                 continue;
             }
             $joinedModel = $expectedJoinedData[$modelId];

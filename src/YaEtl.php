@@ -27,6 +27,7 @@ use fab2s\YaEtl\Extractors\OnClauseInterface;
 use fab2s\YaEtl\Loaders\LoaderInterface;
 use fab2s\YaEtl\Qualifiers\QualifierInterface;
 use fab2s\YaEtl\Transformers\TransformerInterface;
+use ReflectionException;
 
 /**
  * Class YaEtl
@@ -68,7 +69,6 @@ class YaEtl extends NodalFlow
     /**
      * Adds an extractor to the Flow which may be aggregated with another one
      *
-     * @param ExtractorInterface      $extractor
      * @param null|ExtractorInterface $aggregateWith Use the extractor instance you want to aggregate with
      *
      * @throws YaEtlException
@@ -76,7 +76,7 @@ class YaEtl extends NodalFlow
      *
      * @return static
      */
-    public function from(ExtractorInterface $extractor, ExtractorInterface $aggregateWith = null): self
+    public function from(ExtractorInterface $extractor, ?ExtractorInterface $aggregateWith = null): self
     {
         if ($aggregateWith !== null) {
             $this->aggregateTo($extractor, $aggregateWith);
@@ -89,8 +89,6 @@ class YaEtl extends NodalFlow
     }
 
     /**
-     * @param QualifierInterface $qualifier
-     *
      * @throws NodalFlowException
      *
      * @return static
@@ -106,11 +104,8 @@ class YaEtl extends NodalFlow
     /**
      * Override NodalFlow's add method to prohibit its direct usage
      *
-     * @param NodeInterface $node
      *
      * @throws YaEtlException
-     *
-     * @return FlowInterface
      */
     public function add(NodeInterface $node): FlowInterface
     {
@@ -133,7 +128,6 @@ class YaEtl extends NodalFlow
      * Also note that the branch will also be flushed at the end
      * of its top most parent flow.
      *
-     * @param bool $forceFlush
      *
      * @return static
      */
@@ -147,9 +141,6 @@ class YaEtl extends NodalFlow
     /**
      * Adds a Joiner to a specific Extractor in the FLow
      *
-     * @param JoinableInterface $extractor
-     * @param JoinableInterface $joinFrom
-     * @param OnClauseInterface $onClause
      *
      * @throws NodalFlowException
      *
@@ -170,7 +161,6 @@ class YaEtl extends NodalFlow
     /**
      * Adds a Transformer to the Flow
      *
-     * @param TransformerInterface $transformer
      *
      * @throws NodalFlowException
      *
@@ -187,7 +177,6 @@ class YaEtl extends NodalFlow
     /**
      * Adds a Loader to the Flow
      *
-     * @param LoaderInterface $loader
      *
      * @throws NodalFlowException
      *
@@ -237,7 +226,7 @@ class YaEtl extends NodalFlow
     /**
      * KISS method to expose basic stats
      *
-     * @return array<string,integer|string>
+     * @return array<string,int|string>
      */
     public function getStats(): array
     {
@@ -261,6 +250,7 @@ class YaEtl extends NodalFlow
 
             if (is_numeric($value)) {
                 $vars['{' . strtoupper($varName) . '}'] = \number_format($stats[$varName], is_int($value) ? 0 : 2, '.', ' ');
+
                 continue;
             }
 
@@ -275,8 +265,6 @@ class YaEtl extends NodalFlow
     /**
      * Tells if the flow is set to force flush
      * Only used when branched (to tell the parent)
-     *
-     * @return bool
      */
     public function isForceFlush(): bool
     {
@@ -284,9 +272,7 @@ class YaEtl extends NodalFlow
     }
 
     /**
-     * @param string $class
-     *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      *
      * @return static
      */
@@ -301,8 +287,6 @@ class YaEtl extends NodalFlow
     /**
      * Used internally to aggregate Extractors
      *
-     * @param ExtractorInterface $extractor
-     * @param ExtractorInterface $aggregateWith
      *
      * @throws YaEtlException
      * @throws NodalFlowException
@@ -345,11 +329,10 @@ class YaEtl extends NodalFlow
     /**
      * Calls each WorkFlow's loaders and branch flush method
      *
-     * @param FlowStatusInterface|null $flowStatus
      *
      * @return static
      */
-    protected function flush(FlowStatusInterface $flowStatus = null): self
+    protected function flush(?FlowStatusInterface $flowStatus = null): self
     {
         if ($flowStatus === null) {
             if ($this->hasParent() && !$this->isForceFlush()) {
@@ -368,7 +351,6 @@ class YaEtl extends NodalFlow
     /**
      * Actually flush nodes
      *
-     * @param FlowStatusInterface $flowStatus
      *
      * @return static
      */
@@ -379,6 +361,7 @@ class YaEtl extends NodalFlow
                 $node->flush($flowStatus);
                 $this->flowMap->incrementFlow('num_flush');
                 $this->triggerEvent(YaEtlEvent::FLOW_FLUSH, $node);
+
                 continue;
             }
 
