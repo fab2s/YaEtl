@@ -12,14 +12,14 @@ namespace fab2s\Tests\Lib\Arrays;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\Tests\Lib\TestBase;
 use fab2s\YaEtl\Transformers\Arrays\KeyRenameTransformer;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class KeyRenameTransformerTest extends TestBase
 {
     /**
-     * @dataProvider keyRenameProvider
-     *
      * @throws NodalFlowException
      */
+    #[DataProvider('keyRenameProvider')]
     public function test_key_rename_transformer(array $aliases, array $data, array $expected)
     {
         $transformer = new KeyRenameTransformer($aliases);
@@ -27,7 +27,7 @@ class KeyRenameTransformerTest extends TestBase
         $this->assertSame($expected, $transformer->exec($data));
     }
 
-    public function keyRenameProvider(): array
+    public static function keyRenameProvider(): array
     {
         return [
             [

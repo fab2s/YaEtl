@@ -16,6 +16,7 @@ use fab2s\YaEtl\Loaders\ArrayLoader;
 use fab2s\YaEtl\Qualifiers\LimitQualifier;
 use fab2s\YaEtl\YaEtl;
 use fab2s\YaEtl\YaEtlException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Class LimitQualifierTest
@@ -23,11 +24,10 @@ use fab2s\YaEtl\YaEtlException;
 class LimitQualifierTest extends TestBase
 {
     /**
-     * @dataProvider limitQualifierProvider
-     *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
+    #[DataProvider('limitQualifierProvider')]
     public function test_limit_qualifier(array $expected, string $target)
     {
         $arrayLoader = new ArrayLoader;
@@ -40,7 +40,7 @@ class LimitQualifierTest extends TestBase
         $this->assertSame($expected, $arrayLoader->getLoadedData());
     }
 
-    public function limitQualifierProvider(): array
+    public static function limitQualifierProvider(): array
     {
         $expected = range(1, 5);
 
@@ -57,11 +57,10 @@ class LimitQualifierTest extends TestBase
     }
 
     /**
-     * @dataProvider branchLimitQualifierProvider
-     *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
+    #[DataProvider('branchLimitQualifierProvider')]
     public function test_branch_limit_qualifier(array $expected, array $expectedBranch, string $target)
     {
         $arrayLoader       = new ArrayLoader;
@@ -80,7 +79,7 @@ class LimitQualifierTest extends TestBase
         $this->assertSame($expectedBranch, $branchArrayLoader->getLoadedData());
     }
 
-    public function branchLimitQualifierProvider(): array
+    public static function branchLimitQualifierProvider(): array
     {
         $expectedBranch = range(1, 5);
         $expected       = range(1, 10);

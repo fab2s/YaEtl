@@ -13,6 +13,7 @@ use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Extractors\CallableExtractor;
 use fab2s\YaEtl\Loaders\ArrayLoader;
 use fab2s\YaEtl\YaEtl;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Class CallableExtractorTest
@@ -20,12 +21,11 @@ use fab2s\YaEtl\YaEtl;
 class CallableExtractorTest extends TestBase
 {
     /**
-     * @dataProvider callableExtractorProvider
-     *
      * @param mixed $expected
      *
      * @throws NodalFlowException
      */
+    #[DataProvider('callableExtractorProvider')]
     public function test_callable_extractor(callable $callable, $expected)
     {
         $arrayLoader = new ArrayLoader;
@@ -36,11 +36,11 @@ class CallableExtractorTest extends TestBase
         $this->assertSame($expected, $arrayLoader->getLoadedData());
     }
 
-    public function callableExtractorProvider(): array
+    public static function callableExtractorProvider(): array
     {
         return [
             [
-                $this->getTraversableClosure(10),
+                self::getTraversableClosure(10),
                 range(1, 10),
             ],
             [

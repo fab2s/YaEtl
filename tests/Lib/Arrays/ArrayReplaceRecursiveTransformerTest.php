@@ -12,10 +12,11 @@ namespace fab2s\Tests\Lib\Arrays;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\Tests\Lib\TestBase;
 use fab2s\YaEtl\Transformers\Arrays\ArrayReplaceRecursiveTransformer;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ArrayReplaceRecursiveTransformerTest extends TestBase
 {
-    public function arrayReplaceRecursiveProvider()
+    public static function arrayReplaceRecursiveProvider(): array
     {
         return [
             [
@@ -55,10 +56,9 @@ class ArrayReplaceRecursiveTransformerTest extends TestBase
     }
 
     /**
-     * @dataProvider arrayReplaceRecursiveProvider
-     *
      * @throws NodalFlowException
      */
+    #[DataProvider('arrayReplaceRecursiveProvider')]
     public function test_array_replace_recursive_transformer(array $default, array $override, array $cases)
     {
         $transformer = new ArrayReplaceRecursiveTransformer($default, $override);

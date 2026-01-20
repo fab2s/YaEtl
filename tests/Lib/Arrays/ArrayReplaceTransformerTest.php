@@ -12,10 +12,11 @@ namespace fab2s\Tests\Lib\Arrays;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\Tests\Lib\TestBase;
 use fab2s\YaEtl\Transformers\Arrays\ArrayReplaceTransformer;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ArrayReplaceTransformerTest extends TestBase
 {
-    public function arrayReplaceProvider()
+    public static function arrayReplaceProvider(): array
     {
         return [
             [
@@ -56,10 +57,9 @@ class ArrayReplaceTransformerTest extends TestBase
     }
 
     /**
-     * @dataProvider arrayReplaceProvider
-     *
      * @throws NodalFlowException
      */
+    #[DataProvider('arrayReplaceProvider')]
     public function test_array_replace_transformer(array $default, array $override, array $cases)
     {
         $transformer = new ArrayReplaceTransformer($default, $override);

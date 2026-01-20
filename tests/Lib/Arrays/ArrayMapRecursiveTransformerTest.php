@@ -12,14 +12,14 @@ namespace fab2s\Tests\Lib\Arrays;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\Tests\Lib\TestBase;
 use fab2s\YaEtl\Transformers\Arrays\ArrayMapRecursiveTransformer;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ArrayMapRecursiveTransformerTest extends TestBase
 {
     /**
-     * @dataProvider arrayMapRecursiveProvider
-     *
      * @throws NodalFlowException
      */
+    #[DataProvider('arrayMapRecursiveProvider')]
     public function test_array_map_recursive_transformer(callable $callable, array $data, array $expected)
     {
         $transformer = new ArrayMapRecursiveTransformer($callable);
@@ -27,7 +27,7 @@ class ArrayMapRecursiveTransformerTest extends TestBase
         $this->assertSame($expected, $transformer->exec($data));
     }
 
-    public function arrayMapRecursiveProvider(): array
+    public static function arrayMapRecursiveProvider(): array
     {
         return [
             [

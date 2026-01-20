@@ -15,6 +15,7 @@ use fab2s\YaEtl\Laravel\Extractors\UniqueKeyExtractor;
 use fab2s\YaEtl\Loaders\ArrayLoader;
 use fab2s\YaEtl\YaEtl;
 use fab2s\YaEtl\YaEtlException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class UniqueKeyExtractorTest extends LaravelTestCase
 {
@@ -33,11 +34,10 @@ class UniqueKeyExtractorTest extends LaravelTestCase
     }
 
     /**
-     * @dataProvider trueFalseProvider
-     *
      * @throws YaEtlException
      * @throws \fab2s\NodalFlow\NodalFlowException
      */
+    #[DataProvider('trueFalseProvider')]
     public function test_join(bool $every)
     {
         $this->createTestJoinModelTable()
@@ -62,11 +62,10 @@ class UniqueKeyExtractorTest extends LaravelTestCase
     }
 
     /**
-     * @dataProvider trueFalseProvider
-     *
      * @throws YaEtlException
      * @throws \fab2s\NodalFlow\NodalFlowException
      */
+    #[DataProvider('trueFalseProvider')]
     public function test_left_join(bool $every)
     {
         $this->createTestJoinModelTable()
@@ -93,7 +92,7 @@ class UniqueKeyExtractorTest extends LaravelTestCase
         $this->assertEquals($this->getExpectedJoinedData($every, true), $arrayLoader->getLoadedData());
     }
 
-    public function trueFalseProvider(): array
+    public static function trueFalseProvider(): array
     {
         return [
             [true],

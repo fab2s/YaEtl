@@ -16,6 +16,7 @@ use fab2s\YaEtl\Transformers\CallableTransformer;
 use fab2s\YaEtl\Transformers\NoOpTransformer;
 use fab2s\YaEtl\YaEtl;
 use fab2s\YaEtl\YaEtlException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Class FromTest
@@ -30,20 +31,19 @@ class FromTest extends TestBase
     }
 
     /**
-     * @dataProvider fromCasesProvider
-     *
      * @throws NodalFlowException
      */
+    #[DataProvider('fromCasesProvider')]
     public function test_from(YaEtl $flow)
     {
         $this->resetResultTable();
-        $this->assertSame($this->numRecords, $this->getTableCount(self::FROM_TABLE), 'From table not initialized');
+        $this->assertSame(self::$numRecords, $this->getTableCount(self::FROM_TABLE), 'From table not initialized');
         $this->assertSame(0, $this->getTableCount(self::TO_TABLE), 'To table not initialized');
 
         // exec flow
         $flow->exec();
 
-        $this->assertSame($this->numRecords, $this->getTableCount(self::TO_TABLE), 'To table not properly updated');
+        $this->assertSame(self::$numRecords, $this->getTableCount(self::TO_TABLE), 'To table not properly updated');
 
         $this->assertSame($this->getTableAll(self::FROM_TABLE), $this->getTableAll(self::TO_TABLE), self::TO_TABLE . ' did not match ' . self::FROM_TABLE);
     }
@@ -54,18 +54,18 @@ class FromTest extends TestBase
      *
      * @return array
      */
-    public function fromCasesProvider()
+    public static function fromCasesProvider(): array
     {
         $fromQuery = 'SELECT * FROM ' . self::FROM_TABLE . ' ORDER BY id ASC';
-        $fullFrom  = new PdoExtractor($this->getPdo(), $fromQuery);
+        $fullFrom  = new PdoExtractor(self::getPdo(), $fromQuery);
 
         $FirstHalfFrom = clone $fullFrom;
-        $FirstHalfFrom->setLimit(floor($this->numRecords / 2))
+        $FirstHalfFrom->setLimit(floor(self::$numRecords / 2))
             ->setBatchSize(10);
 
         $SecondHalfFrom = clone $FirstHalfFrom;
-        $SecondHalfFrom->setLimit(ceil($this->numRecords / 2))
-            ->setOffset(floor($this->numRecords / 2))
+        $SecondHalfFrom->setLimit(ceil(self::$numRecords / 2))
+            ->setOffset(floor(self::$numRecords / 2))
             ->setBatchSize(20);
 
         $FirstTenFrom = clone $fullFrom;
@@ -76,43 +76,43 @@ class FromTest extends TestBase
 
         return [
             [
-                'flow' => (new YaEtl)
+                (new YaEtl)
                     ->from($fullFrom)
-                    ->to($this->getLoaderMock()),
+                    ->to(new InsertLoader),
             ],
             [
-                'flow' => (new YaEtl)
+                (new YaEtl)
                     ->from(clone $fullFrom)
                     ->transform(new NoOpTransformer)
                     ->transform(new CallableTransformer(function ($record) {
                         return $record;
                     }))
-                    ->to($this->getLoaderMock()),
+                    ->to(new InsertLoader),
             ],
             [
-                'flow' => (new YaEtl)
+                (new YaEtl)
                     ->from($FirstHalfFrom)
                     ->from($SecondHalfFrom, $FirstHalfFrom)
                     ->transform(new NoOpTransformer)
-                    ->to($this->getLoaderMock()),
+                    ->to(new InsertLoader),
             ],
             [
-                'flow' => (new YaEtl)
+                (new YaEtl)
                     ->from($FirstTenFrom)
                     ->from($AfterTenFrom, $FirstTenFrom)
                     ->transform(new NoOpTransformer)
-                    ->to($this->getLoaderMock()),
+                    ->to(new InsertLoader),
             ],
             [
-                'flow' => (new YaEtl)
-                    ->from(new PdoUniqueKeyExtractor($this->getPdo(), $fromQuery, 'id'))
-                    ->to($this->getLoaderMock()),
+                (new YaEtl)
+                    ->from(new PdoUniqueKeyExtractor(self::getPdo(), $fromQuery, 'id'))
+                    ->to(new InsertLoader),
             ],
             [
-                'flow' => (new YaEtl)
+                (new YaEtl)
                     ->from(clone $fullFrom)
                     ->transform(new NoOpTransformer)
-                    ->to($this->getLoaderMock())
+                    ->to(new InsertLoader)
                     ->transform(new NoOpTransformer),
             ],
         ];

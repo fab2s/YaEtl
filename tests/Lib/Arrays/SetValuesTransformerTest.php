@@ -12,14 +12,14 @@ namespace fab2s\Tests\Lib\Arrays;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\Tests\Lib\TestBase;
 use fab2s\YaEtl\Transformers\Arrays\SetValuesTransformer;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SetValuesTransformerTest extends TestBase
 {
     /**
-     * @dataProvider setValuesProvider
-     *
      * @throws NodalFlowException
      */
+    #[DataProvider('setValuesProvider')]
     public function test_set_values_transformer(array $setup, array $data, array $expected)
     {
         $transformer = new SetValuesTransformer($setup);
@@ -27,7 +27,7 @@ class SetValuesTransformerTest extends TestBase
         $this->assertSame($expected, $transformer->exec($data));
     }
 
-    public function setValuesProvider(): array
+    public static function setValuesProvider(): array
     {
         return [
             [

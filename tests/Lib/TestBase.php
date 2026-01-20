@@ -32,6 +32,22 @@ class TestLoader extends NoOpLoader implements TestLoaderInterface
 }
 
 /**
+ * Class InsertLoader - A concrete loader that inserts into the test table
+ */
+class InsertLoader extends NoOpLoader
+{
+    public function exec($param = null)
+    {
+        $insert = [
+            'id'      => $param['id'],
+            'join_id' => $param['join_id'] ?? 'null',
+        ];
+
+        TestBase::getPdo()->query('INSERT INTO ' . TestBase::TO_TABLE . ' (' . implode(',', array_keys($insert)) . ') VALUES (' . implode(',', $insert) . ')');
+    }
+}
+
+/**
  * Class TestBase
  */
 abstract class TestBase extends \PHPUnit\Framework\TestCase
@@ -45,12 +61,12 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
      *
      * @var int
      */
-    protected $numRecords = 42;
+    protected static int $numRecords = 42;
 
     /**
      * @var array
      */
-    protected $expectedJoinRecords = [];
+    protected static array $expectedJoinRecords = [];
 
     /**
      * @var PDO
@@ -58,9 +74,17 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
     protected static $pdo;
 
     /**
+     * Check if SQLite PDO driver is available.
+     */
+    public static function hasSqliteDriver(): bool
+    {
+        return in_array('sqlite', PDO::getAvailableDrivers(), true);
+    }
+
+    /**
      * @return PDO
      */
-    public function getPdo()
+    public static function getPdo(): PDO
     {
         if (static::$pdo === null) {
             static::$pdo = new PDO('sqlite::memory:');
@@ -129,7 +153,7 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
     {
         $keep = true;
         $j    = 0;
-        for ($i = 1; $i <= $this->numRecords; ++$i) {
+        for ($i = 1; $i <= self::$numRecords; ++$i) {
             switch ($table) {
                 case self::FROM_TABLE:
                     $insert = [
@@ -149,13 +173,13 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
                         'join_id' => "$j",
                     ];
 
-                    $this->expectedJoinRecords[$i] = $insert;
+                    self::$expectedJoinRecords[$i] = $insert;
 
                     $keep = false;
                     break;
             }
 
-            $this->getPdo()->query('INSERT OR IGNORE INTO ' . $table . ' (' . implode(',', array_keys($insert)) . ') VALUES (' . implode(',', $insert) . ')');
+            self::getPdo()->query('INSERT OR IGNORE INTO ' . $table . ' (' . implode(',', array_keys($insert)) . ') VALUES (' . implode(',', $insert) . ')');
         }
 
         return $this;
@@ -178,7 +202,7 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
         return $this->getPdo()->query("SELECT * FROM $table ORDER BY id ASC")->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    protected function getTraversableClosure(int $count, int $start = 1): Closure
+    protected static function getTraversableClosure(int $count, int $start = 1): Closure
     {
         $start = max(1, $start);
         $count = $start === 1 ? $count : $count + $start - 1;

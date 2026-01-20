@@ -13,16 +13,16 @@ use DateTimeImmutable;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\Tests\Lib\TestBase;
 use fab2s\YaEtl\Transformers\Arrays\DateFormatTransformer;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DateFormatTransformerTest extends TestBase
 {
     protected static $datetime;
 
     /**
-     * @dataProvider dateFormatProvider
-     *
      * @throws NodalFlowException
      */
+    #[DataProvider('dateFormatProvider')]
     public function test_date_format_transformer(array $setup, array $data, array $expected)
     {
         $transformer = new DateFormatTransformer($setup);
@@ -30,7 +30,7 @@ class DateFormatTransformerTest extends TestBase
         $this->assertEquals($expected, $transformer->exec($data));
     }
 
-    public function dateFormatProvider(): array
+    public static function dateFormatProvider(): array
     {
         return [
             [

@@ -31,16 +31,16 @@
         "MIT"
     ],
     "require": {
-        "php": "^7.2|^8.0",
-        "fab2s/nodalflow": "^2.0.6",
+        "php": "^8.0",
+        "fab2s/nodalflow": "dev-next",
         "fab2s/opinhelpers": "^1.0.1"
     },
     "require-dev": {
         "ext-pdo": "*",
-        "phpunit/phpunit": "^9.0.0|^8.0|^7.5",
-        "symfony/console": "^7.0|^6.0|^5.0|^4.0|^3.4|^2.8",
-        "symfony/event-dispatcher": "^7.0|^6.0|^5.0|^4.0|^3.4|^2.8",
-        "orchestra/testbench": "^9.0|^8.0|^7.0|^6.0|^5.0|^4.0",
+        "phpunit/phpunit": "^11.0|^10.0|^9.0",
+        "symfony/console": "^7.0|^6.0|^5.0",
+        "symfony/event-dispatcher": "^7.0|^6.0|^5.0",
+        "orchestra/testbench": "^9.0|^8.0|^7.0",
         "friendsofphp/php-cs-fixer": "^3.59"
     },
     "suggest": {

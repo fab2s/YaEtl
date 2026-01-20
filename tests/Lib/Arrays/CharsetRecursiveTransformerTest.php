@@ -13,14 +13,14 @@ use fab2s\NodalFlow\NodalFlowException;
 use fab2s\Strings\Strings;
 use fab2s\Tests\Lib\TestBase;
 use fab2s\YaEtl\Transformers\Arrays\CharsetRecursiveTransformer;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CharsetRecursiveTransformerTest extends TestBase
 {
     /**
-     * @dataProvider charsetRecursiveProvider
-     *
      * @throws NodalFlowException
      */
+    #[DataProvider('charsetRecursiveProvider')]
     public function test_charset_recursive_transformer(string $from, string $to, array $data, array $expected)
     {
         $transformer = new CharsetRecursiveTransformer($from, $to);
@@ -28,7 +28,7 @@ class CharsetRecursiveTransformerTest extends TestBase
         $this->assertSame($expected, $transformer->exec($data));
     }
 
-    public function charsetRecursiveProvider(): array
+    public static function charsetRecursiveProvider(): array
     {
         return [
             [

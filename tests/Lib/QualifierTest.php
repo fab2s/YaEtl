@@ -19,6 +19,7 @@ use fab2s\YaEtl\Qualifiers\CallableQualifier;
 use fab2s\YaEtl\Transformers\NoOpTransformer;
 use fab2s\YaEtl\YaEtl;
 use fab2s\YaEtl\YaEtlException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Class QualifierTest
@@ -33,9 +34,7 @@ class QualifierTest extends TestBase
         }))->exec();
     }
 
-    /**
-     * @dataProvider interruptProvider
-     */
+    #[DataProvider('interruptProvider')]
     public function test_interrupt(FlowInterface $flow, array $expected)
     {
         $flow->exec();
@@ -45,10 +44,10 @@ class QualifierTest extends TestBase
     /**
      * @throws NodalFlowException
      */
-    public function interruptProvider(): array
+    public static function interruptProvider(): array
     {
-        $breakAt5Node1    = new CallableQualifier($this->getBreakAt5Closure());
-        $extractor1       = new CallableExtractor($this->getTraversable10Closure());
+        $breakAt5Node1    = new CallableQualifier(self::getBreakAt5Closure());
+        $extractor1       = new CallableExtractor(self::getTraversable10Closure());
         $noOpTransformer1 = new NoOpTransformer;
         $noOpTransformer2 = new NoOpTransformer;
 
@@ -86,8 +85,8 @@ class QualifierTest extends TestBase
             ],
         ];
 
-        $continueAt5Node1   = new CallableQualifier($this->getContinueAt5Closure());
-        $extractor1         = new CallableExtractor($this->getTraversable10Closure());
+        $continueAt5Node1   = new CallableQualifier(self::getContinueAt5Closure());
+        $extractor1         = new CallableExtractor(self::getTraversable10Closure());
         $noOpTransformer1   = new NoOpTransformer;
         $noOpTransformer2   = new NoOpTransformer;
         $testCases['flow2'] = [
@@ -123,8 +122,8 @@ class QualifierTest extends TestBase
             ],
         ];
 
-        $extractor1       = new CallableExtractor($this->getTraversable10Closure());
-        $breakAt5Node1    = new CallableQualifier($this->getBreakAt5Closure());
+        $extractor1       = new CallableExtractor(self::getTraversable10Closure());
+        $breakAt5Node1    = new CallableQualifier(self::getBreakAt5Closure());
         $noOpTransformer1 = new NoOpTransformer;
         $noOpTransformer2 = new NoOpTransformer;
         $branch1          = (new YaEtl)->from($extractor1)
@@ -187,8 +186,8 @@ class QualifierTest extends TestBase
             ],
         ];
 
-        $extractor1       = new CallableExtractor($this->getTraversable10Closure());
-        $continueAt5Node1 = new CallableQualifier($this->getContinueAt5Closure());
+        $extractor1       = new CallableExtractor(self::getTraversable10Closure());
+        $continueAt5Node1 = new CallableQualifier(self::getContinueAt5Closure());
         $noOpTransformer1 = new NoOpTransformer;
         $noOpTransformer2 = new NoOpTransformer;
         $branch1          = (new YaEtl)->from($extractor1)
@@ -251,9 +250,9 @@ class QualifierTest extends TestBase
             ],
         ];
 
-        $extractor1       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor2       = new CallableExtractor($this->getTraversable10Closure());
-        $breakAt5Node1    = new CallableQualifier($this->getBreakAt5Closure());
+        $extractor1       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor2       = new CallableExtractor(self::getTraversable10Closure());
+        $breakAt5Node1    = new CallableQualifier(self::getBreakAt5Closure());
         $noOpTransformer1 = new NoOpTransformer;
         $noOpTransformer2 = new NoOpTransformer;
         $noOpTransformer3 = new NoOpTransformer;
@@ -331,9 +330,9 @@ class QualifierTest extends TestBase
             ],
         ];
 
-        $extractor1       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor2       = new CallableExtractor($this->getTraversable10Closure());
-        $continueAt5Node1 = new CallableQualifier($this->getContinueAt5Closure());
+        $extractor1       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor2       = new CallableExtractor(self::getTraversable10Closure());
+        $continueAt5Node1 = new CallableQualifier(self::getContinueAt5Closure());
         $noOpTransformer1 = new NoOpTransformer;
         $noOpTransformer2 = new NoOpTransformer;
         $noOpTransformer3 = new NoOpTransformer;
@@ -411,9 +410,9 @@ class QualifierTest extends TestBase
             ],
         ];
 
-        $extractor1       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor2       = new CallableExtractor($this->getTraversable10Closure());
-        $breakAt5Node1    = new CallableQualifier($this->getBreakAt5Closure(new Interrupter(InterrupterInterface::TARGET_SELF, $extractor1, InterrupterInterface::TYPE_BREAK)));
+        $extractor1       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor2       = new CallableExtractor(self::getTraversable10Closure());
+        $breakAt5Node1    = new CallableQualifier(self::getBreakAt5Closure(new Interrupter(InterrupterInterface::TARGET_SELF, $extractor1, InterrupterInterface::TYPE_BREAK)));
         $noOpTransformer1 = new NoOpTransformer;
         $noOpTransformer2 = new NoOpTransformer;
         $noOpTransformer3 = new NoOpTransformer;
@@ -491,9 +490,9 @@ class QualifierTest extends TestBase
             ],
         ];
 
-        $extractor1       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor2       = new CallableExtractor($this->getTraversable10Closure());
-        $continueAt5Node1 = new CallableQualifier($this->getContinueAt5Closure(new Interrupter(InterrupterInterface::TARGET_SELF, $extractor1, InterrupterInterface::TYPE_CONTINUE)));
+        $extractor1       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor2       = new CallableExtractor(self::getTraversable10Closure());
+        $continueAt5Node1 = new CallableQualifier(self::getContinueAt5Closure(new Interrupter(InterrupterInterface::TARGET_SELF, $extractor1, InterrupterInterface::TYPE_CONTINUE)));
         $noOpTransformer1 = new NoOpTransformer;
         $noOpTransformer2 = new NoOpTransformer;
         $noOpTransformer3 = new NoOpTransformer;
@@ -572,9 +571,9 @@ class QualifierTest extends TestBase
         ];
 
         $rootFlow         = new YaEtl;
-        $extractor1       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor2       = new CallableExtractor($this->getTraversable10Closure());
-        $breakAt5Node1    = new CallableQualifier($this->getBreakAt5Closure(new Interrupter($rootFlow, null, InterrupterInterface::TYPE_BREAK)));
+        $extractor1       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor2       = new CallableExtractor(self::getTraversable10Closure());
+        $breakAt5Node1    = new CallableQualifier(self::getBreakAt5Closure(new Interrupter($rootFlow, null, InterrupterInterface::TYPE_BREAK)));
         $noOpTransformer1 = new NoOpTransformer;
         $noOpTransformer2 = new NoOpTransformer;
         $noOpTransformer3 = new NoOpTransformer;
@@ -655,9 +654,9 @@ class QualifierTest extends TestBase
         ];
 
         $rootFlow         = new YaEtl;
-        $extractor1       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor2       = new CallableExtractor($this->getTraversable10Closure());
-        $continueAt5Node1 = new CallableQualifier($this->getContinueAt5Closure(new Interrupter($rootFlow, null, InterrupterInterface::TYPE_CONTINUE)));
+        $extractor1       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor2       = new CallableExtractor(self::getTraversable10Closure());
+        $continueAt5Node1 = new CallableQualifier(self::getContinueAt5Closure(new Interrupter($rootFlow, null, InterrupterInterface::TYPE_CONTINUE)));
         $noOpTransformer1 = new NoOpTransformer;
         $noOpTransformer2 = new NoOpTransformer;
         $noOpTransformer3 = new NoOpTransformer;
@@ -738,11 +737,11 @@ class QualifierTest extends TestBase
         ];
 
         $rootFlow         = new YaEtl;
-        $extractor1       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor2       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor3       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor4       = new CallableExtractor($this->getTraversable10Closure());
-        $breakAt5Node1    = new CallableQualifier($this->getBreakAt5Closure(new Interrupter($rootFlow, null, InterrupterInterface::TYPE_BREAK)));
+        $extractor1       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor2       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor3       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor4       = new CallableExtractor(self::getTraversable10Closure());
+        $breakAt5Node1    = new CallableQualifier(self::getBreakAt5Closure(new Interrupter($rootFlow, null, InterrupterInterface::TYPE_BREAK)));
         $noOpTransformer1 = new NoOpTransformer;
         $noOpTransformer2 = new NoOpTransformer;
         $noOpTransformer3 = new NoOpTransformer;
@@ -850,11 +849,11 @@ class QualifierTest extends TestBase
         ];
 
         $rootFlow         = new YaEtl;
-        $extractor1       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor2       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor3       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor4       = new CallableExtractor($this->getTraversable10Closure());
-        $continueAt5Node1 = new CallableQualifier($this->getBreakAt5Closure(new Interrupter($rootFlow, null, InterrupterInterface::TYPE_CONTINUE)));
+        $extractor1       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor2       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor3       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor4       = new CallableExtractor(self::getTraversable10Closure());
+        $continueAt5Node1 = new CallableQualifier(self::getBreakAt5Closure(new Interrupter($rootFlow, null, InterrupterInterface::TYPE_CONTINUE)));
         $noOpTransformer1 = new NoOpTransformer;
         $noOpTransformer2 = new NoOpTransformer;
         $noOpTransformer3 = new NoOpTransformer;
@@ -962,11 +961,11 @@ class QualifierTest extends TestBase
         ];
 
         $rootFlow         = new YaEtl;
-        $extractor1       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor2       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor3       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor4       = new CallableExtractor($this->getTraversable10Closure());
-        $breakAt5Node1    = new CallableQualifier($this->getBreakAt5Closure(new Interrupter($rootFlow, $extractor3, InterrupterInterface::TYPE_BREAK)));
+        $extractor1       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor2       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor3       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor4       = new CallableExtractor(self::getTraversable10Closure());
+        $breakAt5Node1    = new CallableQualifier(self::getBreakAt5Closure(new Interrupter($rootFlow, $extractor3, InterrupterInterface::TYPE_BREAK)));
         $noOpTransformer1 = new NoOpTransformer;
         $noOpTransformer2 = new NoOpTransformer;
         $noOpTransformer3 = new NoOpTransformer;
@@ -1069,11 +1068,11 @@ class QualifierTest extends TestBase
         ];
 
         $rootFlow         = new YaEtl;
-        $extractor1       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor2       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor3       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor4       = new CallableExtractor($this->getTraversable10Closure());
-        $continueAt5Node1 = new CallableQualifier($this->getBreakAt5Closure(new Interrupter($rootFlow, $extractor3, InterrupterInterface::TYPE_CONTINUE)));
+        $extractor1       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor2       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor3       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor4       = new CallableExtractor(self::getTraversable10Closure());
+        $continueAt5Node1 = new CallableQualifier(self::getBreakAt5Closure(new Interrupter($rootFlow, $extractor3, InterrupterInterface::TYPE_CONTINUE)));
         $noOpTransformer1 = new NoOpTransformer;
         $noOpTransformer2 = new NoOpTransformer;
         $noOpTransformer3 = new NoOpTransformer;
@@ -1176,11 +1175,11 @@ class QualifierTest extends TestBase
         ];
 
         $rootFlow         = new YaEtl;
-        $extractor1       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor2       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor3       = new CallableExtractor($this->getTraversable10Closure());
-        $extractor4       = new CallableExtractor($this->getTraversable10Closure());
-        $breakAt5Node1    = new CallableQualifier($this->getBreakAt5Closure(new Interrupter($rootFlow, $extractor4, InterrupterInterface::TYPE_BREAK)));
+        $extractor1       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor2       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor3       = new CallableExtractor(self::getTraversable10Closure());
+        $extractor4       = new CallableExtractor(self::getTraversable10Closure());
+        $breakAt5Node1    = new CallableQualifier(self::getBreakAt5Closure(new Interrupter($rootFlow, $extractor4, InterrupterInterface::TYPE_BREAK)));
         $noOpTransformer1 = new NoOpTransformer;
         $noOpTransformer2 = new NoOpTransformer;
         $noOpTransformer3 = new NoOpTransformer;
@@ -1285,22 +1284,22 @@ class QualifierTest extends TestBase
         return $testCases;
     }
 
-    protected function getNoOpClosure(): Closure
+    protected static function getNoOpClosure(): Closure
     {
         return function ($record) {
             return $record;
         };
     }
 
-    protected function getTraversable10Closure(): Closure
+    protected static function getTraversable10Closure(): Closure
     {
-        return $this->getTraversableClosure(10);
+        return self::getTraversableClosure(10);
     }
 
     /**
      * @param bool|InterrupterInterface $return
      */
-    protected function getBreakAt5Closure($return = null): Closure
+    protected static function getBreakAt5Closure($return = null): Closure
     {
         return function () use ($return) {
             static $cnt = 1;
@@ -1323,7 +1322,7 @@ class QualifierTest extends TestBase
     /**
      * @param bool|InterrupterInterface $return
      */
-    protected function getContinueAt5Closure($return = null): Closure
+    protected static function getContinueAt5Closure($return = null): Closure
     {
         return function () use ($return) {
             static $cnt = 1;

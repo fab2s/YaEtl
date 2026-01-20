@@ -27,7 +27,7 @@ composer require "fab2s/yaetl"
 If you want to specifically install the php >=7.2.0 version, use:
 
 ```
-composer require "fab2s/yaetl" ^2
+composer require "fab2s/yaetl" ^2.0
 ```
 
 If you want to specifically install the php 5.6/7.1 version, use:
@@ -267,7 +267,7 @@ Please have a look at [NodalFlow documentation](https://github.com/fab2s/NodalFl
 
 ## Requirements
 
-`YaEtl` is tested against php 7.2, 7.3, 7.4, 8.0, 8.1, 8.2 and 8.3
+`YaEtl` is tested against php 8.0, 8.1, 8.2, 8.3 and 8.4
 
 ## Contributing
 

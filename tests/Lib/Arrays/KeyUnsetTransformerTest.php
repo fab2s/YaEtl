@@ -12,14 +12,14 @@ namespace fab2s\Tests\Lib\Arrays;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\Tests\Lib\TestBase;
 use fab2s\YaEtl\Transformers\Arrays\KeyUnsetTransformer;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class KeyUnsetTransformerTest extends TestBase
 {
     /**
-     * @dataProvider keyUnsetProvider
-     *
      * @throws NodalFlowException
      */
+    #[DataProvider('keyUnsetProvider')]
     public function test_key_unset_transformer(array $unsetList, array $data, array $expected)
     {
         $transformer = new KeyUnsetTransformer($unsetList);
@@ -27,7 +27,7 @@ class KeyUnsetTransformerTest extends TestBase
         $this->assertSame($expected, $transformer->exec($data));
     }
 
-    public function keyUnsetProvider(): array
+    public static function keyUnsetProvider(): array
     {
         return [
             [
