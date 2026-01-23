@@ -6,8 +6,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: [ '8.4', '8.3', '8.2', '8.1', '8.0' ]
-        console-versions: ['7.2', '7.1', '7.0', '6.4', '6.3', '6.2', '6.1', '6.0', '5.4', '5.3', '5.2', '5.1', '5.0']
+        php-versions: [ '8.4', '8.3', '8.2', '8.1' ]
+        console-versions: ['7.2', '7.1', '7.0', '6.4', '6.3', '6.2', '6.1', '6.0' ]
         exclude:
           - php-versions: 8.1
             console-versions: 7.2
@@ -15,21 +15,6 @@ jobs:
             console-versions: 7.1
           - php-versions: 8.1
             console-versions: 7.0
-          - php-versions: 8.0
-            console-versions: 7.2
-          - php-versions: 8.0
-            console-versions: 7.1
-          - php-versions: 8.0
-            console-versions: 7.0
-          - php-versions: 8.0
-            console-versions: 6.4
-          - php-versions: 8.0
-            console-versions: 6.3
-          - php-versions: 8.0
-            console-versions: 6.2
-          - php-versions: 8.0
-            console-versions: 6.1
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -57,14 +42,14 @@ jobs:
       - name: Detect Orchestra compatibility with console ${{ matrix.console-versions }}
         id: orchestra-compat
         run: |
-          if [[ " 8.0 8.1 " =~ " ${{ matrix.php-versions }} " ]]; then
+          if [[ " 8.1 " =~ " ${{ matrix.php-versions }} " ]]; then
             if [[ " 7.0 7.1 7.2 " =~ " ${{ matrix.console-versions }} " ]]; then
               echo 'compat=0' >> $GITHUB_OUTPUT
               exit 0
             fi
           fi
           if [[ " 8.3 8.4 " =~ " ${{ matrix.php-versions }} " ]]; then
-            if [[ " 6.2 6.1 6.0 5.4 5.3 5.2 5.1 5.0 " =~ " ${{ matrix.console-versions }} " ]]; then
+            if [[ " 6.2 6.1 6.0 " =~ " ${{ matrix.console-versions }} " ]]; then
               echo 'compat=0' >> $GITHUB_OUTPUT
               exit 0
             fi
@@ -82,6 +67,9 @@ jobs:
       - name: Install Symfony console ${{ matrix.console-versions }}
         run: composer require "symfony/console:^${{ matrix.console-versions }}" --dev --no-update
 
+      - name: Disable Composer audit
+        run: composer config --global audit.block-insecure false
+
       - name: Install Composer dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
@@ -89,6 +77,5 @@ jobs:
         run: vendor/bin/phpunit --testsuite Lib
 
       - name: Laravel test with phpunit
-        run: vendor/bin/phpunit --testsuite Laravel
         if: ${{ steps.orchestra-compat.outputs.compat == 1 }}
-
+        run: vendor/bin/phpunit --testsuite Laravel
