@@ -34,7 +34,7 @@ composer require "fab2s/yaetl"
 If you want to specifically install the php >=7.2.0 version, use:
 
 ```
-composer require "fab2s/yaetl" ^2.0
+composer require "fab2s/yaetl" ^2.0.0
 ```
 
 If you want to specifically install the php 5.6/7.1 version, use:
