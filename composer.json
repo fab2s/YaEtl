@@ -32,7 +32,7 @@
     ],
     "require": {
         "php": "^8.1",
-        "fab2s/nodalflow": "dev-next",
+        "fab2s/nodalflow": "^2.1",
         "fab2s/opinhelpers": "^1.0.1"
     },
     "require-dev": {
@@ -62,16 +62,17 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.x-dev",
+            "dev-master": "2.1.x-dev",
+            "dev-2.0.x": "2.0.x-dev",
             "dev-1.x": "1.x-dev"
         }
     },
     "scripts": {
         "post-update-cmd": [
-            "rm -f .*.cache"
+            "rm -rf .*.cache"
         ],
         "post-install-cmd": [
-            "rm -f .*.cache"
+            "rm -rf .*.cache"
         ],
         "fix": "php-cs-fixer fix --config=./.php-cs-fixer.dist.php -vvv",
         "test": "@php vendor/bin/phpunit",
