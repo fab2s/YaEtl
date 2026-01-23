@@ -17,13 +17,13 @@ class DbExtractorTest extends LaravelTestCase
 {
     use ExtractionTestTrait;
 
-    public function testDbExtractorException()
+    public function test_db_extractor_exception()
     {
         $this->expectException(YaEtlException::class);
         (new DbExtractor)->setExtractQuery(null);
     }
 
-    public function testDbExtractorExceptionType()
+    public function test_db_extractor_exception_type()
     {
         $this->expectException(YaEtlException::class);
         (new DbExtractor)->setExtractQuery(TestModel::query());

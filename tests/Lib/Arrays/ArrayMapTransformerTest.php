@@ -12,25 +12,22 @@ namespace fab2s\Tests\Lib\Arrays;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\Tests\Lib\TestBase;
 use fab2s\YaEtl\Transformers\Arrays\ArrayMapTransformer;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ArrayMapTransformerTest extends TestBase
 {
     /**
-     * @dataProvider arrayMapProvider
-     *
-     * @param callable $callable
-     * @param array    $data
-     *
      * @throws NodalFlowException
      */
-    public function testArrayMapTransformer(callable $callable, array $data)
+    #[DataProvider('arrayMapProvider')]
+    public function test_array_map_transformer(callable $callable, array $data)
     {
         $transformer = new ArrayMapTransformer($callable);
 
         $this->assertSame(array_map($callable, $data), $transformer->exec($data));
     }
 
-    public function arrayMapProvider(): array
+    public static function arrayMapProvider(): array
     {
         return [
             [

@@ -17,7 +17,6 @@ interface ExtractorLimitInterface extends ExtractorInterface
     /**
      * Set extract limit
      *
-     * @param int|null $limit
      *
      * @return static
      */
@@ -25,8 +24,6 @@ interface ExtractorLimitInterface extends ExtractorInterface
 
     /**
      * Get current limit
-     *
-     * @return int
      */
     public function getLimit(): ?int;
 

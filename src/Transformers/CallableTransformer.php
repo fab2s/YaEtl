@@ -27,7 +27,6 @@ class CallableTransformer extends PayloadNodeAbstract implements TransformerInte
     /**
      * Instantiate the transformer
      *
-     * @param callable $payload
      *
      * @throws NodalFlowException
      */
@@ -40,8 +39,6 @@ class CallableTransformer extends PayloadNodeAbstract implements TransformerInte
      * Execute the callable payload
      *
      * @param mixed $param the record
-     *
-     * @return mixed
      */
     public function exec($param = null)
     {

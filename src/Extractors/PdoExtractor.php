@@ -11,6 +11,7 @@ namespace fab2s\YaEtl\Extractors;
 
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\YaEtlException;
+use PDO;
 
 /**
  * Class PdoExtractor
@@ -22,13 +23,11 @@ class PdoExtractor extends DbExtractorAbstract
     /**
      * Instantiate PdoExtractor
      *
-     * @param \PDO        $pdo
-     * @param string|null $extractQuery
      *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function __construct(\PDO $pdo, ?string $extractQuery = null)
+    public function __construct(PDO $pdo, ?string $extractQuery = null)
     {
         $this->configurePdo($pdo);
 
@@ -43,7 +42,7 @@ class PdoExtractor extends DbExtractorAbstract
     {
         if ($this->driverBufferedQuery) {
             // set driver state back to where we met
-            $this->pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+            $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
         }
     }
 

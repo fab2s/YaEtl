@@ -17,6 +17,7 @@ use fab2s\YaEtl\Loaders\File\CsvLoader;
 use fab2s\YaEtl\Transformers\CallableTransformer;
 use fab2s\YaEtl\YaEtl;
 use fab2s\YaEtl\YaEtlException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Class FileTest
@@ -26,7 +27,7 @@ class FileTest extends TestBase
     /**
      * @var array
      */
-    protected $expectedCsv = [
+    protected static array $expectedCsv = [
         ['1', 'Sonsing', '思宇', 'Uganda', 'Kotido', "a\"6\nA'R`à1,;\h"],
         ['2', 'Cookley', '思宇', 'Poland', 'Leśna Podlaska', "a\"0L'F`àH,;f"],
         ['3', 'Prodder', '思宇', 'Yemen', 'Al Ḩazm', "o\"1H'O`à4,;c"],
@@ -34,7 +35,7 @@ class FileTest extends TestBase
         ['5', 'Cardify', '昱漳', 'Philippines', "San\nCelestio", "y\"5H'O`àR,;e"],
         ['6', 'Tresom', '慧妍', 'Poland', 'Suwałki', "l\"1W'F`àP,;4"],
         ['7', 'Solarbreeze', '泽瀚', 'Brazil', 'Balsas', "t\"8H'H`àJ,;9"],
-        ['8', 'Tampflex', '俞凯', 'Russia', 'Komsomol’sk', "k\"3A'P`àS,;8"],
+        ['8', 'Tampflex', '俞凯', 'Russia', "Komsomol\u{2019}sk", "k\"3A'P`àS,;8"],
         ['9', 'Cookley', '银含', 'Brazil', 'Itapecerica da Serra', "a\"1W'Z`à5,;k"],
         ['10', 'Rank', '彦歆', 'Armenia', 'Artsvanist', "a\"8K'A`àG,;c"],
     ];
@@ -42,18 +43,16 @@ class FileTest extends TestBase
     /**
      * @var array
      */
-    protected $expectedCsvHeader = ['id', 'name', 'given_name', 'country', 'city', 'garbage'];
+    protected static array $expectedCsvHeader = ['id', 'name', 'given_name', 'country', 'city', 'garbage'];
 
     /**
-     * @dataProvider lineExtractorProvider
-     *
      * @param string $srcPath
-     * @param array  $expected
      *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function testLineExtractor($srcPath, array $expected)
+    #[DataProvider('lineExtractorProvider')]
+    public function test_line_extractor($srcPath, array $expected)
     {
         $lineExtractor = new LineExtractor($srcPath);
         (new YaEtl)->from($lineExtractor)
@@ -68,31 +67,27 @@ class FileTest extends TestBase
     }
 
     /**
-     * @dataProvider csvExtractorProvider
-     *
      * @param string $srcPath
      * @param bool   $useHeader
-     * @param array  $expected
      *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function testCsvExtractor($srcPath, $useHeader, array $expected)
+    #[DataProvider('csvExtractorProvider')]
+    public function test_csv_extractor($srcPath, $useHeader, array $expected)
     {
         $this->csvExtractorAssertions(new CsvExtractor($srcPath), $useHeader, $expected);
     }
 
     /**
-     * @dataProvider csvExtractorProvider
-     *
      * @param string $srcPath
      * @param bool   $useHeader
-     * @param array  $expected
      *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function testCsvLoader($srcPath, $useHeader, array $expected)
+    #[DataProvider('csvExtractorProvider')]
+    public function test_csv_loader($srcPath, $useHeader, array $expected)
     {
         if (empty($expected['values'])) {
             // nothing to load in that case
@@ -119,39 +114,39 @@ class FileTest extends TestBase
             ->exec();
 
         // check if what we just wrote passes the read test
-        $this->testCsvExtractor($srcPath, $useHeader, $expected);
+        $this->test_csv_extractor($srcPath, $useHeader, $expected);
     }
 
     /**
      * @return array
      */
-    public function csvExtractorProvider()
+    public static function csvExtractorProvider(): array
     {
         return [
             [
-                'src'       => __DIR__ . '/data/data_header_nl_eof.csv',
-                'useHeader' => true,
-                'expected'  => [
-                    'values'   => $this->expectedCsv,
-                    'header'   => $this->expectedCsvHeader,
+                __DIR__ . '/data/data_header_nl_eof.csv',
+                true,
+                [
+                    'values'   => self::$expectedCsv,
+                    'header'   => self::$expectedCsvHeader,
                     'encoding' => null,
                     'sep'      => null,
                 ],
             ],
             [
-                'src'       => __DIR__ . '/data/data_header.csv',
-                'useHeader' => true,
-                'expected'  => [
-                    'values'   => $this->expectedCsv,
-                    'header'   => $this->expectedCsvHeader,
+                __DIR__ . '/data/data_header.csv',
+                true,
+                [
+                    'values'   => self::$expectedCsv,
+                    'header'   => self::$expectedCsvHeader,
                     'encoding' => null,
                     'sep'      => null,
                 ],
             ],
             [
-                'src'       => __DIR__ . '/data/empty',
-                'useHeader' => false,
-                'expected'  => [
+                __DIR__ . '/data/empty',
+                false,
+                [
                     'values'   => null,
                     'header'   => null,
                     'encoding' => null,
@@ -159,9 +154,9 @@ class FileTest extends TestBase
                 ],
             ],
             [
-                'src'       => __DIR__ . '/data/empty_bom_utf8',
-                'useHeader' => false,
-                'expected'  => [
+                __DIR__ . '/data/empty_bom_utf8',
+                false,
+                [
                     'values'   => null,
                     'header'   => null,
                     'encoding' => 'UTF-8',
@@ -169,41 +164,41 @@ class FileTest extends TestBase
                 ],
             ],
             [
-                'src'       => __DIR__ . '/data/data.csv',
-                'useHeader' => false,
-                'expected'  => [
-                    'values'   => $this->expectedCsv,
+                __DIR__ . '/data/data.csv',
+                false,
+                [
+                    'values'   => self::$expectedCsv,
                     'header'   => null,
                     'encoding' => null,
                     'sep'      => null,
                 ],
             ],
             [
-                'src'       => __DIR__ . '/data/data_one_empty.csv',
-                'useHeader' => false,
-                'expected'  => [
-                    'values'   => $this->expectedCsv,
+                __DIR__ . '/data/data_one_empty.csv',
+                false,
+                [
+                    'values'   => self::$expectedCsv,
                     'header'   => null,
                     'encoding' => null,
                     'sep'      => null,
                 ],
             ],
             [
-                'src'       => __DIR__ . '/data/data_header_bom_utf8.csv',
-                'useHeader' => true,
-                'expected'  => [
-                    'values'   => $this->expectedCsv,
-                    'header'   => $this->expectedCsvHeader,
+                __DIR__ . '/data/data_header_bom_utf8.csv',
+                true,
+                [
+                    'values'   => self::$expectedCsv,
+                    'header'   => self::$expectedCsvHeader,
                     'encoding' => 'UTF-8',
                     'sep'      => null,
                 ],
             ],
             [
-                'src'       => __DIR__ . '/data/data_header_sep.csv',
-                'useHeader' => true,
-                'expected'  => [
-                    'values'   => $this->expectedCsv,
-                    'header'   => $this->expectedCsvHeader,
+                __DIR__ . '/data/data_header_sep.csv',
+                true,
+                [
+                    'values'   => self::$expectedCsv,
+                    'header'   => self::$expectedCsvHeader,
                     'encoding' => null,
                     'sep'      => ';',
                 ],
@@ -214,47 +209,47 @@ class FileTest extends TestBase
     /**
      * @return array
      */
-    public function lineExtractorProvider()
+    public static function lineExtractorProvider(): array
     {
         return [
             [
-                'src'      => __DIR__ . '/data/lines_nl_eof',
-                'expected' => [
+                __DIR__ . '/data/lines_nl_eof',
+                [
                     'values'   => range(1, 10),
                     'encoding' => null,
                 ],
             ],
             [
-                'src'      => __DIR__ . '/data/empty',
-                'expected' => [
+                __DIR__ . '/data/empty',
+                [
                     'values'   => null,
                     'encoding' => null,
                 ],
             ],
             [
-                'src'      => __DIR__ . '/data/empty_bom_utf8',
-                'expected' => [
+                __DIR__ . '/data/empty_bom_utf8',
+                [
                     'values'   => null,
                     'encoding' => 'UTF-8',
                 ],
             ],
             [
-                'src'      => __DIR__ . '/data/lines',
-                'expected' => [
+                __DIR__ . '/data/lines',
+                [
                     'values'   => range(1, 10),
                     'encoding' => null,
                 ],
             ],
             [
-                'src'      => __DIR__ . '/data/lines_one_empty',
-                'expected' => [
+                __DIR__ . '/data/lines_one_empty',
+                [
                     'values'   => range(1, 10),
                     'encoding' => null,
                 ],
             ],
             [
-                'src'      => __DIR__ . '/data/lines_bom_utf8',
-                'expected' => [
+                __DIR__ . '/data/lines_bom_utf8',
+                [
                     'values'   => range(1, 10),
                     'encoding' => 'UTF-8',
                 ],
@@ -263,9 +258,7 @@ class FileTest extends TestBase
     }
 
     /**
-     * @param CsvExtractor $csvExtractor
-     * @param              $useHeader
-     * @param array        $expected
+     * @param mixed $useHeader
      *
      * @throws NodalFlowException
      * @throws YaEtlException

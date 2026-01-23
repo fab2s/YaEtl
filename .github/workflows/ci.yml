@@ -6,55 +6,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: [ '8.2', '8.1', '8.0', '7.4', '7.3', '7.2' ]
-        console-versions: ['6.2', '6.0', '5.4', '5.3', '5.2', '5.1', '5.0', '4.4', '4.3', '4.2', '4.1', '4.0', '3.4']
+        php-versions: [ '8.4', '8.3', '8.2', '8.1' ]
+        console-versions: ['7.2', '7.1', '7.0', '6.4', '6.3', '6.2', '6.1', '6.0' ]
         exclude:
           - php-versions: 8.1
-            console-versions: 4.3
+            console-versions: 7.2
           - php-versions: 8.1
-            console-versions: 4.2
+            console-versions: 7.1
           - php-versions: 8.1
-            console-versions: 4.1
-          - php-versions: 8.1
-            console-versions: 4.0
-          - php-versions: 8.1
-            console-versions: 3.4
-          - php-versions: 8.0
-            console-versions: 6.2
-          - php-versions: 8.0
-            console-versions: 6.1
-          - php-versions: 8.0
-            console-versions: 4.3
-          - php-versions: 8.0
-            console-versions: 4.2
-          - php-versions: 8.0
-            console-versions: 4.1
-          - php-versions: 8.0
-            console-versions: 4.0
-          - php-versions: 8.0
-            console-versions: 3.4
-          - php-versions: 7.4
-            console-versions: 6.2
-          - php-versions: 7.4
-            console-versions: 6.1
-          - php-versions: 7.4
-            console-versions: 6.0
-          - php-versions: 7.3
-            console-versions: 6.2
-          - php-versions: 7.3
-            console-versions: 6.1
-          - php-versions: 7.3
-            console-versions: 6.0
-          - php-versions: 7.2
-            console-versions: 6.2
-          - php-versions: 7.2
-            console-versions: 6.1
-          - php-versions: 7.2
-            console-versions: 6.0
-
+            console-versions: 7.0
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -64,10 +27,10 @@ jobs:
 
       - name: Get composer cache directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache composer dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
@@ -79,17 +42,19 @@ jobs:
       - name: Detect Orchestra compatibility with console ${{ matrix.console-versions }}
         id: orchestra-compat
         run: |
-          if [[ " 3.4 4.0 4.1 4.2 " =~ " ${{ matrix.console-versions }} " ]]; then
-            echo '::set-output name=compat::0'
-            exit 0
-          fi
-          if [[ " 8.0 8.1 8.2 " =~ " ${{ matrix.php-versions }} " ]]; then
-            if [[ " 4.4 4.3 " =~ " ${{ matrix.console-versions }} " ]]; then
-              echo '::set-output name=compat::0'
+          if [[ " 8.1 " =~ " ${{ matrix.php-versions }} " ]]; then
+            if [[ " 7.0 7.1 7.2 " =~ " ${{ matrix.console-versions }} " ]]; then
+              echo 'compat=0' >> $GITHUB_OUTPUT
               exit 0
             fi
           fi
-          echo '::set-output name=compat::1'
+          if [[ " 8.3 8.4 " =~ " ${{ matrix.php-versions }} " ]]; then
+            if [[ " 6.2 6.1 6.0 " =~ " ${{ matrix.console-versions }} " ]]; then
+              echo 'compat=0' >> $GITHUB_OUTPUT
+              exit 0
+            fi
+          fi
+          echo 'compat=1' >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Remove Orchestra if incompatible with console ${{ matrix.console-versions }}
@@ -102,6 +67,9 @@ jobs:
       - name: Install Symfony console ${{ matrix.console-versions }}
         run: composer require "symfony/console:^${{ matrix.console-versions }}" --dev --no-update
 
+      - name: Disable Composer audit
+        run: composer config --global audit.block-insecure false
+
       - name: Install Composer dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
@@ -109,6 +77,5 @@ jobs:
         run: vendor/bin/phpunit --testsuite Lib
 
       - name: Laravel test with phpunit
-        run: vendor/bin/phpunit --testsuite Laravel
         if: ${{ steps.orchestra-compat.outputs.compat == 1 }}
-
+        run: vendor/bin/phpunit --testsuite Laravel

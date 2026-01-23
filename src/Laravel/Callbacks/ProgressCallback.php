@@ -52,7 +52,6 @@ class ProgressCallback extends CallbackAbstract
     /**
      * Set progress modulo
      *
-     * @param int $progressMod
      *
      * @return static
      */
@@ -66,7 +65,6 @@ class ProgressCallback extends CallbackAbstract
     /**
      * Set the total number of records prior to FLow execution
      *
-     * @param int $numRecords
      *
      * @return static
      */
@@ -80,7 +78,6 @@ class ProgressCallback extends CallbackAbstract
     /**
      * Set Laravel's Command
      *
-     * @param Command $command
      *
      * @return static
      */
@@ -95,8 +92,6 @@ class ProgressCallback extends CallbackAbstract
 
     /**
      * Triggered when a Flow starts
-     *
-     * @param FlowInterface $flow
      */
     public function start(FlowInterface $flow)
     {
@@ -107,9 +102,6 @@ class ProgressCallback extends CallbackAbstract
     /**
      * Triggered when a Flow progresses,
      * eg exec once or generates once
-     *
-     * @param FlowInterface $flow
-     * @param NodeInterface $node
      */
     public function progress(FlowInterface $flow, NodeInterface $node)
     {
@@ -118,8 +110,6 @@ class ProgressCallback extends CallbackAbstract
 
     /**
      * Triggered when a Flow succeeds
-     *
-     * @param FlowInterface $flow
      */
     public function success(FlowInterface $flow)
     {
@@ -135,8 +125,6 @@ class ProgressCallback extends CallbackAbstract
 
     /**
      * Triggered when a Flow fails
-     *
-     * @param FlowInterface $flow
      */
     public function fail(FlowInterface $flow)
     {

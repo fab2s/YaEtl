@@ -36,7 +36,6 @@ class DbLoader extends LoaderAbstract
     /**
      * Instantiate the DbLoader
      *
-     * @param Builder|null $loadQuery
      *
      * @throws NodalFlowException
      */
@@ -52,7 +51,6 @@ class DbLoader extends LoaderAbstract
     /**
      * Set the Load query
      *
-     * @param Builder $loadQuery
      *
      * @return static
      */
@@ -66,7 +64,6 @@ class DbLoader extends LoaderAbstract
     /**
      * Set proper WHERE fields
      *
-     * @param array $whereFields
      *
      * @return static
      */

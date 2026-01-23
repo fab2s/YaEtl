@@ -23,13 +23,13 @@ use fab2s\YaEtl\YaEtlException;
  */
 class YaEtlTest extends TestBase
 {
-    public function testAddException()
+    public function test_add_exception()
     {
         $this->expectException(YaEtlException::class);
         (new YaEtl)->add(new NoOpTransformer);
     }
 
-    public function testQualifyContinue()
+    public function test_qualify_continue()
     {
         $arrayLoader = new ArrayLoader;
         (new YaEtl)
@@ -43,7 +43,7 @@ class YaEtlTest extends TestBase
         $this->assertSame(range(1, 5), $arrayLoader->getLoadedData());
     }
 
-    public function testQualifyBreakInterrupter()
+    public function test_qualify_break_interrupter()
     {
         $arrayLoader = new ArrayLoader;
         (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(10)))
@@ -60,7 +60,7 @@ class YaEtlTest extends TestBase
         $this->assertSame(range(1, 5), $arrayLoader->getLoadedData());
     }
 
-    public function testQualifyBreakFlow()
+    public function test_qualify_break_flow()
     {
         $arrayLoader = new ArrayLoader;
         $yaEtl       = new YaEtl;
@@ -68,6 +68,7 @@ class YaEtlTest extends TestBase
             ->qualify(new CallableQualifier(function ($value) use ($yaEtl) {
                 if ($value > 5) {
                     $yaEtl->breakFlow();
+
                     // return value is of no consequences here
                     return true;
                 }
@@ -80,7 +81,7 @@ class YaEtlTest extends TestBase
         $this->assertSame(range(1, 5), $arrayLoader->getLoadedData());
     }
 
-    public function testQualifyBranch()
+    public function test_qualify_branch()
     {
         $branchLoader = new ArrayLoader;
         $arrayLoader  = new ArrayLoader;
@@ -99,7 +100,7 @@ class YaEtlTest extends TestBase
         $this->assertSame(range(1, 10), $arrayLoader->getLoadedData());
     }
 
-    public function testAggregateToException()
+    public function test_aggregate_to_exception()
     {
         $this->expectException(YaEtlException::class);
         $firstExtractor  = new CallableExtractor($this->getTraversableClosure(5));
@@ -108,7 +109,7 @@ class YaEtlTest extends TestBase
         (new YaEtl)->from($firstExtractor, $secondExtractor);
     }
 
-    public function testAggregateToSingle()
+    public function test_aggregate_to_single()
     {
         $arrayLoader     = new ArrayLoader;
         $firstExtractor  = new CallableExtractor($this->getTraversableClosure(5));
@@ -122,7 +123,7 @@ class YaEtlTest extends TestBase
         $this->assertSame(range(1, 10), $arrayLoader->getLoadedData());
     }
 
-    public function testAggregateToMultiple()
+    public function test_aggregate_to_multiple()
     {
         $arrayLoader     = new ArrayLoader;
         $firstExtractor  = new CallableExtractor($this->getTraversableClosure(5));

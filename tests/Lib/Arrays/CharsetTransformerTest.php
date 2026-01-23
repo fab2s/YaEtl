@@ -13,27 +13,22 @@ use fab2s\NodalFlow\NodalFlowException;
 use fab2s\Strings\Strings;
 use fab2s\Tests\Lib\TestBase;
 use fab2s\YaEtl\Transformers\Arrays\CharsetTransformer;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CharsetTransformerTest extends TestBase
 {
     /**
-     * @dataProvider charsetProvider
-     *
-     * @param string $from
-     * @param string $to
-     * @param array  $data
-     * @param array  $expected
-     *
      * @throws NodalFlowException
      */
-    public function testCharsetTransformer(string $from, string $to, array $data, array $expected)
+    #[DataProvider('charsetProvider')]
+    public function test_charset_transformer(string $from, string $to, array $data, array $expected)
     {
         $transformer = new CharsetTransformer($from, $to);
 
         $this->assertSame($expected, $transformer->exec($data));
     }
 
-    public function charsetProvider(): array
+    public static function charsetProvider(): array
     {
         return [
             [

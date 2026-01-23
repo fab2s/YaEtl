@@ -16,6 +16,7 @@ use fab2s\YaEtl\Loaders\ArrayLoader;
 use fab2s\YaEtl\Qualifiers\LimitQualifier;
 use fab2s\YaEtl\YaEtl;
 use fab2s\YaEtl\YaEtlException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Class LimitQualifierTest
@@ -23,12 +24,11 @@ use fab2s\YaEtl\YaEtlException;
 class LimitQualifierTest extends TestBase
 {
     /**
-     * @dataProvider limitQualifierProvider
-     *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function testLimitQualifier(array $expected, string $target)
+    #[DataProvider('limitQualifierProvider')]
+    public function test_limit_qualifier(array $expected, string $target)
     {
         $arrayLoader = new ArrayLoader;
         $yaEtl       = new YaEtl;
@@ -40,12 +40,12 @@ class LimitQualifierTest extends TestBase
         $this->assertSame($expected, $arrayLoader->getLoadedData());
     }
 
-    public function limitQualifierProvider(): array
+    public static function limitQualifierProvider(): array
     {
         $expected = range(1, 5);
 
         return [
-            InterrupterInterface::TARGET_TOP  => [
+            InterrupterInterface::TARGET_TOP => [
                 $expected,
                 InterrupterInterface::TARGET_TOP,
             ],
@@ -57,12 +57,11 @@ class LimitQualifierTest extends TestBase
     }
 
     /**
-     * @dataProvider branchLimitQualifierProvider
-     *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function testBranchLimitQualifier(array $expected, array $expectedBranch, string $target)
+    #[DataProvider('branchLimitQualifierProvider')]
+    public function test_branch_limit_qualifier(array $expected, array $expectedBranch, string $target)
     {
         $arrayLoader       = new ArrayLoader;
         $branchArrayLoader = new ArrayLoader;
@@ -80,13 +79,13 @@ class LimitQualifierTest extends TestBase
         $this->assertSame($expectedBranch, $branchArrayLoader->getLoadedData());
     }
 
-    public function branchLimitQualifierProvider(): array
+    public static function branchLimitQualifierProvider(): array
     {
         $expectedBranch = range(1, 5);
         $expected       = range(1, 10);
 
         return [
-            InterrupterInterface::TARGET_TOP  => [
+            InterrupterInterface::TARGET_TOP => [
                 $expectedBranch,
                 $expectedBranch,
                 InterrupterInterface::TARGET_TOP,

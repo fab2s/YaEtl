@@ -26,22 +26,17 @@ interface ExtractorBatchLimitInterface extends ExtractorLimitInterface
 
     /**
      * Get current query offset
-     *
-     * @return int
      */
     public function getOffset(): int;
 
     /**
      * Get current batch size
-     *
-     * @return int
      */
     public function getBatchSize(): int;
 
     /**
      * Set batch size
      *
-     * @param int $batchSize
      *
      * @return static
      */

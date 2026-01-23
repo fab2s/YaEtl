@@ -12,26 +12,22 @@ namespace fab2s\Tests\Lib\Arrays;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\Tests\Lib\TestBase;
 use fab2s\YaEtl\Transformers\Arrays\ArrayKeyTransformer;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ArrayKeyTransformerTest extends TestBase
 {
     /**
-     * @dataProvider arrayKeyProvider
-     *
-     * @param callable $callable
-     * @param array    $data
-     * @param array    $expected
-     *
      * @throws NodalFlowException
      */
-    public function testArrayKeyTransformer(callable $callable, array $data, array $expected)
+    #[DataProvider('arrayKeyProvider')]
+    public function test_array_key_transformer(callable $callable, array $data, array $expected)
     {
         $transformer = new ArrayKeyTransformer($callable);
 
         $this->assertSame($expected, $transformer->exec($data));
     }
 
-    public function arrayKeyProvider(): array
+    public static function arrayKeyProvider(): array
     {
         return [
             [

@@ -31,17 +31,17 @@
         "MIT"
     ],
     "require": {
-        "php": "^7.2|^8.0",
-        "fab2s/nodalflow": "^2.0.5",
-        "fab2s/opinhelpers": "^1.0"
+        "php": "^8.1",
+        "fab2s/nodalflow": "^2.1",
+        "fab2s/opinhelpers": "^1.0.1"
     },
     "require-dev": {
         "ext-pdo": "*",
-        "phpunit/phpunit": "^9.0|^8.0|^7.5",
-        "symfony/console": "^6.0|^5.0|^4.0|^3.4|^2.8",
-        "symfony/event-dispatcher": "^6.0|^5.0|^4.0|^3.4|^2.8",
-        "orchestra/testbench": "^7.0|^6.0|^5.0|^4.0",
-        "friendsofphp/php-cs-fixer": "^3.0|^2.0"
+        "phpunit/phpunit": "^11.0|^10.0|^9.0",
+        "symfony/console": "^7.0|^6.0|^5.0",
+        "symfony/event-dispatcher": "^7.0|^6.0|^5.0",
+        "orchestra/testbench": "^9.0|^8.0|^7.0",
+        "friendsofphp/php-cs-fixer": "^3.59"
     },
     "suggest": {
         "symfony/console": "To use ProgressBarSubscriber",
@@ -62,17 +62,20 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.x-dev",
+            "dev-master": "2.1.x-dev",
+            "dev-2.0.x": "2.0.x-dev",
             "dev-1.x": "1.x-dev"
         }
     },
     "scripts": {
         "post-update-cmd": [
-            "rm -f .*.cache"
+            "rm -rf .*.cache"
         ],
         "post-install-cmd": [
-            "rm -f .*.cache"
+            "rm -rf .*.cache"
         ],
-        "fix": "php-cs-fixer fix --config=./.php-cs-fixer.dist.php -vvv"
+        "fix": "php-cs-fixer fix --config=./.php-cs-fixer.dist.php -vvv",
+        "test": "@php vendor/bin/phpunit",
+        "cov": "@php vendor/bin/phpunit --coverage-html ./cov"
     }
 }

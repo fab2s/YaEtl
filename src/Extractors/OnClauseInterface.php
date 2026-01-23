@@ -19,7 +19,6 @@ interface OnClauseInterface
      *
      * @param string     $fromKeyAlias  The from unique key name in record
      * @param string     $joinKeyAlias  The join unique key name in record
-     * @param callable   $merger
      * @param null|mixed $defaultRecord null for a regular join,
      *                                  mixed a default record to be
      *                                  used each time there is no match
@@ -44,6 +43,7 @@ interface OnClauseInterface
     /**
      * Merge Joined data into the original record
      *
+     *
      * @param mixed $upstreamRecord
      * @param mixed $record
      *
@@ -53,8 +53,6 @@ interface OnClauseInterface
 
     /**
      * Indicate if we are left joining
-     *
-     * @return bool
      */
     public function isLeftJoin(): bool;
 

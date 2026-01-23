@@ -13,6 +13,7 @@ use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Loaders\LoaderAbstract;
 use fab2s\YaEtl\Traits\FileHandlerTrait;
 use fab2s\YaEtl\YaEtlException;
+use ReflectionClass;
 
 /**
  * Class FileLoaderAbstract
@@ -58,20 +59,20 @@ abstract class FileLoaderAbstract extends LoaderAbstract
         if (is_resource($input)) {
             $metaData = stream_get_meta_data($input);
             if (!is_writable($metaData['uri'])) {
-                throw new YaEtlException((new \ReflectionClass($this))->getShortName() . ' : destination cannot be opened in write mode');
+                throw new YaEtlException((new ReflectionClass($this))->getShortName() . ' : destination cannot be opened in write mode');
             }
 
             return $this;
         }
 
         if (
-            !is_string($input) ||
-            (
-                !is_file($input) &&
-                !touch($input)
+            !is_string($input)
+            || (
+                !is_file($input)
+                && !touch($input)
             )
         ) {
-            throw new YaEtlException((new \ReflectionClass($this))->getShortName() . ' : destination cannot be created');
+            throw new YaEtlException((new ReflectionClass($this))->getShortName() . ' : destination cannot be created');
         }
 
         return $this;

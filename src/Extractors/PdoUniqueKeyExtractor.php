@@ -11,6 +11,7 @@ namespace fab2s\YaEtl\Extractors;
 
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\YaEtlException;
+use PDO;
 
 /**
  * class PdoUniqueKeyExtractor
@@ -22,11 +23,9 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
     /**
      * Generic extraction from tables with unique (composite) key
      *
-     * @param \PDO         $pdo
-     * @param string|null  $extractQuery
-     * @param array|string $uniqueKey    can be either a unique key name as
-     *                                   string
-     *                                   `'(table.)compositeKeyName' // ('id' by default)`
+     * @param array|string $uniqueKey can be either a unique key name as
+     *                                string
+     *                                `'(table.)compositeKeyName' // ('id' by default)`
      *
      *                      or an array :
      *                      `['(table.)compositeKey1'] // single unique key`
@@ -47,7 +46,7 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
      * @throws YaEtlException
      * @throws NodalFlowException
      */
-    public function __construct(\PDO $pdo, ?string $extractQuery = null, $uniqueKey = 'id')
+    public function __construct(PDO $pdo, ?string $extractQuery = null, $uniqueKey = 'id')
     {
         $this->configurePdo($pdo);
 
@@ -62,7 +61,7 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
     {
         if ($this->driverBufferedQuery) {
             // set driver state back to where we met
-            $this->pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+            $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
         }
     }
 
@@ -86,9 +85,6 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
         return $this->extractQuery . $this->getLimitOffsetBit();
     }
 
-    /**
-     * @return bool
-     */
     protected function fetchJoinedRecords(): bool
     {
         $extractQuery = $this->getPaginatedQuery();
@@ -99,7 +95,7 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
 
         $this->joinedRecords = [];
         $joinKey             = $this->onClose->getJoinKeyAlias();
-        while ($record = $statement->fetch(\PDO::FETCH_ASSOC)) {
+        while ($record = $statement->fetch(PDO::FETCH_ASSOC)) {
             $this->joinedRecords[$record[$joinKey]] = $record;
         }
 

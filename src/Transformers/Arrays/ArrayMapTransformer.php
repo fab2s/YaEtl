@@ -25,8 +25,6 @@ class ArrayMapTransformer extends TransformerAbstract
     protected $mapper;
 
     /**
-     * @param callable $mapper
-     *
      * @throws NodalFlowException
      */
     public function __construct(callable $mapper)

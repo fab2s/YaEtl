@@ -40,7 +40,6 @@ class DbExtractor extends PdoExtractor implements PaginatedQueryInterface
     /**
      * Instantiate the DbExtractor
      *
-     * @param Builder|null $extractQuery
      *
      * @throws NodalFlowException
      * @throws YaEtlException

@@ -18,11 +18,11 @@ use fab2s\YaEtl\YaEtl;
  */
 class NullExtractorTest extends TestBase
 {
-    public function testNullExtractor()
+    public function test_null_extractor()
     {
         $arrayLoader   = new ArrayLoader;
         $yaEtl         = new YaEtl;
-        $nullExtractor = (new NullExtractor())->setLimit(10);
+        $nullExtractor = (new NullExtractor)->setLimit(10);
         $yaEtl->from(clone $nullExtractor)
             ->to($arrayLoader)
             ->exec();

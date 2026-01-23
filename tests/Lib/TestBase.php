@@ -11,16 +11,16 @@ namespace fab2s\Tests\Lib;
 
 use Closure;
 use fab2s\NodalFlow\Nodes\ExecNodeInterface;
-use fab2s\NodalFlow\Nodes\NodeInterface;
 use fab2s\YaEtl\Loaders\LoaderInterface;
 use fab2s\YaEtl\Loaders\NoOpLoader;
+use PDO;
 
 // we need these two for phpunit to mock NoOpLoader
 
 /**
  * Interface TestLoaderInterface
  */
-interface TestLoaderInterface extends NodeInterface, ExecNodeInterface, LoaderInterface
+interface TestLoaderInterface extends ExecNodeInterface, LoaderInterface
 {
 }
 
@@ -29,6 +29,22 @@ interface TestLoaderInterface extends NodeInterface, ExecNodeInterface, LoaderIn
  */
 class TestLoader extends NoOpLoader implements TestLoaderInterface
 {
+}
+
+/**
+ * Class InsertLoader - A concrete loader that inserts into the test table
+ */
+class InsertLoader extends NoOpLoader
+{
+    public function exec($param = null)
+    {
+        $insert = [
+            'id'      => $param['id'],
+            'join_id' => $param['join_id'] ?? 'null',
+        ];
+
+        TestBase::getPdo()->query('INSERT INTO ' . TestBase::TO_TABLE . ' (' . implode(',', array_keys($insert)) . ') VALUES (' . implode(',', $insert) . ')');
+    }
 }
 
 /**
@@ -45,25 +61,33 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
      *
      * @var int
      */
-    protected $numRecords = 42;
+    protected static int $numRecords = 42;
 
     /**
      * @var array
      */
-    protected $expectedJoinRecords = [];
+    protected static array $expectedJoinRecords = [];
 
     /**
-     * @var \PDO
+     * @var PDO
      */
     protected static $pdo;
 
     /**
-     * @return \PDO
+     * Check if SQLite PDO driver is available.
      */
-    public function getPdo()
+    public static function hasSqliteDriver(): bool
+    {
+        return in_array('sqlite', PDO::getAvailableDrivers(), true);
+    }
+
+    /**
+     * @return PDO
+     */
+    public static function getPdo(): PDO
     {
         if (static::$pdo === null) {
-            static::$pdo = new \PDO('sqlite::memory:');
+            static::$pdo = new PDO('sqlite::memory:');
 
             static::$pdo->query(
                 'CREATE TABLE ' . self::FROM_TABLE . '(
@@ -103,8 +127,8 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
     public function getLoaderMock()
     {
         $stub = $this->getMockBuilder(TestLoader::class)
-                ->setMethods(['exec'])
-                ->getMock();
+            ->setMethods(['exec'])
+            ->getMock();
 
         $stub->expects($spy = $this->any())
             ->method('exec')
@@ -123,15 +147,13 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @param string $table
-     *
      * @return static
      */
     protected function populateTable(string $table): self
     {
         $keep = true;
         $j    = 0;
-        for ($i = 1; $i <= $this->numRecords; ++$i) {
+        for ($i = 1; $i <= self::$numRecords; ++$i) {
             switch ($table) {
                 case self::FROM_TABLE:
                     $insert = [
@@ -151,13 +173,13 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
                         'join_id' => "$j",
                     ];
 
-                    $this->expectedJoinRecords[$i] = $insert;
+                    self::$expectedJoinRecords[$i] = $insert;
 
                     $keep = false;
                     break;
             }
 
-            $this->getPdo()->query('INSERT OR IGNORE INTO ' . $table . ' (' . implode(',', array_keys($insert)) . ') VALUES (' . implode(',', $insert) . ')');
+            self::getPdo()->query('INSERT OR IGNORE INTO ' . $table . ' (' . implode(',', array_keys($insert)) . ') VALUES (' . implode(',', $insert) . ')');
         }
 
         return $this;
@@ -170,33 +192,17 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
         return $this;
     }
 
-    /**
-     * @param string $table
-     *
-     * @return int
-     */
     protected function getTableCount(string $table): int
     {
         return (int) $this->getPdo()->query("SELECT COUNT(*) FROM $table")->fetchColumn();
     }
 
-    /**
-     * @param string $table
-     *
-     * @return array
-     */
     protected function getTableAll(string $table): array
     {
-        return $this->getPdo()->query("SELECT * FROM $table ORDER BY id ASC")->fetchAll(\PDO::FETCH_ASSOC);
+        return $this->getPdo()->query("SELECT * FROM $table ORDER BY id ASC")->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @param int $count
-     * @param int $start
-     *
-     * @return Closure
-     */
-    protected function getTraversableClosure(int $count, int $start = 1): Closure
+    protected static function getTraversableClosure(int $count, int $start = 1): Closure
     {
         $start = max(1, $start);
         $count = $start === 1 ? $count : $count + $start - 1;

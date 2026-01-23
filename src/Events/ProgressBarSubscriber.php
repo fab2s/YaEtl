@@ -53,11 +53,10 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     /**
      * ProgressBarSubscriber constructor.
      *
-     * @param YaEtl|null $flow
      *
      * @throws ReflectionException
      */
-    public function __construct(YaEtl $flow = null)
+    public function __construct(?YaEtl $flow = null)
     {
         if ($flow !== null) {
             // auto register
@@ -66,8 +65,6 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param YaEtl $flow
-     *
      * @throws ReflectionException
      *
      * @return static
@@ -92,8 +89,6 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param OutputInterface $output
-     *
      * @return static
      */
     public function setOutput(OutputInterface $output): self
@@ -106,7 +101,6 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     /**
      * Set progress modulo
      *
-     * @param int $progressMod
      *
      * @return static
      */
@@ -120,7 +114,6 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     /**
      * Set the total number of records prior to FLow execution
      *
-     * @param int|null $numRecords
      *
      * @return static
      */
@@ -133,8 +126,6 @@ class ProgressBarSubscriber implements EventSubscriberInterface
 
     /**
      * Triggered when a Flow starts
-     *
-     * @param FlowEventInterface $event
      */
     public function start(FlowEventInterface $event)
     {
@@ -158,8 +149,6 @@ class ProgressBarSubscriber implements EventSubscriberInterface
 
     /**
      * Triggered when a Flow succeeds
-     *
-     * @param FlowEventInterface $event
      */
     public function success(FlowEventInterface $event)
     {
@@ -178,8 +167,6 @@ class ProgressBarSubscriber implements EventSubscriberInterface
 
     /**
      * Triggered when a Flow fails
-     *
-     * @param FlowEventInterface $event
      */
     public function fail(FlowEventInterface $event)
     {
@@ -189,9 +176,6 @@ class ProgressBarSubscriber implements EventSubscriberInterface
         $this->displayReport($event->getFlow());
     }
 
-    /**
-     * @return array
-     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -203,8 +187,6 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param FlowInterface $flow
-     *
      * @return static
      */
     protected function displayReport(FlowInterface $flow): self

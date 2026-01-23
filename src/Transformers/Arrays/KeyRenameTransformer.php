@@ -25,8 +25,6 @@ class KeyRenameTransformer extends TransformerAbstract
     protected $aliases;
 
     /**
-     * @param array $aliases
-     *
      * @throws NodalFlowException
      */
     public function __construct(array $aliases)

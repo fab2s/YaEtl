@@ -12,58 +12,54 @@ namespace fab2s\Tests\Lib\Arrays;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\Tests\Lib\TestBase;
 use fab2s\YaEtl\Transformers\Arrays\ArrayReplaceRecursiveTransformer;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ArrayReplaceRecursiveTransformerTest extends TestBase
 {
-    public function arrayReplaceRecursiveProvider()
+    public static function arrayReplaceRecursiveProvider(): array
     {
         return [
-          [
-              'default'  => [
-                  'one' => 'onedefault',
-                  42    => [1, 3, 3, 7],
-              ],
-              'override' => [
-                  '?' => ['no', 'maybe'],
-              ],
-              'cases'    => [
-                  [
-                      'input'    => [
-                          '?'  => 'yes',
-                          42   => [7, 3, 3, 1],
-                      ],
-                      'expected' => [
-                          'one' => 'onedefault',
-                          42    => [7, 3, 3, 1],
-                          '?'   => ['no', 'maybe'],
-                      ],
-                  ],
-                  [
-                      'input'    => [
-                          '?'  => ['a', 'b', 'never'],
-                          42   => null,
-                      ],
-                      'expected' => [
-                          'one' => 'onedefault',
-                          42    => null,
-                          '?'   => ['no', 'maybe', 'never'],
-                      ],
-                  ],
-              ],
-          ],
+            [
+                'default' => [
+                    'one' => 'onedefault',
+                    42    => [1, 3, 3, 7],
+                ],
+                'override' => [
+                    '?' => ['no', 'maybe'],
+                ],
+                'cases' => [
+                    [
+                        'input' => [
+                            '?' => 'yes',
+                            42  => [7, 3, 3, 1],
+                        ],
+                        'expected' => [
+                            'one' => 'onedefault',
+                            42    => [7, 3, 3, 1],
+                            '?'   => ['no', 'maybe'],
+                        ],
+                    ],
+                    [
+                        'input' => [
+                            '?' => ['a', 'b', 'never'],
+                            42  => null,
+                        ],
+                        'expected' => [
+                            'one' => 'onedefault',
+                            42    => null,
+                            '?'   => ['no', 'maybe', 'never'],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
     /**
-     * @dataProvider arrayReplaceRecursiveProvider
-     *
-     * @param array $default
-     * @param array $override
-     * @param array $cases
-     *
      * @throws NodalFlowException
      */
-    public function testArrayReplaceRecursiveTransformer(array $default, array $override, array $cases)
+    #[DataProvider('arrayReplaceRecursiveProvider')]
+    public function test_array_replace_recursive_transformer(array $default, array $override, array $cases)
     {
         $transformer = new ArrayReplaceRecursiveTransformer($default, $override);
 

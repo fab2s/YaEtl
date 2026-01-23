@@ -24,7 +24,6 @@ abstract class ExtractorLimitAbstract extends ExtractorAbstract implements Extra
     /**
      * Set extract limit
      *
-     * @param int|null $limit
      *
      * @return static
      */
@@ -37,10 +36,8 @@ abstract class ExtractorLimitAbstract extends ExtractorAbstract implements Extra
 
     /**
      * Get current limit
-     *
-     * @return int|null
      */
-    public function getLimit(): ? int
+    public function getLimit(): ?int
     {
         return $this->limit;
     }

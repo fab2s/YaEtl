@@ -18,9 +18,6 @@ class ArrayLoader extends LoaderAbstract
         $this->loadedData[] = $param;
     }
 
-    /**
-     * @return array
-     */
     public function getLoadedData(): array
     {
         return $this->loadedData;

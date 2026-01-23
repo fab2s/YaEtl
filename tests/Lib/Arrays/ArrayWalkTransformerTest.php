@@ -13,28 +13,26 @@ use fab2s\NodalFlow\NodalFlowException;
 use fab2s\Tests\Lib\TestBase;
 use fab2s\YaEtl\Transformers\Arrays\ArrayWalkTransformer;
 use fab2s\YaEtl\YaEtlException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ArrayWalkTransformerTest extends TestBase
 {
     /**
-     * @dataProvider arrayWalkProvider
-     *
-     * @param callable $callable
-     * @param array    $data
-     * @param          $expected
-     * @param null     $arg
+     * @param null  $arg
+     * @param mixed $expected
      *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
-    public function testArrayWalkTransformer(callable $callable, array $data, $expected, $arg = null)
+    #[DataProvider('arrayWalkProvider')]
+    public function test_array_walk_transformer(callable $callable, array $data, $expected, $arg = null)
     {
         $transformer = new ArrayWalkTransformer($callable, $arg);
 
         $this->assertSame($expected, $transformer->exec($data));
     }
 
-    public function arrayWalkProvider(): array
+    public static function arrayWalkProvider(): array
     {
         return [
             [

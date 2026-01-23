@@ -1,6 +1,13 @@
 # YaEtl
 
-[![Documentation Status](https://readthedocs.org/projects/yaetl/badge/?version=latest)](http://yaetl.readthedocs.io/en/latest/?badge=latest) [![CI](https://github.com/fab2s/YaEtl/actions/workflows/ci.yml/badge.svg)](https://github.com/fab2s/YaEtl/actions/workflows/ci.yml) [![QA](https://github.com/fab2s/YaEtl/actions/workflows/qa.yml/badge.svg)](https://github.com/fab2s/YaEtl/actions/workflows/qa.yml) [![Total Downloads](https://poser.pugx.org/fab2s/yaetl/downloads)](https://packagist.org/packages/fab2s/yaetl) [![Monthly Downloads](https://poser.pugx.org/fab2s/yaetl/d/monthly)](https://packagist.org/packages/fab2s/yaetl) [![Latest Stable Version](https://poser.pugx.org/fab2s/yaetl/v/stable)](https://packagist.org/packages/fab2s/yaetl)  [![Code Climate](https://codeclimate.com/github/fab2s/YaEtl/badges/gpa.svg)](https://codeclimate.com/github/fab2s/YaEtl) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/fab2s/YaEtl/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/fab2s/YaEtl/?branch=master) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com) [![License](https://poser.pugx.org/fab2s/nodalflow/license)](https://packagist.org/packages/fab2s/yaetl)
+[![Documentation Status](https://readthedocs.org/projects/yaetl/badge/?version=latest)](http://yaetl.readthedocs.io/en/latest/?badge=latest) 
+[![CI](https://github.com/fab2s/YaEtl/actions/workflows/ci.yml/badge.svg)](https://github.com/fab2s/YaEtl/actions/workflows/ci.yml) [![QA](https://github.com/fab2s/YaEtl/actions/workflows/qa.yml/badge.svg)](https://github.com/fab2s/YaEtl/actions/workflows/qa.yml) 
+[![Total Downloads](https://poser.pugx.org/fab2s/yaetl/downloads)](https://packagist.org/packages/fab2s/yaetl) 
+[![Monthly Downloads](https://poser.pugx.org/fab2s/yaetl/d/monthly)](https://packagist.org/packages/fab2s/yaetl) 
+[![Latest Stable Version](https://poser.pugx.org/fab2s/yaetl/v/stable)](https://packagist.org/packages/fab2s/yaetl)  
+[![Code Climate](https://codeclimate.com/github/fab2s/YaEtl/badges/gpa.svg)](https://codeclimate.com/github/fab2s/YaEtl)  
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com) 
+[![License](https://poser.pugx.org/fab2s/nodalflow/license)](https://packagist.org/packages/fab2s/yaetl)
 
 `YaEtl` ("Yay'TL", or YetAnotherEtl) is a PHP implementation of an Extract-Transform-Load (aka ETL) workflow based on [NodalFlow](https://github.com/fab2s/NodalFlow).
 ETL workflow comes handy in numerous situations where a lot of records meet with various sources, format and repositories.
@@ -27,7 +34,7 @@ composer require "fab2s/yaetl"
 If you want to specifically install the php >=7.2.0 version, use:
 
 ```
-composer require "fab2s/yaetl" ^2
+composer require "fab2s/yaetl" ^2.0.0
 ```
 
 If you want to specifically install the php 5.6/7.1 version, use:
@@ -267,7 +274,7 @@ Please have a look at [NodalFlow documentation](https://github.com/fab2s/NodalFl
 
 ## Requirements
 
-`YaEtl` is tested against php 7.2, 7.3, 7.4, 8.0, 8.1 and 8.2
+`YaEtl` is tested against php 8.1, 8.2, 8.3 and 8.4
 
 ## Contributing
 

@@ -17,7 +17,8 @@ class NoOpLoader extends LoaderAbstract
     /**
      * Execute the dumbest loader
      *
-     * @param mixed $record
+     *
+     * @param null|mixed $record
      *
      * @return bool
      */

@@ -35,19 +35,11 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
         parent::__construct();
     }
 
-    /**
-     * @param mixed $param
-     *
-     * @return bool
-     */
     public function extract($param = null): bool
     {
         return !feof($this->handle);
     }
 
-    /**
-     * @return bool
-     */
     protected function readBom(): bool
     {
         if (false === ($bomCandidate = fread($this->handle, 4))) {
@@ -64,9 +56,6 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
         return rewind($this->handle);
     }
 
-    /**
-     * @return string|null
-     */
     protected function getNextNonEmptyLine(): ?string
     {
         do {
@@ -84,10 +73,7 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
         return null;
     }
 
-    /**
-     * @return string|null
-     */
-    protected function getNextNonEmptyChars(): ? string
+    protected function getNextNonEmptyChars(): ?string
     {
         do {
             if (false === ($char = fread($this->handle, 1))) {

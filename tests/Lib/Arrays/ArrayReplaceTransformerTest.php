@@ -12,59 +12,55 @@ namespace fab2s\Tests\Lib\Arrays;
 use fab2s\NodalFlow\NodalFlowException;
 use fab2s\Tests\Lib\TestBase;
 use fab2s\YaEtl\Transformers\Arrays\ArrayReplaceTransformer;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ArrayReplaceTransformerTest extends TestBase
 {
-    public function arrayReplaceProvider()
+    public static function arrayReplaceProvider(): array
     {
         return [
-          [
-              'default'  => [
-                  'one' => 'onedefault',
-                  42    => 1337,
-              ],
-              'override' => [
-                  '?' => 'no',
-              ],
-              'cases'    => [
-                  [
-                      'input'    => [
-                          '?'  => 'yes',
-                          'oh' => 'my',
-                      ],
-                      'expected' => [
-                          'one' => 'onedefault',
-                          42    => 1337,
-                          '?'   => 'no',
-                          'oh'  => 'my',
-                      ],
-                  ],
-                  [
-                      'input'    => [
-                          '?'  => ['a', 'b', 'c'],
-                          42   => null,
-                      ],
-                      'expected' => [
-                          'one' => 'onedefault',
-                          42    => null,
-                          '?'   => 'no',
-                      ],
-                  ],
-              ],
-          ],
+            [
+                'default' => [
+                    'one' => 'onedefault',
+                    42    => 1337,
+                ],
+                'override' => [
+                    '?' => 'no',
+                ],
+                'cases' => [
+                    [
+                        'input' => [
+                            '?'  => 'yes',
+                            'oh' => 'my',
+                        ],
+                        'expected' => [
+                            'one' => 'onedefault',
+                            42    => 1337,
+                            '?'   => 'no',
+                            'oh'  => 'my',
+                        ],
+                    ],
+                    [
+                        'input' => [
+                            '?' => ['a', 'b', 'c'],
+                            42  => null,
+                        ],
+                        'expected' => [
+                            'one' => 'onedefault',
+                            42    => null,
+                            '?'   => 'no',
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
     /**
-     * @dataProvider arrayReplaceProvider
-     *
-     * @param array $default
-     * @param array $override
-     * @param array $cases
-     *
      * @throws NodalFlowException
      */
-    public function testArrayReplaceTransformer(array $default, array $override, array $cases)
+    #[DataProvider('arrayReplaceProvider')]
+    public function test_array_replace_transformer(array $default, array $override, array $cases)
     {
         $transformer = new ArrayReplaceTransformer($default, $override);
 
