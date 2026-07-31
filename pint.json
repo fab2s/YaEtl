@@ -1,0 +1,78 @@
+{
+    "preset": "laravel",
+    "cache-file": ".pint.cache",
+    "rules": {
+        "header_comment": {
+            "header": "This file is part of YaEtl\n    (c) Fabrice de Stefanis / https://github.com/fab2s/YaEtl\nThis source file is licensed under the MIT license which you will\nfind in the LICENSE file or at https://opensource.org/licenses/MIT"
+        },
+        "assign_null_coalescing_to_coalesce_equal": true,
+        "binary_operator_spaces": {
+            "default": "align_single_space_minimal"
+        },
+        "class_definition": true,
+        "blank_lines_before_namespace": true,
+        "align_multiline_comment": true,
+        "class_attributes_separation": {
+            "elements": {
+                "method": "one",
+                "const": "only_if_meta",
+                "property": "only_if_meta",
+                "trait_import": "only_if_meta"
+            }
+        },
+        "concat_space": {
+            "spacing": "one"
+        },
+        "global_namespace_import": {
+            "import_classes": true,
+            "import_functions": false,
+            "import_constants": false
+        },
+        "no_superfluous_phpdoc_tags": true,
+        "method_argument_space": {
+            "on_multiline": "ensure_fully_multiline"
+        },
+        "method_chaining_indentation": true,
+        "multiline_whitespace_before_semicolons": {
+            "strategy": "new_line_for_chained_calls"
+        },
+        "operator_linebreak": {
+            "position": "beginning"
+        },
+        "ordered_class_elements": {
+            "order": [
+                "use_trait",
+                "constant",
+                "case",
+                "property",
+                "method"
+            ]
+        },
+        "phpdoc_align": true,
+        "phpdoc_separation": {
+            "groups": [
+                [
+                    "param"
+                ],
+                [
+                    "return"
+                ]
+            ]
+        },
+        "php_unit_method_casing": {
+            "case": "snake_case"
+        },
+        "return_type_declaration": true,
+        "simplified_null_return": true,
+        "single_trait_insert_per_statement": true,
+        "trailing_comma_in_multiline": {
+            "elements": [
+                "parameters",
+                "arguments"
+            ]
+        }
+    },
+    "exclude": [
+        "vendor"
+    ]
+}

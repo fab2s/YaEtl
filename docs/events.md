@@ -150,7 +150,7 @@ The original exception is [re-thrown by NodalFlow](exceptions.md) after the exec
 
 ## ProgressBarSubscriber
 
-YaEtl comes with a `ProgressBarSubscriber` class you can use if you want to display a symfony ProgressBar during Flow execution. It is tested against [symfony/console](htttps://symfony.com/doc/current/composents/console.html) versions `2.8.*`, `3.4.*` and `4.0.*` (php > 7.1).
+YaEtl comes with a `ProgressBarSubscriber` class you can use if you want to display a symfony ProgressBar during Flow execution. It is tested against [symfony/console](htttps://symfony.com/doc/current/composents/console.html) versions `6.4.*`, `7.0.*`, `7.4.*`, `8.0.*` and `8.1.*` (php >= 8.2).
 
 **TL;DR:**
 

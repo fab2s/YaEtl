@@ -11,6 +11,7 @@ namespace fab2s\YaEtl\Extractors;
 
 use fab2s\YaEtl\YaEtlException;
 use PDO;
+use Pdo\Mysql;
 use SplDoublyLinkedList;
 
 /**
@@ -64,8 +65,19 @@ trait PdoExtractorTrait
     {
         if ($this->dbDriverName === 'mysql' && $this->driverBufferedQuery) {
             // set driver state back to where we met
-            $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+            $this->pdo->setAttribute(static::bufferedQueryAttribute(), true);
         }
+    }
+
+    /**
+     * PDO::MYSQL_ATTR_USE_BUFFERED_QUERY is deprecated since php 8.5 in favor of
+     * Pdo\Mysql::ATTR_USE_BUFFERED_QUERY, which only exists since php 8.4
+     * Both constants only exist when the pdo_mysql extension is loaded,
+     * which is granted in mysql driver context
+     */
+    public static function bufferedQueryAttribute(): int
+    {
+        return PHP_VERSION_ID >= 80400 ? Mysql::ATTR_USE_BUFFERED_QUERY : PDO::MYSQL_ATTR_USE_BUFFERED_QUERY;
     }
 
     /**
@@ -88,11 +100,12 @@ trait PdoExtractorTrait
         if ($this->dbDriverName === 'mysql') {
             // buffered queries can have great performance impact
             // with large data sets
-            $this->driverBufferedQuery = $this->pdo->getAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY);
+            $bufferedQueryAttribute    = static::bufferedQueryAttribute();
+            $this->driverBufferedQuery = $this->pdo->getAttribute($bufferedQueryAttribute);
 
             if ($this->driverBufferedQuery) {
                 // disable buffered queries as we should be querying by a lot
-                $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
+                $this->pdo->setAttribute($bufferedQueryAttribute, false);
             }
         }
 

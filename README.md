@@ -31,13 +31,19 @@ It is also a good thing to check [NodalFlow documentation](http://nodalflow.read
 composer require "fab2s/yaetl"
 ```
 
-If you want to specifically install the php >=7.2.0 version, use:
+If you want to specifically install the php 8.1 version, use:
+
+```
+composer require "fab2s/yaetl" ^2.1.0
+```
+
+If you want to specifically install the php 7.2/8.0 version, use:
 
 ```
 composer require "fab2s/yaetl" ^2.0.0
 ```
 
-If you want to specifically install the php 5.6/7.1 version, use:
+If you want to specifically install the php >=5.6 version, use:
 
 ```
 composer require "fab2s/yaetl" ^1
@@ -274,7 +280,7 @@ Please have a look at [NodalFlow documentation](https://github.com/fab2s/NodalFl
 
 ## Requirements
 
-`YaEtl` is tested against php 8.1, 8.2, 8.3 and 8.4
+`YaEtl` is tested against php 8.2, 8.3, 8.4 and 8.5
 
 ## Contributing
 
