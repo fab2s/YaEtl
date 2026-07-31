@@ -1,5 +1,5 @@
 site_name: 'YaEtl'
-pages:
+nav:
     - 'YaEtl Documentation': 'index.md'
     - 'Citizens': 'citizens.md'
     - 'Usage': 'usage.md'

@@ -61,7 +61,7 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
     {
         if ($this->driverBufferedQuery) {
             // set driver state back to where we met
-            $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+            $this->pdo->setAttribute(static::bufferedQueryAttribute(), true);
         }
     }
 
@@ -89,7 +89,7 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
     {
         $extractQuery = $this->getPaginatedQuery();
         $statement    = $this->pdo->prepare($extractQuery);
-        if (!$statement->execute(!empty($this->queryBindings) ? $this->queryBindings : null)) {
+        if (! $statement->execute(! empty($this->queryBindings) ? $this->queryBindings : null)) {
             return false;
         }
 
@@ -105,6 +105,6 @@ class PdoUniqueKeyExtractor extends UniqueKeyExtractorAbstract
         // record map in both from and join context
         $this->setExtractedCollection($this->joinedRecords);
 
-        return !empty($this->joinedRecords);
+        return ! empty($this->joinedRecords);
     }
 }

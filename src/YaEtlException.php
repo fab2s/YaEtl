@@ -14,6 +14,4 @@ use fab2s\NodalFlow\NodalFlowException;
 /**
  * Class YaEtlException
  */
-class YaEtlException extends NodalFlowException
-{
-}
+class YaEtlException extends NodalFlowException {}

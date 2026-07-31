@@ -96,7 +96,7 @@ class DbLoader extends LoaderAbstract
         // situation where there is a lot of updates and you need ot keep
         // atomicity using transactions
         DB::transaction(function () use ($loadQuery, $whereClause, $param) {
-            if (!empty($whereClause) && $loadQuery->where($whereClause)->sharedLock()->exists()) {
+            if (! empty($whereClause) && $loadQuery->where($whereClause)->sharedLock()->exists()) {
                 $update = \array_diff_key($param, $whereClause);
                 $loadQuery->update($update);
             } else {

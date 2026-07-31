@@ -24,9 +24,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
  */
 class FileTest extends TestBase
 {
-    /**
-     * @var array
-     */
     protected static array $expectedCsv = [
         ['1', 'Sonsing', '思宇', 'Uganda', 'Kotido', "a\"6\nA'R`à1,;\h"],
         ['2', 'Cookley', '思宇', 'Poland', 'Leśna Podlaska', "a\"0L'F`àH,;f"],
@@ -39,10 +36,6 @@ class FileTest extends TestBase
         ['9', 'Cookley', '银含', 'Brazil', 'Itapecerica da Serra', "a\"1W'Z`à5,;k"],
         ['10', 'Rank', '彦歆', 'Armenia', 'Artsvanist', "a\"8K'A`àG,;c"],
     ];
-
-    /**
-     * @var array
-     */
     protected static array $expectedCsvHeader = ['id', 'name', 'given_name', 'country', 'city', 'garbage'];
 
     /**
@@ -59,9 +52,10 @@ class FileTest extends TestBase
             ->transform(new CallableTransformer(function ($line) use ($expected) {
                 static $i = 0;
                 $this->assertSame($expected['values'][$i], (int) trim($line));
-                ++$i;
+                $i++;
             }))
-            ->exec();
+            ->exec()
+        ;
 
         $this->assertSame($expected['encoding'], $lineExtractor->getEncoding());
     }
@@ -104,22 +98,20 @@ class FileTest extends TestBase
             $csvLoader->setUseHeader(true)->setHeader($expected['header']);
         }
 
-        if (!empty($expected['encoding'])) {
+        if (! empty($expected['encoding'])) {
             $csvLoader->setUseBom(true)->setEncoding($expected['encoding']);
         }
 
         (new YaEtl)->from(new CallableExtractor(function () use ($expected) {
             return $expected['values'];
         }))->to($csvLoader)
-            ->exec();
+            ->exec()
+        ;
 
         // check if what we just wrote passes the read test
         $this->test_csv_extractor($srcPath, $useHeader, $expected);
     }
 
-    /**
-     * @return array
-     */
     public static function csvExtractorProvider(): array
     {
         return [
@@ -206,9 +198,6 @@ class FileTest extends TestBase
         ];
     }
 
-    /**
-     * @return array
-     */
     public static function lineExtractorProvider(): array
     {
         return [
@@ -258,8 +247,6 @@ class FileTest extends TestBase
     }
 
     /**
-     * @param mixed $useHeader
-     *
      * @throws NodalFlowException
      * @throws YaEtlException
      */
@@ -272,9 +259,10 @@ class FileTest extends TestBase
                 static $i = 0;
                 $expected = $useHeader ? array_combine($csvExtractor->getHeader(), $expected['values'][$i]) : $expected['values'][$i];
                 $this->assertSame($expected, $record);
-                ++$i;
+                $i++;
             }))
-            ->exec();
+            ->exec()
+        ;
 
         $this->assertSame($expected['header'], $csvExtractor->getHeader());
         $this->assertSame($expected['encoding'], $csvExtractor->getEncoding());

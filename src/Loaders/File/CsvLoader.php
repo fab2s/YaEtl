@@ -49,7 +49,8 @@ class CsvLoader extends FileLoaderAbstract
     public function exec($param = null)
     {
         $this->handleFirstLine($param)
-            ->writeCsvLine($param);
+            ->writeCsvLine($param)
+        ;
     }
 
     /**
@@ -70,7 +71,7 @@ class CsvLoader extends FileLoaderAbstract
     public function writeHeader(array $param): self
     {
         if ($this->useHeader) {
-            if (!isset($this->header)) {
+            if (! isset($this->header)) {
                 $this->header = array_keys($param);
             }
 
@@ -98,7 +99,8 @@ class CsvLoader extends FileLoaderAbstract
         if ($this->isFirstLine) {
             $this->writeBom()
                 ->writeSep()
-                ->writeHeader($param);
+                ->writeHeader($param)
+            ;
             $this->isFirstLine = false;
         }
 

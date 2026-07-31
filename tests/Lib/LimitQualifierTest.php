@@ -35,7 +35,8 @@ class LimitQualifierTest extends TestBase
         $yaEtl->from(new CallableExtractor($this->getTraversableClosure(10)))
             ->qualify(new LimitQualifier(5, $target))
             ->to($arrayLoader)
-            ->exec();
+            ->exec()
+        ;
 
         $this->assertSame($expected, $arrayLoader->getLoadedData());
     }
@@ -67,13 +68,15 @@ class LimitQualifierTest extends TestBase
         $branchArrayLoader = new ArrayLoader;
         $branch            = new YaEtl;
         $branch->qualify(new LimitQualifier(5, $target))
-            ->to($branchArrayLoader);
+            ->to($branchArrayLoader)
+        ;
 
         $yaEtl = new YaEtl;
         $yaEtl->from(new CallableExtractor($this->getTraversableClosure(10)))
             ->branch($branch)
             ->to($arrayLoader)
-            ->exec();
+            ->exec()
+        ;
 
         $this->assertSame($expected, $arrayLoader->getLoadedData());
         $this->assertSame($expectedBranch, $branchArrayLoader->getLoadedData());

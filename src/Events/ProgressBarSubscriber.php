@@ -65,9 +65,9 @@ class ProgressBarSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @throws ReflectionException
-     *
      * @return static
+     *
+     * @throws ReflectionException
      */
     public function registerFlow(YaEtl $flow): self
     {
@@ -81,7 +81,7 @@ class ProgressBarSubscriber implements EventSubscriberInterface
      */
     public function getOutput()
     {
-        if (!isset($this->output)) {
+        if (! isset($this->output)) {
             $this->output = new ConsoleOutput;
         }
 
@@ -133,7 +133,8 @@ class ProgressBarSubscriber implements EventSubscriberInterface
         $flow = $event->getFlow();
         $this->setProgressMod($flow->getProgressMod())
             ->getOutput()
-            ->writeln('<info>[YaEtl] Start</info>');
+            ->writeln('<info>[YaEtl] Start</info>')
+        ;
         $this->progressBar = new ProgressBar($this->output);
         $this->progressBar->start($this->numRecords);
     }

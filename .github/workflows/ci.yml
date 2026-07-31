@@ -1,20 +1,23 @@
 name: CI
 on: [pull_request]
 jobs:
-  tests:
-    name: YaEtl CI (PHP ${{ matrix.php-versions }} / console ${{ matrix.console-versions }})
+  lib:
+    name: YaEtl Lib (PHP ${{ matrix.php-versions }} / console ${{ matrix.console-versions }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: [ '8.4', '8.3', '8.2', '8.1' ]
-        console-versions: ['7.2', '7.1', '7.0', '6.4', '6.3', '6.2', '6.1', '6.0' ]
+        php-versions: [ '8.5', '8.4', '8.3', '8.2' ]
+        console-versions: [ '8.1', '8.0', '7.4', '7.0', '6.4' ]
         exclude:
-          - php-versions: 8.1
-            console-versions: 7.2
-          - php-versions: 8.1
-            console-versions: 7.1
-          - php-versions: 8.1
-            console-versions: 7.0
+          # Symfony 8 requires PHP >= 8.4
+          - php-versions: 8.3
+            console-versions: 8.1
+          - php-versions: 8.3
+            console-versions: 8.0
+          - php-versions: 8.2
+            console-versions: 8.1
+          - php-versions: 8.2
+            console-versions: 8.0
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,36 +42,13 @@ jobs:
       - name: Remove composer.lock
         run: rm -f composer.lock
 
-      - name: Detect Orchestra compatibility with console ${{ matrix.console-versions }}
-        id: orchestra-compat
-        run: |
-          if [[ " 8.1 " =~ " ${{ matrix.php-versions }} " ]]; then
-            if [[ " 7.0 7.1 7.2 " =~ " ${{ matrix.console-versions }} " ]]; then
-              echo 'compat=0' >> $GITHUB_OUTPUT
-              exit 0
-            fi
-          fi
-          if [[ " 8.3 8.4 " =~ " ${{ matrix.php-versions }} " ]]; then
-            if [[ " 6.2 6.1 6.0 " =~ " ${{ matrix.console-versions }} " ]]; then
-              echo 'compat=0' >> $GITHUB_OUTPUT
-              exit 0
-            fi
-          fi
-          echo 'compat=1' >> $GITHUB_OUTPUT
-        shell: bash
-
-      - name: Remove Orchestra if incompatible with console ${{ matrix.console-versions }}
-        run: composer remove "orchestra/testbench" --dev --no-update
-        if: ${{ steps.orchestra-compat.outputs.compat == 0 }}
-
-      - name: Remove php-cs-fixer dependency
-        run: composer remove "friendsofphp/php-cs-fixer" --dev --no-update
+      # The Lib test suite does not need Laravel, and Orchestra pins Symfony versions
+      # of its own, which would defeat the whole point of this matrix
+      - name: Remove Orchestra and QA dependencies
+        run: composer remove "orchestra/testbench" "laravel/pint" --dev --no-update
 
       - name: Install Symfony console ${{ matrix.console-versions }}
-        run: composer require "symfony/console:^${{ matrix.console-versions }}" --dev --no-update
-
-      - name: Disable Composer audit
-        run: composer config --global audit.block-insecure false
+        run: composer require "symfony/console:${{ matrix.console-versions }}.*" "symfony/event-dispatcher:${{ matrix.console-versions }}.*" --dev --no-update
 
       - name: Install Composer dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
@@ -76,6 +56,58 @@ jobs:
       - name: Lib test with phpunit
         run: vendor/bin/phpunit --testsuite Lib
 
+  laravel:
+    name: YaEtl Laravel (PHP ${{ matrix.php-versions }} / Orchestra ${{ matrix.orchestra-versions }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: [ '8.5', '8.4', '8.3', '8.2' ]
+        orchestra-versions: [ '11.0', '10.0', '9.0' ]
+        exclude:
+          # Laravel 13 (Testbench 11) requires PHP >= 8.3
+          - php-versions: 8.2
+            orchestra-versions: 11.0
+          # Laravel 11 (Testbench 9) does not support PHP 8.5
+          - php-versions: 8.5
+            orchestra-versions: 9.0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, dom, fileinfo, gmp, bcmath
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Remove composer.lock
+        run: rm -f composer.lock
+
+      - name: Remove QA dependencies
+        run: composer remove "laravel/pint" --dev --no-update
+
+      # Laravel 11 (Testbench 9) is EOL and carries unpatched security advisories,
+      # so composer blocks its install by default. YaEtl still supports it, so
+      # allow it in CI only (never touches the committed composer.json).
+      - name: Allow advisory-flagged dependencies (Laravel 11 is EOL)
+        run: composer config --global policy.advisories.block false
+
+      - name: Install Orchestra ${{ matrix.orchestra-versions }}
+        run: composer require "orchestra/testbench:^${{ matrix.orchestra-versions }}" --dev --no-update
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
       - name: Laravel test with phpunit
-        if: ${{ steps.orchestra-compat.outputs.compat == 1 }}
         run: vendor/bin/phpunit --testsuite Laravel

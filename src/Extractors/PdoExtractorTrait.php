@@ -11,6 +11,7 @@ namespace fab2s\YaEtl\Extractors;
 
 use fab2s\YaEtl\YaEtlException;
 use PDO;
+use Pdo\Mysql;
 use SplDoublyLinkedList;
 
 /**
@@ -64,35 +65,48 @@ trait PdoExtractorTrait
     {
         if ($this->dbDriverName === 'mysql' && $this->driverBufferedQuery) {
             // set driver state back to where we met
-            $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+            $this->pdo->setAttribute(static::bufferedQueryAttribute(), true);
         }
+    }
+
+    /**
+     * PDO::MYSQL_ATTR_USE_BUFFERED_QUERY is deprecated since php 8.5 in favor of
+     * Pdo\Mysql::ATTR_USE_BUFFERED_QUERY, which only exists since php 8.4
+     * Both constants only exist when the pdo_mysql extension is loaded,
+     * which is granted in mysql driver context
+     */
+    public static function bufferedQueryAttribute(): int
+    {
+        return PHP_VERSION_ID >= 80400 ? Mysql::ATTR_USE_BUFFERED_QUERY : PDO::MYSQL_ATTR_USE_BUFFERED_QUERY;
     }
 
     /**
      * Properly set up PDO connection
      *
      *
-     * @throws YaEtlException
      *
      * @return static
+     *
+     * @throws YaEtlException
      */
     public function configurePdo(PDO $pdo): self
     {
         $this->pdo          = $pdo;
         $this->dbDriverName = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
 
-        if (!($this instanceof PaginatedQueryInterface) && !isset($this->supportedDrivers[$this->dbDriverName])) {
+        if (! ($this instanceof PaginatedQueryInterface) && ! isset($this->supportedDrivers[$this->dbDriverName])) {
             throw new YaEtlException(\get_class($this) . ' does not implement PaginatedQueryInterface and does not uses a supported Pdo driver, supported drivers are: ' . \implode(', ', \array_keys($this->supportedDrivers)));
         }
 
         if ($this->dbDriverName === 'mysql') {
             // buffered queries can have great performance impact
             // with large data sets
-            $this->driverBufferedQuery = $this->pdo->getAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY);
+            $bufferedQueryAttribute    = static::bufferedQueryAttribute();
+            $this->driverBufferedQuery = $this->pdo->getAttribute($bufferedQueryAttribute);
 
             if ($this->driverBufferedQuery) {
                 // disable buffered queries as we should be querying by a lot
-                $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
+                $this->pdo->setAttribute($bufferedQueryAttribute, false);
             }
         }
 
@@ -106,7 +120,7 @@ trait PdoExtractorTrait
     {
         $extractQuery = $this->getPaginatedQuery();
         $statement    = $this->pdo->prepare($extractQuery);
-        if (!$statement->execute(!empty($this->queryBindings) ? $this->queryBindings : null)) {
+        if (! $statement->execute(! empty($this->queryBindings) ? $this->queryBindings : null)) {
             return false;
         }
 
@@ -124,7 +138,7 @@ trait PdoExtractorTrait
         /* @var $this DbExtractorAbstract */
         $this->setExtractedCollection($collection);
 
-        return !$collection->isEmpty();
+        return ! $collection->isEmpty();
     }
 
     /**

@@ -26,18 +26,17 @@ class UniqueKeyExtractor extends PdoUniqueKeyExtractor implements PaginatedQuery
     /**
      * Generic extraction from tables with unique (composite) key
      *
-     * @param ?Builder     $extractQuery
-     * @param array|string $uniqueKey    can be either a unique key name as
-     *                                   string ('id' by default, will be ordered asc) or an associative array :
-     *                                   [
-     *                                   'uniqueKeyName' => 'order', // eg 'asc' or 'desc'
-     *                                   ]
-     *                                   or, for a unique composite key :
-     *                                   [
-     *                                   'compositeKey1' => 'asc',
-     *                                   'compositeKey2' => 'desc',
-     *                                   // ...
-     *                                   ]
+     * @param array|string $uniqueKey can be either a unique key name as
+     *                                string ('id' by default, will be ordered asc) or an associative array :
+     *                                [
+     *                                'uniqueKeyName' => 'order', // eg 'asc' or 'desc'
+     *                                ]
+     *                                or, for a unique composite key :
+     *                                [
+     *                                'compositeKey1' => 'asc',
+     *                                'compositeKey2' => 'desc',
+     *                                // ...
+     *                                ]
      *
      * @throws YaEtlException
      * @throws NodalFlowException
@@ -61,11 +60,13 @@ class UniqueKeyExtractor extends PdoUniqueKeyExtractor implements PaginatedQuery
     {
         if ($this->joinFrom) {
             $extractQuery = $this->extractQuery
-                ->whereIn($this->uniqueKeyName, $this->uniqueKeyValues);
+                ->whereIn($this->uniqueKeyName, $this->uniqueKeyValues)
+            ;
         } else {
             $extractQuery = $this->extractQuery
                 ->offset($this->offset)
-                ->limit($this->batchSize);
+                ->limit($this->batchSize)
+            ;
         }
 
         $this->queryBindings = $extractQuery->getRawBindings();

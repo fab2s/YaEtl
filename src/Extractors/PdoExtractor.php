@@ -42,7 +42,7 @@ class PdoExtractor extends DbExtractorAbstract
     {
         if ($this->driverBufferedQuery) {
             // set driver state back to where we met
-            $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+            $this->pdo->setAttribute(static::bufferedQueryAttribute(), true);
         }
     }
 

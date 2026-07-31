@@ -38,7 +38,8 @@ class YaEtlTest extends TestBase
                 return $value <= 5;
             }))
             ->to($arrayLoader)
-            ->exec();
+            ->exec()
+        ;
 
         $this->assertSame(range(1, 5), $arrayLoader->getLoadedData());
     }
@@ -55,7 +56,8 @@ class YaEtlTest extends TestBase
                 return true;
             }))
             ->to($arrayLoader)
-            ->exec();
+            ->exec()
+        ;
 
         $this->assertSame(range(1, 5), $arrayLoader->getLoadedData());
     }
@@ -76,7 +78,8 @@ class YaEtlTest extends TestBase
                 return true;
             }))
             ->to($arrayLoader)
-            ->exec();
+            ->exec()
+        ;
 
         $this->assertSame(range(1, 5), $arrayLoader->getLoadedData());
     }
@@ -89,12 +92,14 @@ class YaEtlTest extends TestBase
             ->qualify(new CallableQualifier(function ($value) {
                 return $value <= 5;
             }))
-            ->to($branchLoader);
+            ->to($branchLoader)
+        ;
 
         (new YaEtl)->from(new CallableExtractor($this->getTraversableClosure(10)))
             ->branch($branch)
             ->to($arrayLoader)
-            ->exec();
+            ->exec()
+        ;
 
         $this->assertSame(range(1, 5), $branchLoader->getLoadedData());
         $this->assertSame(range(1, 10), $arrayLoader->getLoadedData());
@@ -118,7 +123,8 @@ class YaEtlTest extends TestBase
         (new YaEtl)->from($firstExtractor)
             ->from($secondExtractor, $firstExtractor)
             ->to($arrayLoader)
-            ->exec();
+            ->exec()
+        ;
 
         $this->assertSame(range(1, 10), $arrayLoader->getLoadedData());
     }
@@ -134,7 +140,8 @@ class YaEtlTest extends TestBase
             ->from($secondExtractor, $firstExtractor)
             ->from($thirdExtractor, $firstExtractor)
             ->to($arrayLoader)
-            ->exec();
+            ->exec()
+        ;
 
         $this->assertSame(range(1, 15), $arrayLoader->getLoadedData());
     }

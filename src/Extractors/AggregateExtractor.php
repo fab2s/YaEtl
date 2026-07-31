@@ -43,14 +43,14 @@ class AggregateExtractor extends AggregateNode
     }
 
     /**
+     * @return static
+     *
      * @throws NodalFlowException
      * @throws YaEtlException
-     *
-     * @return static
      */
     public function addTraversable(TraversableNodeInterface $node): AggregateNodeInterface
     {
-        if (!($node instanceof ExtractorInterface)) {
+        if (! ($node instanceof ExtractorInterface)) {
             throw new YaEtlException('AggregateExtractor only supports ExtractorInterface Nodes');
         }
 

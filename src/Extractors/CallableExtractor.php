@@ -58,7 +58,7 @@ class CallableExtractor extends PayloadNodeAbstract implements ExtractorInterfac
     {
         $extracted = \call_user_func($this->payload, $param);
 
-        if (!is_iterable($extracted)) {
+        if (! is_iterable($extracted)) {
             return false;
         }
 
@@ -77,7 +77,7 @@ class CallableExtractor extends PayloadNodeAbstract implements ExtractorInterfac
      */
     public function getTraversable($param = null): iterable
     {
-        if (!$this->extract($param)) {
+        if (! $this->extract($param)) {
             // we still return an empty generator here
             return;
         }

@@ -25,7 +25,8 @@ class NullExtractorTest extends TestBase
         $nullExtractor = (new NullExtractor)->setLimit(10);
         $yaEtl->from(clone $nullExtractor)
             ->to($arrayLoader)
-            ->exec();
+            ->exec()
+        ;
 
         $expected = array_fill(0, 10, null);
         $this->assertSame($expected, $arrayLoader->getLoadedData());

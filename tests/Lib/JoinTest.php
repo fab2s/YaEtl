@@ -21,12 +21,13 @@ use PHPUnit\Framework\Attributes\DataProvider;
  */
 class JoinTest extends TestBase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->populateTable(self::FROM_TABLE)
-            ->populateTable(self::JOIN_TABLE);
+            ->populateTable(self::JOIN_TABLE)
+        ;
     }
 
     /**
@@ -51,7 +52,7 @@ class JoinTest extends TestBase
         if ($isLeft) {
             foreach ($fromRecords as $idx => $record) {
                 $id                = $record['id'];
-                $expectedRecords[] = !isset(self::$expectedJoinRecords[$id]) ? $record : self::$expectedJoinRecords[$id];
+                $expectedRecords[] = ! isset(self::$expectedJoinRecords[$id]) ? $record : self::$expectedJoinRecords[$id];
             }
         } else {
             $expectedRecords = array_values(self::$expectedJoinRecords);
@@ -63,8 +64,6 @@ class JoinTest extends TestBase
     /**
      * @throws NodalFlowException
      * @throws YaEtlException
-     *
-     * @return array
      */
     public static function joinCasesProvider(): array
     {

@@ -69,9 +69,9 @@ abstract class ExtractorAbstract extends NodeAbstract implements ExtractorInterf
     {
         $this->bootNumExtracts();
         while ($this->extract($param)) {
-            ++$this->numExtracts;
+            $this->numExtracts++;
             foreach ($this->getExtracted() as $record) {
-                ++$this->numRecords;
+                $this->numRecords++;
                 yield $record;
             }
         }

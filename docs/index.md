@@ -1,6 +1,13 @@
 # YaEtl
 
-[![Documentation Status](https://readthedocs.org/projects/yaetl/badge/?version=latest)](http://yaetl.readthedocs.io/en/latest/?badge=latest) [![Build Status](https://travis-ci.org/fab2s/YaEtl.svg?branch=master)](https://travis-ci.org/fab2s/YaEtl) [![Total Downloads](https://poser.pugx.org/fab2s/yaetl/downloads)](https://packagist.org/packages/fab2s/yaetl) [![Monthly Downloads](https://poser.pugx.org/fab2s/yaetl/d/monthly)](https://packagist.org/packages/fab2s/yaetl) [![Latest Stable Version](https://poser.pugx.org/fab2s/yaetl/v/stable)](https://packagist.org/packages/fab2s/yaetl) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/1f24395f-9b33-4d99-acc7-d286a5f54db4/mini.png)](https://insight.sensiolabs.com/projects/1f24395f-9b33-4d99-acc7-d286a5f54db4) [![Code Climate](https://codeclimate.com/github/fab2s/YaEtl/badges/gpa.svg)](https://codeclimate.com/github/fab2s/YaEtl) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/aa2adb7aac514da497b154d6ad37db3c)](https://www.codacy.com/app/fab2s/YaEtl) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/fab2s/YaEtl/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/fab2s/YaEtl/?branch=master) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com) [![License](https://poser.pugx.org/fab2s/nodalflow/license)](https://packagist.org/packages/fab2s/yaetl)
+[![Documentation Status](https://readthedocs.org/projects/yaetl/badge/?version=latest)](http://yaetl.readthedocs.io/en/latest/?badge=latest) 
+[![CI](https://github.com/fab2s/YaEtl/actions/workflows/ci.yml/badge.svg)](https://github.com/fab2s/YaEtl/actions/workflows/ci.yml) [![QA](https://github.com/fab2s/YaEtl/actions/workflows/qa.yml/badge.svg)](https://github.com/fab2s/YaEtl/actions/workflows/qa.yml) 
+[![Total Downloads](https://poser.pugx.org/fab2s/yaetl/downloads)](https://packagist.org/packages/fab2s/yaetl) 
+[![Monthly Downloads](https://poser.pugx.org/fab2s/yaetl/d/monthly)](https://packagist.org/packages/fab2s/yaetl) 
+[![Latest Stable Version](https://poser.pugx.org/fab2s/yaetl/v/stable)](https://packagist.org/packages/fab2s/yaetl)  
+[![Code Climate](https://codeclimate.com/github/fab2s/YaEtl/badges/gpa.svg)](https://codeclimate.com/github/fab2s/YaEtl)  
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com) 
+[![License](https://poser.pugx.org/fab2s/nodalflow/license)](https://packagist.org/packages/fab2s/yaetl)
 
 `YaEtl` ("Yay'TL", or YetAnotherEtl) is a PHP implementation of an Extract-Transform-Load (aka ETL) workflow based on [NodalFlow](https://github.com/fab2s/NodalFlow).
 ETL workflow comes handy in numerous situations where a lot of records meet with various sources, format and repositories.
@@ -24,13 +31,19 @@ It is also a good thing to check [NodalFlow documentation](http://nodalflow.read
 composer require "fab2s/yaetl"
 ```
 
-If you want to specifically install the php >=7.1.0 version, use:
+If you want to specifically install the php 8.1 version, use:
 
 ```
-composer require "fab2s/yaetl" ^2
+composer require "fab2s/yaetl" ^2.1.0
 ```
 
-If you want to specifically install the php 5.6/7.0 version, use:
+If you want to specifically install the php 7.2/8.0 version, use:
+
+```
+composer require "fab2s/yaetl" ^2.0.0
+```
+
+If you want to specifically install the php >=5.6 version, use:
 
 ```
 composer require "fab2s/yaetl" ^1
@@ -257,7 +270,7 @@ Using such Node, you can for example share a slow extraction among many usages o
 
 In this example, each record would be presented to every branch and each Qualifier would be in charge of accepting the record in its Branch for other Nodes to act on it. As you can see, this pattern creates a lot of occasions to reuse existing Nodes as downstream Transformers and Loaders do not have to know anything about the specific properties we where choosing in the Qualifier. This means that you can write very generic loader strictly in charge of loading a record somewhere, leave the defaulting and formatting (charset etc) to a Transformer that does just that, and reuse these in any conditional use case by just Implementing a qualifier that holds the conditional logic.
 
-Read [Qualifiers](/docs/citizens.md#qualifiers) for more on qualification.
+Read [Qualifiers](citizens.md#qualifiers) for more on qualification.
 
 ## Serialization
 
@@ -267,7 +280,7 @@ Please have a look at [NodalFlow documentation](https://github.com/fab2s/NodalFl
 
 ## Requirements
 
-`YaEtl` is tested against php 7.1, 7.2, 7.3 and 7.4
+`YaEtl` is tested against php 8.2, 8.3, 8.4 and 8.5
 
 ## Contributing
 

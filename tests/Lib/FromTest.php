@@ -23,7 +23,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  */
 class FromTest extends TestBase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -51,8 +51,6 @@ class FromTest extends TestBase
     /**
      * @throws YaEtlException
      * @throws NodalFlowException
-     *
-     * @return array
      */
     public static function fromCasesProvider(): array
     {
@@ -61,12 +59,14 @@ class FromTest extends TestBase
 
         $FirstHalfFrom = clone $fullFrom;
         $FirstHalfFrom->setLimit(floor(self::$numRecords / 2))
-            ->setBatchSize(10);
+            ->setBatchSize(10)
+        ;
 
         $SecondHalfFrom = clone $FirstHalfFrom;
         $SecondHalfFrom->setLimit(ceil(self::$numRecords / 2))
             ->setOffset(floor(self::$numRecords / 2))
-            ->setBatchSize(20);
+            ->setBatchSize(20)
+        ;
 
         $FirstTenFrom = clone $fullFrom;
         $FirstTenFrom->setLimit(10);
