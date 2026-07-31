@@ -20,7 +20,7 @@ class PdoExtractorTraitTest extends TestBase
 {
     public function test_buffered_query_attribute()
     {
-        if (!extension_loaded('pdo_mysql')) {
+        if (! extension_loaded('pdo_mysql')) {
             $this->markTestSkipped('pdo_mysql is required to resolve MYSQL_ATTR_USE_BUFFERED_QUERY');
         }
 
@@ -41,7 +41,7 @@ class PdoExtractorTraitTest extends TestBase
         $this->assertSame([], $deprecations);
         $this->assertSame(
             PHP_VERSION_ID >= 80400 ? Mysql::ATTR_USE_BUFFERED_QUERY : PDO::MYSQL_ATTR_USE_BUFFERED_QUERY,
-            $attribute
+            $attribute,
         );
     }
 }

@@ -23,7 +23,7 @@ class YaEtlEvent extends FlowEvent
 
     public static function getEventList(): array
     {
-        if (!isset(static::$eventList)) {
+        if (! isset(static::$eventList)) {
             static::$eventList = array_replace(parent::getEventList(), [
                 static::FLOW_FLUSH => static::FLOW_FLUSH,
             ]);

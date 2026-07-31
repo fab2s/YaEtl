@@ -161,15 +161,16 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      * Register the extractor we would be joining against
      *
      *
-     * @throws YaEtlException
      *
      * @return $this
+     *
+     * @throws YaEtlException
      */
     public function setJoinFrom(JoinableInterface $joinFrom): JoinableInterface
     {
         // at least make sure this joinable extends this very class
         // to enforce getRecordMap() type
-        if (!is_a($joinFrom, self::class)) {
+        if (! is_a($joinFrom, self::class)) {
             throw new YaEtlException('The extractor joined against is not compatible, expected implementation of: ' . self::class . "\ngot: " . \get_class($joinFrom));
         }
 
@@ -217,7 +218,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
         $this->enforceBatchSize();
         if ($this->fetchRecords()) {
             $this->incrementOffset()
-                ->genRecordMap();
+                ->genRecordMap()
+            ;
 
             return true;
         }
@@ -258,9 +260,9 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
      *
      * @param null|mixed $record
      *
-     * @throws YaEtlException
-     *
      * @return mixed The result of the join
+     *
+     * @throws YaEtlException
      */
     public function exec($record = null)
     {
@@ -308,7 +310,8 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
             $this->getCarrier()->getFlowMap()->incrementNode($this->getId(), 'num_join');
             // gen record map before we set defaults
             $this->genRecordMap()
-                ->setDefaultExtracted();
+                ->setDefaultExtracted()
+            ;
 
             return true;
         }
@@ -398,9 +401,10 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
     /**
      * Generate record map
      *
-     * @throws YaEtlException
      *
      * @return static
+     *
+     * @throws YaEtlException
      */
     protected function genRecordMap(): self
     {
@@ -422,7 +426,7 @@ abstract class UniqueKeyExtractorAbstract extends DbExtractorAbstract implements
             // we could optimize a little bit for cases where
             // $this->joinedRecords is an indexed array on the proper key but ...
             foreach ($this->getExtracted() as $record) {
-                if (!isset($record[$fromKeyAlias])) {
+                if (! isset($record[$fromKeyAlias])) {
                     // Since we do not enforce key alias existence during init
                     // we have to do it here
                     throw new YaEtlException("From Key Alias not found in record: $fromKeyAlias");

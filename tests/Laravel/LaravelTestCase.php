@@ -10,6 +10,7 @@
 namespace fab2s\Tests\Laravel;
 
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase;
 
@@ -20,7 +21,7 @@ abstract class LaravelTestCase extends TestCase
     /**
      * @var int
      */
-    protected $seedNum            = 15;
+    protected $seedNum = 15;
 
     /**
      * @var array
@@ -40,13 +41,14 @@ abstract class LaravelTestCase extends TestCase
         parent::setUp();
 
         $this->createTestModelTable()
-            ->seedTestModelTable();
+            ->seedTestModelTable()
+        ;
     }
 
     /**
      * Define environment setup.
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @param Application $app
      */
     protected function defineEnvironment($app)
     {
@@ -103,7 +105,7 @@ abstract class LaravelTestCase extends TestCase
         }
 
         $result = [];
-        for ($i = 1; $i <= $this->seedNum; ++$i) {
+        for ($i = 1; $i <= $this->seedNum; $i++) {
             $result[] = [
                 'name' => "name_$i",
             ];
@@ -121,8 +123,8 @@ abstract class LaravelTestCase extends TestCase
         $result  = [];
         $counter = 0;
         foreach ($this->getTestModelSeedData() as $testModel) {
-            ++$counter;
-            if (!$every && $counter % 2) {
+            $counter++;
+            if (! $every && $counter % 2) {
                 continue;
             }
 
@@ -146,7 +148,7 @@ abstract class LaravelTestCase extends TestCase
                     'name' => $value['name'],
                 ];
             },
-            $this->getTestModelSeedData()
+            $this->getTestModelSeedData(),
         );
     }
 
@@ -156,12 +158,12 @@ abstract class LaravelTestCase extends TestCase
         $modelId = 0;
         $result  = [];
         foreach ($this->getTestJoinModelSeedData() as $testModel) {
-            ++$modelId;
-            if (!$every && $modelId % 2) {
+            $modelId++;
+            if (! $every && $modelId % 2) {
                 continue;
             }
 
-            ++$counter;
+            $counter++;
             $result[] = [
                 'id'       => $counter,
                 'model_id' => $modelId,

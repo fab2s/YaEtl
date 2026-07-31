@@ -38,7 +38,7 @@ class CsvExtractor extends FileExtractorAbstract
 
     protected function getExtracted(): iterable
     {
-        if (!$this->readBom() || !$this->readSep() || false === ($firstRecord = $this->readHeader())) {
+        if (! $this->readBom() || ! $this->readSep() || false === ($firstRecord = $this->readHeader())) {
             return;
         }
 
@@ -62,7 +62,7 @@ class CsvExtractor extends FileExtractorAbstract
         }
 
         if ($this->useHeader) {
-            $this->header = $this->header ?? array_map('trim', $firstRecord);
+            $this->header ??= array_map('trim', $firstRecord);
 
             return $this->getNextNonEmptyRecord();
         }
@@ -89,11 +89,11 @@ class CsvExtractor extends FileExtractorAbstract
                 $this->useSep    = true;
                 $this->delimiter = $line[4];
 
-                return !fseek($this->handle, $firstCharPos + 5);
+                return ! fseek($this->handle, $firstCharPos + 5);
             }
         }
 
-        return !fseek($this->handle, $firstCharPos - 1);
+        return ! fseek($this->handle, $firstCharPos - 1);
     }
 
     protected function getNextNonEmptyRecord(): ?array
@@ -109,6 +109,6 @@ class CsvExtractor extends FileExtractorAbstract
             }
 
             return $record;
-        } while (!feof($this->handle));
+        } while (! feof($this->handle));
     }
 }

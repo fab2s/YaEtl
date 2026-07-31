@@ -22,7 +22,6 @@ interface QualifierInterface extends ExecNodeInterface
      * or at any upstream Node
      *
      *
-     * @param mixed $param
      *
      * @return InterrupterInterface|bool|null|void `true` to accept the record, eg let the Flow proceed untouched
      *                                             `false|null|void` to deny the record, eg trigger a continue on the carrier Flow (not ancestors)

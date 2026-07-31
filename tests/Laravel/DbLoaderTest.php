@@ -28,12 +28,14 @@ class DbLoaderTest extends LaravelTestCase
                 return $this->getTestJoinModelSeedData();
             }))
             ->to($dbLoader)
-            ->exec();
+            ->exec()
+        ;
 
         (new YaEtl)
             ->from(new DbExtractor($loadQuery->orderBy('id')))
             ->to($arrayLoader)
-            ->exec();
+            ->exec()
+        ;
 
         $loadedData = $arrayLoader->getLoadedData();
         $this->assertEquals($this->getExpectedTestJoinModelData(), $loadedData);
@@ -50,12 +52,14 @@ class DbLoaderTest extends LaravelTestCase
                 return $loadedData;
             }))
             ->to($dbLoader)
-            ->exec();
+            ->exec()
+        ;
 
         (new YaEtl)
             ->from(new DbExtractor($loadQuery->orderBy('id')))
             ->to($arrayLoader)
-            ->exec();
+            ->exec()
+        ;
 
         $this->assertEquals($loadedData, $arrayLoader->getLoadedData());
     }

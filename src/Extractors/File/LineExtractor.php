@@ -16,7 +16,7 @@ class LineExtractor extends FileExtractorAbstract
 {
     protected function getExtracted(): iterable
     {
-        if (!$this->readBom()) {
+        if (! $this->readBom()) {
             return;
         }
 

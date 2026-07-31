@@ -18,8 +18,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class ArrayWalkTransformerTest extends TestBase
 {
     /**
-     * @param null  $arg
-     * @param mixed $expected
+     * @param null $arg
      *
      * @throws NodalFlowException
      * @throws YaEtlException

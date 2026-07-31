@@ -104,8 +104,6 @@ class OnClause implements OnClauseInterface
      * Merge Joined data into the original record
      *
      *
-     * @param mixed $upstreamRecord
-     * @param mixed $record
      *
      * @return mixed The somehow merged record
      */

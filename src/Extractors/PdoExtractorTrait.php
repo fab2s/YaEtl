@@ -84,16 +84,17 @@ trait PdoExtractorTrait
      * Properly set up PDO connection
      *
      *
-     * @throws YaEtlException
      *
      * @return static
+     *
+     * @throws YaEtlException
      */
     public function configurePdo(PDO $pdo): self
     {
         $this->pdo          = $pdo;
         $this->dbDriverName = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
 
-        if (!($this instanceof PaginatedQueryInterface) && !isset($this->supportedDrivers[$this->dbDriverName])) {
+        if (! ($this instanceof PaginatedQueryInterface) && ! isset($this->supportedDrivers[$this->dbDriverName])) {
             throw new YaEtlException(\get_class($this) . ' does not implement PaginatedQueryInterface and does not uses a supported Pdo driver, supported drivers are: ' . \implode(', ', \array_keys($this->supportedDrivers)));
         }
 
@@ -119,7 +120,7 @@ trait PdoExtractorTrait
     {
         $extractQuery = $this->getPaginatedQuery();
         $statement    = $this->pdo->prepare($extractQuery);
-        if (!$statement->execute(!empty($this->queryBindings) ? $this->queryBindings : null)) {
+        if (! $statement->execute(! empty($this->queryBindings) ? $this->queryBindings : null)) {
             return false;
         }
 
@@ -137,7 +138,7 @@ trait PdoExtractorTrait
         /* @var $this DbExtractorAbstract */
         $this->setExtractedCollection($collection);
 
-        return !$collection->isEmpty();
+        return ! $collection->isEmpty();
     }
 
     /**

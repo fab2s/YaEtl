@@ -129,7 +129,8 @@ class QualifierTest extends TestBase
         $branch1          = (new YaEtl)->from($extractor1)
             ->transform($noOpTransformer1)
             ->qualify($breakAt5Node1)
-            ->transform($noOpTransformer2);
+            ->transform($noOpTransformer2)
+        ;
 
         $noOpTransformer3 = new NoOpTransformer;
         $noOpTransformer4 = new NoOpTransformer;
@@ -193,7 +194,8 @@ class QualifierTest extends TestBase
         $branch1          = (new YaEtl)->from($extractor1)
             ->transform($noOpTransformer1)
             ->qualify($continueAt5Node1)
-            ->transform($noOpTransformer2);
+            ->transform($noOpTransformer2)
+        ;
 
         $noOpTransformer3 = new NoOpTransformer;
         $noOpTransformer4 = new NoOpTransformer;
@@ -261,7 +263,8 @@ class QualifierTest extends TestBase
             ->from($extractor2)
             ->transform($noOpTransformer2)
             ->qualify($breakAt5Node1)
-            ->transform($noOpTransformer3);
+            ->transform($noOpTransformer3)
+        ;
 
         $noOpTransformer4 = new NoOpTransformer;
         $noOpTransformer5 = new NoOpTransformer;
@@ -341,7 +344,8 @@ class QualifierTest extends TestBase
             ->from($extractor2)
             ->transform($noOpTransformer2)
             ->qualify($continueAt5Node1)
-            ->transform($noOpTransformer3);
+            ->transform($noOpTransformer3)
+        ;
 
         $noOpTransformer4 = new NoOpTransformer;
         $noOpTransformer5 = new NoOpTransformer;
@@ -421,7 +425,8 @@ class QualifierTest extends TestBase
             ->from($extractor2)
             ->transform($noOpTransformer2)
             ->qualify($breakAt5Node1)
-            ->transform($noOpTransformer3);
+            ->transform($noOpTransformer3)
+        ;
 
         $noOpTransformer4 = new NoOpTransformer;
         $noOpTransformer5 = new NoOpTransformer;
@@ -501,7 +506,8 @@ class QualifierTest extends TestBase
             ->from($extractor2)
             ->transform($noOpTransformer2)
             ->qualify($continueAt5Node1)
-            ->transform($noOpTransformer3);
+            ->transform($noOpTransformer3)
+        ;
 
         $noOpTransformer4 = new NoOpTransformer;
         $noOpTransformer5 = new NoOpTransformer;
@@ -582,14 +588,16 @@ class QualifierTest extends TestBase
             ->from($extractor2)
             ->transform($noOpTransformer2)
             ->qualify($breakAt5Node1)
-            ->transform($noOpTransformer3);
+            ->transform($noOpTransformer3)
+        ;
 
         $noOpTransformer4 = new NoOpTransformer;
         $noOpTransformer5 = new NoOpTransformer;
 
         $rootFlow->transform($noOpTransformer4)
             ->branch($branch1)
-            ->transform($noOpTransformer5);
+            ->transform($noOpTransformer5)
+        ;
 
         $testCases['flow9'] = [
             'flow'     => $rootFlow,
@@ -665,14 +673,16 @@ class QualifierTest extends TestBase
             ->from($extractor2)
             ->transform($noOpTransformer2)
             ->qualify($continueAt5Node1)
-            ->transform($noOpTransformer3);
+            ->transform($noOpTransformer3)
+        ;
 
         $noOpTransformer4 = new NoOpTransformer;
         $noOpTransformer5 = new NoOpTransformer;
 
         $rootFlow->transform($noOpTransformer4)
             ->branch($branch1)
-            ->transform($noOpTransformer5);
+            ->transform($noOpTransformer5)
+        ;
 
         $testCases['flow10'] = [
             'flow'     => $rootFlow,
@@ -750,7 +760,8 @@ class QualifierTest extends TestBase
             ->from($extractor2)
             ->transform($noOpTransformer2)
             ->qualify($breakAt5Node1)
-            ->transform($noOpTransformer3);
+            ->transform($noOpTransformer3)
+        ;
 
         $noOpTransformer4 = new NoOpTransformer;
         $noOpTransformer5 = new NoOpTransformer;
@@ -761,7 +772,8 @@ class QualifierTest extends TestBase
             ->from($extractor4)
             ->transform($noOpTransformer4)
             ->branch($branch1)
-            ->transform($noOpTransformer5);
+            ->transform($noOpTransformer5)
+        ;
 
         $testCases['flow11'] = [
             'flow'     => $rootFlow,
@@ -862,7 +874,8 @@ class QualifierTest extends TestBase
             ->from($extractor2)
             ->transform($noOpTransformer2)
             ->qualify($continueAt5Node1)
-            ->transform($noOpTransformer3);
+            ->transform($noOpTransformer3)
+        ;
 
         $noOpTransformer4 = new NoOpTransformer;
         $noOpTransformer5 = new NoOpTransformer;
@@ -873,7 +886,8 @@ class QualifierTest extends TestBase
             ->from($extractor4)
             ->transform($noOpTransformer4)
             ->branch($branch1)
-            ->transform($noOpTransformer5);
+            ->transform($noOpTransformer5)
+        ;
 
         $testCases['flow12'] = [
             'flow'     => $rootFlow,
@@ -974,7 +988,8 @@ class QualifierTest extends TestBase
             ->from($extractor2)
             ->transform($noOpTransformer2)
             ->qualify($breakAt5Node1)
-            ->transform($noOpTransformer3);
+            ->transform($noOpTransformer3)
+        ;
 
         $noOpTransformer4 = new NoOpTransformer;
         $noOpTransformer5 = new NoOpTransformer;
@@ -985,7 +1000,8 @@ class QualifierTest extends TestBase
             ->from($extractor4)
             ->transform($noOpTransformer4)
             ->branch($branch1)
-            ->transform($noOpTransformer5);
+            ->transform($noOpTransformer5)
+        ;
 
         $testCases['flow13'] = [
             'flow'     => $rootFlow,
@@ -1081,7 +1097,8 @@ class QualifierTest extends TestBase
             ->from($extractor2)
             ->transform($noOpTransformer2)
             ->qualify($continueAt5Node1)
-            ->transform($noOpTransformer3);
+            ->transform($noOpTransformer3)
+        ;
 
         $noOpTransformer4 = new NoOpTransformer;
         $noOpTransformer5 = new NoOpTransformer;
@@ -1092,7 +1109,8 @@ class QualifierTest extends TestBase
             ->from($extractor4)
             ->transform($noOpTransformer4)
             ->branch($branch1)
-            ->transform($noOpTransformer5);
+            ->transform($noOpTransformer5)
+        ;
 
         $testCases['flow14'] = [
             'flow'     => $rootFlow,
@@ -1188,7 +1206,8 @@ class QualifierTest extends TestBase
             ->from($extractor2)
             ->transform($noOpTransformer2)
             ->qualify($breakAt5Node1)
-            ->transform($noOpTransformer3);
+            ->transform($noOpTransformer3)
+        ;
 
         $noOpTransformer4 = new NoOpTransformer;
         $noOpTransformer5 = new NoOpTransformer;
@@ -1199,7 +1218,8 @@ class QualifierTest extends TestBase
             ->from($extractor4)
             ->transform($noOpTransformer4)
             ->branch($branch1)
-            ->transform($noOpTransformer5);
+            ->transform($noOpTransformer5)
+        ;
 
         $testCases['flow15'] = [
             'flow'     => $rootFlow,
@@ -1304,7 +1324,7 @@ class QualifierTest extends TestBase
         return function () use ($return) {
             static $cnt = 1;
             if ($cnt === 5) {
-                ++$cnt;
+                $cnt++;
 
                 if ($return instanceof InterrupterInterface) {
                     return $return;
@@ -1313,7 +1333,7 @@ class QualifierTest extends TestBase
                 return new Interrupter(null, null, InterrupterInterface::TYPE_BREAK);
             }
 
-            ++$cnt;
+            $cnt++;
 
             return true;
         };
@@ -1327,7 +1347,7 @@ class QualifierTest extends TestBase
         return function () use ($return) {
             static $cnt = 1;
             if ($cnt === 5) {
-                ++$cnt;
+                $cnt++;
 
                 if ($return instanceof InterrupterInterface) {
                     return $return;
@@ -1336,7 +1356,7 @@ class QualifierTest extends TestBase
                 return false;
             }
 
-            ++$cnt;
+            $cnt++;
 
             return true;
         };

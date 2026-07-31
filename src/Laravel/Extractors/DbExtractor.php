@@ -63,7 +63,8 @@ class DbExtractor extends PdoExtractor implements PaginatedQueryInterface
     {
         $extractQuery = $this->extractQuery
             ->offset($this->offset)
-            ->limit($this->batchSize);
+            ->limit($this->batchSize)
+        ;
         $this->queryBindings = $extractQuery->getRawBindings();
         $this->queryBindings = $this->queryBindings['where'];
 

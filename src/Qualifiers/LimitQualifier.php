@@ -37,7 +37,8 @@ class LimitQualifier extends QualifierAbstract
         parent::__construct();
 
         $this->setLimit($limit)
-            ->setTarget($target);
+            ->setTarget($target)
+        ;
     }
 
     public function setLimit(?int $limit): LimitQualifier

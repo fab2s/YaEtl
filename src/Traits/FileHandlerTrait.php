@@ -93,9 +93,9 @@ trait FileHandlerTrait
     /**
      * @param resource|string $input
      *
-     * @throws YaEtlException
-     *
      * @return static
+     *
+     * @throws YaEtlException
      */
     protected function initHandle($input, string $mode): self
     {
@@ -103,7 +103,7 @@ trait FileHandlerTrait
             $this->handle = $input;
         } elseif (is_file($input)) {
             $this->handle = fopen($input, $mode) ?: null;
-            if (!$this->handle) {
+            if (! $this->handle) {
                 throw new YaEtlException('Handle could not be opened in mode:' . $mode);
             }
         } else {

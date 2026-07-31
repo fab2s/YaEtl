@@ -40,13 +40,13 @@ class ModelQueryExtractor extends DbExtractor
      *
      * @param Builder $extractQuery
      *
-     * @throws YaEtlException
-     *
      * @return static
+     *
+     * @throws YaEtlException
      */
     public function setExtractQuery($extractQuery): DbExtractorAbstract
     {
-        if (!($extractQuery instanceof Builder)) {
+        if (! ($extractQuery instanceof Builder)) {
             throw new YaEtlException('Argument 1 passed to ' . __METHOD__ . ' must be an instance of ' . Builder::class . ', ' . \gettype($extractQuery) . ' given');
         }
 

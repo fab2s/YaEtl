@@ -14,22 +14,20 @@ use fab2s\NodalFlow\Nodes\ExecNodeInterface;
 use fab2s\YaEtl\Loaders\LoaderInterface;
 use fab2s\YaEtl\Loaders\NoOpLoader;
 use PDO;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 // we need these two for phpunit to mock NoOpLoader
 
 /**
  * Interface TestLoaderInterface
  */
-interface TestLoaderInterface extends ExecNodeInterface, LoaderInterface
-{
-}
+interface TestLoaderInterface extends ExecNodeInterface, LoaderInterface {}
 
 /**
  * Class TestLoader
  */
-class TestLoader extends NoOpLoader implements TestLoaderInterface
-{
-}
+class TestLoader extends NoOpLoader implements TestLoaderInterface {}
 
 /**
  * Class InsertLoader - A concrete loader that inserts into the test table
@@ -50,7 +48,7 @@ class InsertLoader extends NoOpLoader
 /**
  * Class TestBase
  */
-abstract class TestBase extends \PHPUnit\Framework\TestCase
+abstract class TestBase extends TestCase
 {
     const FROM_TABLE = 'fromTable';
     const JOIN_TABLE = 'joinTable';
@@ -58,14 +56,8 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
 
     /**
      * should be even as it is divided by two in some providers
-     *
-     * @var int
      */
-    protected static int $numRecords = 42;
-
-    /**
-     * @var array
-     */
+    protected static int $numRecords            = 42;
     protected static array $expectedJoinRecords = [];
 
     /**
@@ -81,9 +73,6 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
         return in_array('sqlite', PDO::getAvailableDrivers(), true);
     }
 
-    /**
-     * @return PDO
-     */
     public static function getPdo(): PDO
     {
         if (static::$pdo === null) {
@@ -93,7 +82,7 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
                 'CREATE TABLE ' . self::FROM_TABLE . '(
                     id INTEGER PRIMARY KEY,
                     join_id DEFAULT NULL
-                );'
+                );',
             );
 
             static::$pdo->query(
@@ -101,14 +90,14 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
                     id INTEGER,
                     join_id INTEGER PRIMARY KEY,
                     FOREIGN KEY (id) REFERENCES ' . self::FROM_TABLE . ' (id)
-                );'
+                );',
             );
 
             static::$pdo->query(
                 'CREATE TABLE ' . self::TO_TABLE . '(
                     id INTEGER,
                     join_id INTEGER
-                );'
+                );',
             );
         }
 
@@ -122,13 +111,14 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
      * The $spy will allow us to inspect invocations and arguments
      *
      *
-     * @return \PHPUnit\Framework\MockObject\MockObject
+     * @return MockObject
      */
     public function getLoaderMock()
     {
         $stub = $this->getMockBuilder(TestLoader::class)
             ->setMethods(['exec'])
-            ->getMock();
+            ->getMock()
+        ;
 
         $stub->expects($spy = $this->any())
             ->method('exec')
@@ -140,8 +130,9 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
                     ];
 
                     $this->getPdo()->query('INSERT INTO ' . self::TO_TABLE . ' (' . implode(',', array_keys($insert)) . ') VALUES (' . implode(',', $insert) . ')');
-                }
-            ));
+                },
+            ))
+        ;
 
         return $stub;
     }
@@ -153,7 +144,7 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
     {
         $keep = true;
         $j    = 0;
-        for ($i = 1; $i <= self::$numRecords; ++$i) {
+        for ($i = 1; $i <= self::$numRecords; $i++) {
             switch ($table) {
                 case self::FROM_TABLE:
                     $insert = [
@@ -162,12 +153,12 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
                     ];
                     break;
                 case self::JOIN_TABLE:
-                    if (!$keep) {
+                    if (! $keep) {
                         $keep = true;
                         break;
                     }
 
-                    ++$j;
+                    $j++;
                     $insert = [
                         'id'      => "$i",
                         'join_id' => "$j",
@@ -208,7 +199,7 @@ abstract class TestBase extends \PHPUnit\Framework\TestCase
         $count = $start === 1 ? $count : $count + $start - 1;
 
         return function () use ($count, $start) {
-            for ($i = $start; $i <= $count; ++$i) {
+            for ($i = $start; $i <= $count; $i++) {
                 yield $i;
             }
         };

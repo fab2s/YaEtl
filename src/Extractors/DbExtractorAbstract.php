@@ -68,7 +68,6 @@ abstract class DbExtractorAbstract extends ExtractorBatchLimitAbstract
      * Set the Extract SQL query
      *
      *
-     * @param mixed $extractQuery
      *
      * @return static
      */

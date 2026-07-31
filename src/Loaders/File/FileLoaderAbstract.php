@@ -31,7 +31,8 @@ abstract class FileLoaderAbstract extends LoaderAbstract
     public function __construct($input)
     {
         $this->checkHandle($input)
-            ->initHandle($input, 'wb');
+            ->initHandle($input, 'wb')
+        ;
         parent::__construct();
     }
 
@@ -50,15 +51,15 @@ abstract class FileLoaderAbstract extends LoaderAbstract
     /**
      * @param resource|string $input
      *
-     * @throws YaEtlException
-     *
      * @return static
+     *
+     * @throws YaEtlException
      */
     protected function checkHandle($input): self
     {
         if (is_resource($input)) {
             $metaData = stream_get_meta_data($input);
-            if (!is_writable($metaData['uri'])) {
+            if (! is_writable($metaData['uri'])) {
                 throw new YaEtlException((new ReflectionClass($this))->getShortName() . ' : destination cannot be opened in write mode');
             }
 
@@ -66,10 +67,10 @@ abstract class FileLoaderAbstract extends LoaderAbstract
         }
 
         if (
-            !is_string($input)
+            ! is_string($input)
             || (
-                !is_file($input)
-                && !touch($input)
+                ! is_file($input)
+                && ! touch($input)
             )
         ) {
             throw new YaEtlException((new ReflectionClass($this))->getShortName() . ' : destination cannot be created');

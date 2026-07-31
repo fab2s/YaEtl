@@ -71,10 +71,10 @@ class YaEtl extends NodalFlow
      *
      * @param null|ExtractorInterface $aggregateWith Use the extractor instance you want to aggregate with
      *
+     * @return static
+     *
      * @throws YaEtlException
      * @throws NodalFlowException
-     *
-     * @return static
      */
     public function from(ExtractorInterface $extractor, ?ExtractorInterface $aggregateWith = null): self
     {
@@ -89,9 +89,9 @@ class YaEtl extends NodalFlow
     }
 
     /**
-     * @throws NodalFlowException
-     *
      * @return static
+     *
+     * @throws NodalFlowException
      */
     public function qualify(QualifierInterface $qualifier): self
     {
@@ -142,9 +142,10 @@ class YaEtl extends NodalFlow
      * Adds a Joiner to a specific Extractor in the FLow
      *
      *
-     * @throws NodalFlowException
      *
      * @return static
+     *
+     * @throws NodalFlowException
      */
     public function join(JoinableInterface $extractor, JoinableInterface $joinFrom, OnClauseInterface $onClause): self
     {
@@ -162,9 +163,10 @@ class YaEtl extends NodalFlow
      * Adds a Transformer to the Flow
      *
      *
-     * @throws NodalFlowException
      *
      * @return static
+     *
+     * @throws NodalFlowException
      */
     public function transform(TransformerInterface $transformer): self
     {
@@ -178,9 +180,10 @@ class YaEtl extends NodalFlow
      * Adds a Loader to the Flow
      *
      *
-     * @throws NodalFlowException
      *
      * @return static
+     *
+     * @throws NodalFlowException
      */
     public function to(LoaderInterface $loader): self
     {
@@ -197,9 +200,9 @@ class YaEtl extends NodalFlow
      * @param bool  $isAReturningVal To indicate if this Branch Flow is a true Branch or just
      *                               a bag of Nodes to execute at this location of the Flow
      *
-     * @throws NodalFlowException
-     *
      * @return static
+     *
+     * @throws NodalFlowException
      */
     public function branch(self $flow, $isAReturningVal = false): self
     {
@@ -268,13 +271,13 @@ class YaEtl extends NodalFlow
      */
     public function isForceFlush(): bool
     {
-        return !empty($this->forceFlush);
+        return ! empty($this->forceFlush);
     }
 
     /**
-     * @throws ReflectionException
-     *
      * @return static
+     *
+     * @throws ReflectionException
      */
     protected function initDispatchArgs(string $class): FlowEventAbstract
     {
@@ -288,17 +291,18 @@ class YaEtl extends NodalFlow
      * Used internally to aggregate Extractors
      *
      *
-     * @throws YaEtlException
-     * @throws NodalFlowException
      *
      * @return static
+     *
+     * @throws YaEtlException
+     * @throws NodalFlowException
      */
     protected function aggregateTo(ExtractorInterface $extractor, ExtractorInterface $aggregateWith): self
     {
         // aggregate with target Node
         $aggregateWithNodeId = $aggregateWith->getId();
         $aggregateWithIdx    = $this->flowMap->getNodeIndex($aggregateWithNodeId);
-        if ($aggregateWithIdx === null && !isset($this->reverseAggregateTable[$aggregateWithNodeId])) {
+        if ($aggregateWithIdx === null && ! isset($this->reverseAggregateTable[$aggregateWithNodeId])) {
             throw new YaEtlException('Cannot aggregate with orphaned Node:' . \get_class($aggregateWith));
         }
 
@@ -317,11 +321,12 @@ class YaEtl extends NodalFlow
         // now replace its slot in the main tree
         $this->replace($aggregateWithIdx, $aggregateNode);
         $aggregateNode->addTraversable($aggregateWith)
-            ->addTraversable($extractor);
+            ->addTraversable($extractor)
+        ;
 
         // adjust counters as we did remove the $aggregateWith Extractor from this flow
         $reg = &$this->registry->get($this->getId());
-        --$reg['flowStats']['num_extractor'];
+        $reg['flowStats']['num_extractor']--;
 
         return $this;
     }
@@ -335,7 +340,7 @@ class YaEtl extends NodalFlow
     protected function flush(?FlowStatusInterface $flowStatus = null): self
     {
         if ($flowStatus === null) {
-            if ($this->hasParent() && !$this->isForceFlush()) {
+            if ($this->hasParent() && ! $this->isForceFlush()) {
                 // we'll get another chance at this
                 return $this;
             }

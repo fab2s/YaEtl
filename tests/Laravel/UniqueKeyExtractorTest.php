@@ -9,6 +9,7 @@
 
 namespace fab2s\Tests\Laravel;
 
+use fab2s\NodalFlow\NodalFlowException;
 use fab2s\YaEtl\Extractors\ExtractorAbstract;
 use fab2s\YaEtl\Extractors\OnClause;
 use fab2s\YaEtl\Laravel\Extractors\UniqueKeyExtractor;
@@ -35,13 +36,14 @@ class UniqueKeyExtractorTest extends LaravelTestCase
 
     /**
      * @throws YaEtlException
-     * @throws \fab2s\NodalFlow\NodalFlowException
+     * @throws NodalFlowException
      */
     #[DataProvider('trueFalseProvider')]
     public function test_join(bool $every)
     {
         $this->createTestJoinModelTable()
-            ->seedTestJoinModelTable($every);
+            ->seedTestJoinModelTable($every)
+        ;
         $joinOnClause = new OnClause('id', 'model_id', function ($upstreamRecord, $record) {
             unset($record['id']);
 
@@ -56,20 +58,22 @@ class UniqueKeyExtractorTest extends LaravelTestCase
             ->from($fromExtractor)
             ->join($joinExtractor, $fromExtractor, $joinOnClause)
             ->to($arrayLoader)
-            ->exec();
+            ->exec()
+        ;
 
         $this->assertEquals($this->getExpectedJoinedData($every), $arrayLoader->getLoadedData());
     }
 
     /**
      * @throws YaEtlException
-     * @throws \fab2s\NodalFlow\NodalFlowException
+     * @throws NodalFlowException
      */
     #[DataProvider('trueFalseProvider')]
     public function test_left_join(bool $every)
     {
         $this->createTestJoinModelTable()
-            ->seedTestJoinModelTable($every);
+            ->seedTestJoinModelTable($every)
+        ;
 
         $leftJoinOnClause = new OnClause('id', 'model_id', function ($upstreamRecord, $record) {
             unset($record['id']);
@@ -87,7 +91,8 @@ class UniqueKeyExtractorTest extends LaravelTestCase
             ->from($fromExtractor)
             ->join($joinExtractor, $fromExtractor, $leftJoinOnClause)
             ->to($arrayLoader)
-            ->exec();
+            ->exec()
+        ;
 
         $this->assertEquals($this->getExpectedJoinedData($every, true), $arrayLoader->getLoadedData());
     }
@@ -110,7 +115,7 @@ class UniqueKeyExtractorTest extends LaravelTestCase
 
         foreach ($this->getExpectedTestModelData() as $expectedTestModelData) {
             $modelId = $expectedTestModelData['id'];
-            if (!isset($expectedJoinedData[$modelId])) {
+            if (! isset($expectedJoinedData[$modelId])) {
                 if ($isLeft) {
                     $result[] = array_replace($expectedTestModelData, [
                         'model_id' => null,

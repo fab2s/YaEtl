@@ -37,7 +37,7 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
 
     public function extract($param = null): bool
     {
-        return !feof($this->handle);
+        return ! feof($this->handle);
     }
 
     protected function readBom(): bool
@@ -50,7 +50,7 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
         if ($bom = Bom::extract($bomCandidate)) {
             $this->encoding = Bom::getBomEncoding($bom);
 
-            return !fseek($this->handle, strlen($bom));
+            return ! fseek($this->handle, strlen($bom));
         }
 
         return rewind($this->handle);
@@ -68,7 +68,7 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
             }
 
             return $line;
-        } while (!feof($this->handle));
+        } while (! feof($this->handle));
 
         return null;
     }
@@ -85,7 +85,7 @@ abstract class FileExtractorAbstract extends ExtractorAbstract
             }
 
             return $char;
-        } while (!feof($this->handle));
+        } while (! feof($this->handle));
 
         return null;
     }

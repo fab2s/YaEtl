@@ -56,9 +56,9 @@ abstract class QualifierAbstract extends NodeAbstract implements QualifierInterf
      *
      * @param null|mixed $param
      *
-     * @throws YaEtlException
-     *
      * @return mixed|void
+     *
+     * @throws YaEtlException
      */
     public function exec($param = null)
     {

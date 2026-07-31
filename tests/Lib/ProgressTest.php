@@ -35,7 +35,8 @@ class ProgressTest extends TestBase
         $flow->setProgressMod($progressMod);
         $progressSubscriber = new ProgressBarSubscriber($flow);
         $progressSubscriber->setOutput(new StreamOutput(fopen('php://memory', 'r+', false)))
-            ->setNumRecords($numRecords);
+            ->setNumRecords($numRecords)
+        ;
         $flow->exec();
 
         /** @var StreamOutput $output */

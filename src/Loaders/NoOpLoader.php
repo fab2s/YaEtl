@@ -24,6 +24,6 @@ class NoOpLoader extends LoaderAbstract
      */
     public function exec($record = null)
     {
-        return !empty($record);
+        return ! empty($record);
     }
 }

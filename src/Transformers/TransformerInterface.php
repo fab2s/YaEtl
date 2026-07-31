@@ -14,6 +14,4 @@ use fab2s\NodalFlow\Nodes\ExecNodeInterface;
 /**
  * Interface TransformerInterface
  */
-interface TransformerInterface extends ExecNodeInterface
-{
-}
+interface TransformerInterface extends ExecNodeInterface {}

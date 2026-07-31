@@ -21,8 +21,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class CallableExtractorTest extends TestBase
 {
     /**
-     * @param mixed $expected
-     *
      * @throws NodalFlowException
      */
     #[DataProvider('callableExtractorProvider')]
@@ -32,7 +30,8 @@ class CallableExtractorTest extends TestBase
         (new YaEtl)
             ->from(new CallableExtractor($callable))
             ->to($arrayLoader)
-            ->exec();
+            ->exec()
+        ;
         $this->assertSame($expected, $arrayLoader->getLoadedData());
     }
 

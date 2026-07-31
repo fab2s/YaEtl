@@ -57,7 +57,8 @@ class DateFormatTransformer extends TransformerAbstract
     {
         foreach ($this->setUp as $key => $dateFormat) {
             $param[$key] = DateTimeImmutable::createFromFormat($dateFormat['from'], $param[$key], $this->dateTimeZoneFrom)
-                ->setTimezone($this->dateTimeZoneTo);
+                ->setTimezone($this->dateTimeZoneTo)
+            ;
 
             if ($dateFormat['to']) {
                 $param[$key] = $param[$key]->format($dateFormat['to']);
